@@ -138,6 +138,7 @@
         .clock-date { font-weight: 600; color: var(--text-secondary); }
 
         .weather-strip { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-muted); }
+        .ws-location { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; margin-right: 2px; }
         .weather-slot { display: flex; flex-direction: column; align-items: center; gap: 1px; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 7px; padding: 4px 7px; min-width: 38px; }
         .weather-slot .ws-icon { font-size: 1rem; line-height: 1; }
         .weather-slot .ws-temp { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); }
@@ -1006,6 +1007,20 @@
         navigator.geolocation.getCurrentPosition(function(pos) {
             var lat = pos.coords.latitude.toFixed(4);
             var lon = pos.coords.longitude.toFixed(4);
+            var strip = document.getElementById('weather-strip');
+
+            // Reverse geocode for city name
+            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+                .then(function(r) { return r.json(); })
+                .then(function(geo) {
+                    var a = geo.address || {};
+                    var city = a.city || a.town || a.village || a.county || '';
+                    if (city && strip) {
+                        var loc = strip.querySelector('.ws-location');
+                        if (loc) loc.textContent = city;
+                    }
+                }).catch(function() {});
+
             var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
                 '&hourly=temperature_2m,weathercode&timezone=auto&forecast_days=1';
             fetch(url).then(function(r) { return r.json(); }).then(function(data) {
@@ -1014,10 +1029,9 @@
                 var times = data.hourly.time;
                 var temps = data.hourly.temperature_2m;
                 var codes = data.hourly.weathercode;
-                var strip = document.getElementById('weather-strip');
-                var html = '';
+                var html = '<span class="ws-location"></span>';
                 var shown = 0;
-                for (var i = 0; i < times.length && shown < 6; i++) {
+                for (var i = 0; i < times.length && shown < 3; i++) {
                     var h = parseInt(times[i].slice(11, 13));
                     if (h < curHour) continue;
                     html += '<div class="weather-slot"><span class="ws-icon">' + wxIcon(codes[i]) + '</span>' +
@@ -1025,7 +1039,7 @@
                         '<span class="ws-hour">' + String(h).padStart(2,'0') + ':00</span></div>';
                     shown++;
                 }
-                if (html) strip.innerHTML = html;
+                if (shown && strip) strip.innerHTML = html;
             }).catch(function() {});
         }, function() {}, { timeout: 8000 });
     }
