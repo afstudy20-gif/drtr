@@ -666,26 +666,47 @@ function calcPercentile() {
     const pctDisplay = result.pct.startsWith('<') || result.pct.startsWith('>') ? result.pct : 'P' + result.pct;
     const ageLabel = `${agey > 0 ? agey + t(' yaş','y ') : ''}${agem > 0 ? agem + t(' ay','m') : ''}${agey === 0 && agem === 0 ? t('Doğum','Birth') : ''}`;
 
-    let whoBlock = '';
     if (type === 'height') {
         const whoLMS = sex === 'male' ? WHO_HEIGHT_BOYS_LMS : WHO_HEIGHT_GIRLS_LMS;
         const whoRefs = interpolateLMS(whoLMS, totalMonths);
         const whoResult = valueToPercentile(val, whoRefs);
+        const whoInterp = interpretBand(whoResult.band);
         const whoPctDisplay = whoResult.pct.startsWith('<') || whoResult.pct.startsWith('>') ? whoResult.pct : 'P' + whoResult.pct;
-        whoBlock = `<hr style="margin:14px 0;border:none;border-top:1px solid #E2E8F0">` +
-            `<div style="font-size:0.78rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">WHO Referansı</div>` +
-            `<div style="font-size:1.1rem;font-weight:700;color:#0F172A">${whoPctDisplay} (${val} cm)</div>` +
-            `<div style="font-size:0.84rem;color:#475569">Z-skor: ${whoResult.z}</div>` +
-            buildRefTable(whoRefs, val);
+        const whoPctNum = parseFloat(whoResult.pct) || (whoResult.pct.startsWith('<') ? 1 : 99);
+
+        const neyziCard =
+            `<div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:14px">` +
+            `<div style="font-size:0.72rem;font-weight:700;color:#2563EB;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Neyzi 2008 · Türk Referansı</div>` +
+            `<div style="font-size:1.25rem;font-weight:700;color:#0F172A;margin-bottom:2px">${pctDisplay} (${val} cm)</div>` +
+            `<div style="font-size:0.88rem;font-weight:600;margin-bottom:2px" class="${interp.cls}">${interp[currentLang]}</div>` +
+            `<div style="font-size:0.82rem;color:#475569;margin-bottom:8px">Z-skor: ${result.z} · ${t('Yaş','Age')}: ${ageLabel}</div>` +
+            buildPctBar(parseFloat(result.pct) || (result.pct.startsWith('<') ? 1 : 99)) +
+            buildRefTable(refs, val) + `</div>`;
+
+        const whoCard =
+            `<div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:14px">` +
+            `<div style="font-size:0.72rem;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">WHO Referansı</div>` +
+            `<div style="font-size:1.25rem;font-weight:700;color:#0F172A;margin-bottom:2px">${whoPctDisplay} (${val} cm)</div>` +
+            `<div style="font-size:0.88rem;font-weight:600;margin-bottom:2px" class="${whoInterp.cls}">${whoInterp[currentLang]}</div>` +
+            `<div style="font-size:0.82rem;color:#475569;margin-bottom:8px">Z-skor: ${whoResult.z} · ${t('Yaş','Age')}: ${ageLabel}</div>` +
+            buildPctBar(whoPctNum, '#15803D') +
+            buildRefTable(whoRefs, val) + `</div>`;
+
+        const box = document.getElementById('pct-result');
+        box.innerHTML =
+            `<div class="result-title">${t('Boy Persantili','Height Percentile')}</div>` +
+            `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px">${neyziCard}${whoCard}</div>`;
+        box.classList.add('show');
+        return;
     }
 
     const details =
         `<strong>${interp[currentLang]}</strong><br>` +
         `Z-skor: ${result.z}<br>${t('Yaş','Age')}: ${ageLabel}<br>` +
         buildPctBar(parseFloat(result.pct) || (result.pct.startsWith('<') ? 1 : 99)) +
-        buildRefTable(refs, val) + whoBlock;
+        buildRefTable(refs, val);
 
-    showResult('pct-result', typeLbl + ' ' + t('Persantili','Percentile') + (type === 'height' ? ' · Neyzi 2008' : ''),
+    showResult('pct-result', typeLbl + ' ' + t('Persantili','Percentile'),
         pctDisplay + ' (' + val + ' ' + unit + ')',
         details, interp.cls);
 }
