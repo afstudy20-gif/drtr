@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>drtr.uk - Free Online Tools | PDF Translator, Excel Matcher, Warfarin Calculator</title>
+    <meta name="description" content="Free online productivity tools: PDF document translator, Excel data matcher, Warfarin dose calculator, citation manager, medical calculators and more. Available in Turkish, English, Arabic, Chinese, and Hindi.">
+    <meta name="keywords" content="free online tools, PDF translator, Excel data matcher, Warfarin dose calculator, citation manager, medical calculators, BMI calculator, eGFR, online utilities, drtr.uk">
+    <meta name="author" content="drtr.uk">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drtr.uk/">
+    <meta property="og:title" content="drtr.uk - Free Online Tools">
+    <meta property="og:description" content="Free online productivity tools: PDF translator, Excel data matcher, Warfarin dose calculator, medical calculators and more.">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="ar_SA">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta property="og:locale:alternate" content="hi_IN">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="drtr.uk - Free Online Tools">
+    <meta name="twitter:description" content="Free online productivity tools: PDF translator, Excel data matcher, Warfarin dose calculator and more.">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="tr" href="https://drtr.uk/">
+    <link rel="alternate" hreflang="en" href="https://drtr.uk/">
+    <link rel="alternate" hreflang="ar" href="https://drtr.uk/">
+    <link rel="alternate" hreflang="zh" href="https://drtr.uk/">
+    <link rel="alternate" hreflang="hi" href="https://drtr.uk/">
+    <link rel="alternate" hreflang="x-default" href="https://drtr.uk/">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "drtr.uk",
+        "url": "https://drtr.uk",
+        "description": "Free online productivity and medical tools",
+        "author": {
+            "@type": "Person",
+            "email": "adycovs@gmail.com"
+        }
+    }
+    </script>
+
+    <!-- Google AdSense: Onay sonrasi kendi publisher ID'nizle degistirin -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        html[dir="rtl"] .link-card { flex-direction: row-reverse; }
+        html[dir="rtl"] .link-card .arrow { margin-left: 0; margin-right: auto; transform: scaleX(-1); }
+        html[dir="rtl"] .lang-switcher { direction: ltr; }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .lang-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #888;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover { border-color: #555; color: #ccc; }
+        .lang-btn.active { background: #2a2a2a; border-color: #555; color: #fff; }
+
+        header { text-align: center; margin-bottom: 36px; }
+        header h1 { font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        header p { color: #888; font-size: 1rem; line-height: 1.5; }
+
+        .links { display: flex; flex-direction: column; gap: 12px; }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 18px 22px;
+            text-decoration: none;
+            color: #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            background: #222;
+            border-color: #444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .link-icon {
+            font-size: 1.6rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .link-info h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 3px; }
+        .link-info p { font-size: 0.84rem; color: #888; line-height: 1.4; }
+
+        .link-card .arrow { margin-left: auto; color: #555; font-size: 1.2rem; flex-shrink: 0; }
+
+        .ad-slot {
+            background: #1a1a1a;
+            border: 1px dashed #333;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin: 24px 0;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 0.75rem;
+        }
+
+        .health-tip {
+            background: linear-gradient(135deg, #1a2a1a, #1a1a2a);
+            border: 1px solid #2a3a2a;
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin: 28px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .health-tip::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4caf50, #2196f3);
+        }
+
+        .health-tip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .health-tip-header span { font-size: 1.3rem; }
+        .health-tip-header h3 { font-size: 0.95rem; color: #4caf50; font-weight: 600; }
+
+        .health-tip p {
+            font-size: 0.9rem;
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .health-tip .tip-source {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .health-tip .tip-source a {
+            color: #5a8abf;
+            text-decoration: none;
+        }
+
+        .health-tip .tip-source a:hover { text-decoration: underline; }
+
+        .health-tip .new-tip-btn {
+            background: none;
+            border: 1px solid #333;
+            color: #888;
+            padding: 4px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-left: auto;
+            transition: all 0.2s;
+        }
+
+        .health-tip .new-tip-btn:hover { border-color: #4caf50; color: #4caf50; }
+
+        .about-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+        }
+
+        .about-section h2 { font-size: 1.05rem; color: #ccc; margin-bottom: 10px; font-weight: 600; }
+        .about-section p { font-size: 0.88rem; color: #888; line-height: 1.7; margin-bottom: 8px; }
+
+        .contact {
+            text-align: center;
+            margin-top: 24px;
+            padding: 24px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+        }
+
+        .contact h2 { font-size: 1rem; color: #ccc; margin-bottom: 8px; font-weight: 600; }
+        .contact a { color: #6b9fff; text-decoration: none; font-size: 0.95rem; }
+        .contact a:hover { text-decoration: underline; }
+
+        footer { text-align: center; padding: 32px 20px; color: #444; font-size: 0.8rem; }
+        footer a { color: #555; text-decoration: none; margin: 0 8px; }
+        footer a:hover { color: #888; }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.6rem; }
+            .link-card { padding: 14px 16px; gap: 12px; }
+            .link-icon { width: 38px; height: 38px; font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <nav class="lang-switcher" aria-label="Language selector">
+            <button class="lang-btn active" data-lang="tr">Turkce</button>
+            <button class="lang-btn" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="ar">العربية</button>
+            <button class="lang-btn" data-lang="zh">中文</button>
+            <button class="lang-btn" data-lang="hi">हिन्दी</button>
+        </nav>
+
+        <header>
+            <h1>drtr.uk</h1>
+            <p data-i18n="subtitle">Ucretsiz online araclar ve uygulamalar</p>
+        </header>
+
+        <div class="ad-slot" id="ad-top">
+            <!-- AdSense reklam kodu buraya -->
+        </div>
+
+        <div class="links">
+
+            <a href="https://varf.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">💊</span>
+                <div class="link-info">
+                    <h3 data-i18n="app1_title">Varfarin Doz Asistani</h3>
+                    <p data-i18n="app1_desc">INR degerine gore haftalik varfarin doz onerisi sunan klinik karar destek araci</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="https://pdftranslator.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">📄</span>
+                <div class="link-info">
+                    <h3 data-i18n="app2_title">PDF Translator</h3>
+                    <p data-i18n="app2_desc">PDF, DOCX, XLSX, PPTX dosyalarini Ingilizce-Turkce cevirin</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="https://kelime.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">📝</span>
+                <div class="link-info">
+                    <h3 data-i18n="app3_title">Kelime & Islem</h3>
+                    <p data-i18n="app3_desc">Metin ve kelime isleme araci</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="https://veriduzelt.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">📊</span>
+                <div class="link-info">
+                    <h3 data-i18n="app4_title">Excel Veri Eslestirici</h3>
+                    <p data-i18n="app4_desc">Iki Excel dosyasi arasinda sutun eslestirme ve veri aktarimi</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="https://atif.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">🎓</span>
+                <div class="link-info">
+                    <h3 data-i18n="app5_title">Docentlik Atif Sistemi</h3>
+                    <p data-i18n="app5_desc">UAK standartlarinda akademik atif yonetimi ve PDF olusturma</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="https://docpuan.drtr.uk/" class="link-card" target="_blank" rel="noopener">
+                <span class="link-icon">🏅</span>
+                <div class="link-info">
+                    <h3 data-i18n="app6_title">Docpuan</h3>
+                    <p data-i18n="app6_desc">Docentlik puan hesaplama araci</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="hesaplamalar.html" class="link-card">
+                <span class="link-icon">🧮</span>
+                <div class="link-info">
+                    <h3 data-i18n="app7_title">Tibbi Hesaplamalar</h3>
+                    <p data-i18n="app7_desc">BMI, eGFR, QTc, CHA2DS2-VASc, HAS-BLED, Framingham ve daha fazlasi</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+        </div>
+
+        <!-- Saglik Bilgisi -->
+        <div class="health-tip" id="healthTip">
+            <div class="health-tip-header">
+                <span>🩺</span>
+                <h3 data-i18n="health_title">Gunun Saglik Bilgisi</h3>
+                <button class="new-tip-btn" onclick="showRandomTip()" data-i18n="new_tip">Yeni Bilgi</button>
+            </div>
+            <p id="tipText"></p>
+            <div class="tip-source" id="tipSource"></div>
+            <p style="margin-top:12px;font-size:0.75rem;color:#666;font-style:italic;border-top:1px solid #2a2a2a;padding-top:10px" data-i18n="disclaimer">Bu sayfadaki bilgiler yalnizca bilgilendirme amaciyla sunulmaktadir. Kesin ve kisisel saglik bilgisi icin lutfen doktorunuza danisiniz.</p>
+        </div>
+
+        <div class="ad-slot" id="ad-bottom">
+            <!-- AdSense reklam kodu buraya -->
+        </div>
+
+        <section class="about-section">
+            <h2 data-i18n="about_title">Hakkimizda</h2>
+            <p data-i18n="about_text">drtr.uk, saglik profesyonelleri ve arastirmacilar icin gelistirilmis ucretsiz online araclar sunan bir platformdur. Varfarin doz hesaplama, belge ceviri, akademik atif yonetimi ve tibbi hesaplamalar gibi araclarimiz, gunluk klinik pratiginizi kolaylastirmak icin tasarlanmistir.</p>
+        </section>
+
+        <section class="contact">
+            <h2 data-i18n="contact_title">Iletisim</h2>
+            <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 drtr.uk &mdash; <span data-i18n="footer_text">Tum haklar saklidir.</span></p>
+        <p style="margin-top:8px"><a href="privacy.html" data-i18n="privacy_link">Gizlilik Politikasi</a> | <a href="about.html" data-i18n="about_link">Hakkimizda</a></p>
+    </footer>
+
+    <script>
+    var translations = {
+        tr: {
+            subtitle: "Ucretsiz online araclar ve uygulamalar",
+            app1_title: "Varfarin Doz Asistani",
+            app1_desc: "INR degerine gore haftalik varfarin doz onerisi sunan klinik karar destek araci",
+            app2_title: "PDF Translator",
+            app2_desc: "PDF, DOCX, XLSX, PPTX dosyalarini Ingilizce-Turkce cevirin",
+            app3_title: "Kelime & Islem",
+            app3_desc: "Metin ve kelime isleme araci",
+            app4_title: "Excel Veri Eslestirici",
+            app4_desc: "Iki Excel dosyasi arasinda sutun eslestirme ve veri aktarimi",
+            app5_title: "Docentlik Atif Sistemi",
+            app5_desc: "UAK standartlarinda akademik atif yonetimi ve PDF olusturma",
+            app6_title: "Docpuan",
+            app6_desc: "Docentlik puan hesaplama araci",
+            app7_title: "Tibbi Hesaplamalar",
+            app7_desc: "BMI, eGFR, QTc, CHA2DS2-VASc, HAS-BLED, Framingham ve daha fazlasi",
+            contact_title: "Iletisim",
+            footer_text: "Tum haklar saklidir.",
+            health_title: "Gunun Saglik Bilgisi",
+            new_tip: "Yeni Bilgi",
+            about_title: "Hakkimizda",
+            about_text: "drtr.uk, saglik profesyonelleri ve arastirmacilar icin gelistirilmis ucretsiz online araclar sunan bir platformdur. Varfarin doz hesaplama, belge ceviri, akademik atif yonetimi ve tibbi hesaplamalar gibi araclarimiz, gunluk klinik pratiginizi kolaylastirmak icin tasarlanmistir.",
+            disclaimer: "Bu sayfadaki bilgiler yalnizca bilgilendirme amaciyla sunulmaktadir. Kesin ve kisisel saglik bilgisi icin lutfen doktorunuza danisiniz.",
+            privacy_link: "Gizlilik Politikasi",
+            about_link: "Hakkimizda"
+        },
+        en: {
+            subtitle: "Free online tools and utilities",
+            app1_title: "Warfarin Dose Assistant",
+            app1_desc: "Clinical decision support tool for weekly warfarin dosing based on INR values",
+            app2_title: "PDF Translator",
+            app2_desc: "Translate PDF, DOCX, XLSX, PPTX files between English and Turkish",
+            app3_title: "Word & Process",
+            app3_desc: "Text and word processing tool",
+            app4_title: "Excel Data Matcher",
+            app4_desc: "Match columns and transfer data between two Excel files",
+            app5_title: "Citation Manager",
+            app5_desc: "Academic citation management and PDF generation for associate professorship",
+            app6_title: "Docpuan",
+            app6_desc: "Associate professorship score calculator",
+            app7_title: "Medical Calculators",
+            app7_desc: "BMI, eGFR, QTc, CHA2DS2-VASc, HAS-BLED, Framingham and more",
+            contact_title: "Contact",
+            footer_text: "All rights reserved.",
+            health_title: "Health Tip of the Day",
+            new_tip: "New Tip",
+            about_title: "About Us",
+            about_text: "drtr.uk is a platform offering free online tools for healthcare professionals and researchers. Our tools including warfarin dose calculator, document translator, citation manager, and medical calculators are designed to simplify your daily clinical practice.",
+            disclaimer: "The information on this page is provided for informational purposes only. Please consult your doctor for accurate and personalized health advice.",
+            privacy_link: "Privacy Policy",
+            about_link: "About Us"
+        },
+        ar: {
+            subtitle: "\u0623\u062f\u0648\u0627\u062a \u0648\u062a\u0637\u0628\u064a\u0642\u0627\u062a \u0645\u062c\u0627\u0646\u064a\u0629 \u0639\u0628\u0631 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a",
+            app1_title: "\u0645\u0633\u0627\u0639\u062f \u062c\u0631\u0639\u0629 \u0627\u0644\u0648\u0627\u0631\u0641\u0627\u0631\u064a\u0646",
+            app1_desc: "\u0623\u062f\u0627\u0629 \u062f\u0639\u0645 \u0627\u0644\u0642\u0631\u0627\u0631 \u0627\u0644\u0633\u0631\u064a\u0631\u064a \u0644\u062c\u0631\u0639\u0627\u062a \u0627\u0644\u0648\u0627\u0631\u0641\u0627\u0631\u064a\u0646 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064a\u0629 \u0628\u0646\u0627\u0621\u064b \u0639\u0644\u0649 \u0642\u064a\u0645 INR",
+            app2_title: "\u0645\u062a\u0631\u062c\u0645 PDF",
+            app2_desc: "\u062a\u0631\u062c\u0645\u0629 \u0645\u0644\u0641\u0627\u062a PDF \u0648DOCX \u0648XLSX \u0648PPTX \u0628\u064a\u0646 \u0627\u0644\u0625\u0646\u062c\u0644\u064a\u0632\u064a\u0629 \u0648\u0627\u0644\u062a\u0631\u0643\u064a\u0629",
+            app3_title: "\u0627\u0644\u0643\u0644\u0645\u0629 \u0648\u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629",
+            app3_desc: "\u0623\u062f\u0627\u0629 \u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0646\u0635\u0648\u0635 \u0648\u0627\u0644\u0643\u0644\u0645\u0627\u062a",
+            app4_title: "\u0645\u0637\u0627\u0628\u0642 \u0628\u064a\u0627\u0646\u0627\u062a Excel",
+            app4_desc: "\u0645\u0637\u0627\u0628\u0642\u0629 \u0627\u0644\u0623\u0639\u0645\u062f\u0629 \u0648\u0646\u0642\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0628\u064a\u0646 \u0645\u0644\u0641\u064a Excel",
+            app5_title: "\u0646\u0638\u0627\u0645 \u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0627\u0633\u062a\u0634\u0647\u0627\u062f\u0627\u062a",
+            app5_desc: "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0627\u0633\u062a\u0634\u0647\u0627\u062f\u0627\u062a \u0627\u0644\u0623\u0643\u0627\u062f\u064a\u0645\u064a\u0629 \u0648\u0625\u0646\u0634\u0627\u0621 PDF",
+            app6_title: "Docpuan",
+            app6_desc: "\u062d\u0627\u0633\u0628\u0629 \u0646\u0642\u0627\u0637 \u0627\u0644\u0623\u0633\u062a\u0627\u0630\u064a\u0629 \u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629",
+            app7_title: "\u0627\u0644\u062d\u0627\u0633\u0628\u0627\u062a \u0627\u0644\u0637\u0628\u064a\u0629",
+            app7_desc: "BMI \u0648eGFR \u0648QTc \u0648CHA2DS2-VASc \u0648HAS-BLED \u0648Framingham \u0648\u0627\u0644\u0645\u0632\u064a\u062f",
+            contact_title: "\u0627\u062a\u0635\u0644 \u0628\u0646\u0627",
+            footer_text: "\u062c\u0645\u064a\u0639 \u0627\u0644\u062d\u0642\u0648\u0642 \u0645\u062d\u0641\u0648\u0638\u0629.",
+            health_title: "\u0646\u0635\u064a\u062d\u0629 \u0635\u062d\u064a\u0629 \u0627\u0644\u064a\u0648\u0645",
+            new_tip: "\u0646\u0635\u064a\u062d\u0629 \u062c\u062f\u064a\u062f\u0629",
+            about_title: "\u0645\u0646 \u0646\u062d\u0646",
+            about_text: "drtr.uk \u0645\u0646\u0635\u0629 \u062a\u0642\u062f\u0645 \u0623\u062f\u0648\u0627\u062a \u0645\u062c\u0627\u0646\u064a\u0629 \u0639\u0628\u0631 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a \u0644\u0644\u0645\u062a\u062e\u0635\u0635\u064a\u0646 \u0641\u064a \u0627\u0644\u0631\u0639\u0627\u064a\u0629 \u0627\u0644\u0635\u062d\u064a\u0629 \u0648\u0627\u0644\u0628\u0627\u062d\u062b\u064a\u0646.",
+            disclaimer: "\u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0641\u064a \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062d\u0629 \u0644\u0623\u063a\u0631\u0627\u0636 \u0625\u0639\u0644\u0627\u0645\u064a\u0629 \u0641\u0642\u0637. \u064a\u0631\u062c\u0649 \u0627\u0633\u062a\u0634\u0627\u0631\u0629 \u0637\u0628\u064a\u0628\u0643 \u0644\u0644\u062d\u0635\u0648\u0644 \u0639\u0644\u0649 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0635\u062d\u064a\u0629 \u062f\u0642\u064a\u0642\u0629.",
+            privacy_link: "\u0633\u064a\u0627\u0633\u0629 \u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629",
+            about_link: "\u0645\u0646 \u0646\u062d\u0646"
+        },
+        zh: {
+            subtitle: "\u514d\u8d39\u5728\u7ebf\u5de5\u5177\u548c\u5e94\u7528",
+            app1_title: "\u534e\u6cd5\u6797\u5242\u91cf\u52a9\u624b",
+            app1_desc: "\u57fa\u4e8eINR\u503c\u7684\u534e\u6cd5\u6797\u6bcf\u5468\u5242\u91cf\u4e34\u5e8a\u51b3\u7b56\u652f\u6301\u5de5\u5177",
+            app2_title: "PDF\u7ffb\u8bd1\u5668",
+            app2_desc: "\u5728\u82f1\u8bed\u548c\u571f\u8033\u5176\u8bed\u4e4b\u95f4\u7ffb\u8bd1PDF\u3001DOCX\u3001XLSX\u3001PPTX\u6587\u4ef6",
+            app3_title: "\u6587\u5b57\u4e0e\u5904\u7406",
+            app3_desc: "\u6587\u672c\u548c\u6587\u5b57\u5904\u7406\u5de5\u5177",
+            app4_title: "Excel\u6570\u636e\u5339\u914d\u5668",
+            app4_desc: "\u5728\u4e24\u4e2aExcel\u6587\u4ef6\u4e4b\u95f4\u5339\u914d\u5217\u5e76\u4f20\u8f93\u6570\u636e",
+            app5_title: "\u5f15\u7528\u7ba1\u7406\u7cfb\u7edf",
+            app5_desc: "\u5b66\u672f\u5f15\u7528\u7ba1\u7406\u548cPDF\u751f\u6210",
+            app6_title: "Docpuan",
+            app6_desc: "\u526f\u6559\u6388\u5206\u6570\u8ba1\u7b97\u5668",
+            app7_title: "\u533b\u5b66\u8ba1\u7b97\u5668",
+            app7_desc: "BMI\u3001eGFR\u3001QTc\u3001CHA2DS2-VASc\u3001HAS-BLED\u3001Framingham\u7b49",
+            contact_title: "\u8054\u7cfb\u6211\u4eec",
+            footer_text: "\u7248\u6743\u6240\u6709\u3002",
+            health_title: "\u4eca\u65e5\u5065\u5eb7\u63d0\u793a",
+            new_tip: "\u65b0\u63d0\u793a",
+            about_title: "\u5173\u4e8e\u6211\u4eec",
+            about_text: "drtr.uk \u662f\u4e00\u4e2a\u4e3a\u533b\u7597\u4e13\u4e1a\u4eba\u5458\u548c\u7814\u7a76\u4eba\u5458\u63d0\u4f9b\u514d\u8d39\u5728\u7ebf\u5de5\u5177\u7684\u5e73\u53f0\u3002",
+            disclaimer: "\u672c\u9875\u4fe1\u606f\u4ec5\u4f9b\u53c2\u8003\u3002\u8bf7\u54a8\u8be2\u60a8\u7684\u533b\u751f\u4ee5\u83b7\u53d6\u51c6\u786e\u7684\u5065\u5eb7\u5efa\u8bae\u3002",
+            privacy_link: "\u9690\u79c1\u653f\u7b56",
+            about_link: "\u5173\u4e8e\u6211\u4eec"
+        },
+        hi: {
+            subtitle: "\u092e\u0941\u092b\u094d\u0924 \u0911\u0928\u0932\u093e\u0907\u0928 \u0909\u092a\u0915\u0930\u0923 \u0914\u0930 \u0910\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928",
+            app1_title: "\u0935\u093e\u0930\u094d\u092b\u0930\u093f\u0928 \u0916\u0941\u0930\u093e\u0915 \u0938\u0939\u093e\u092f\u0915",
+            app1_desc: "INR \u092e\u0942\u0932\u094d\u092f\u094b\u0902 \u0915\u0947 \u0906\u0927\u093e\u0930 \u092a\u0930 \u0938\u093e\u092a\u094d\u0924\u093e\u0939\u093f\u0915 \u0935\u093e\u0930\u094d\u092b\u0930\u093f\u0928 \u0916\u0941\u0930\u093e\u0915 \u0915\u0947 \u0932\u093f\u090f \u0928\u0948\u0926\u093e\u0928\u093f\u0915 \u0928\u093f\u0930\u094d\u0923\u092f \u0938\u0939\u093e\u092f\u0924\u093e",
+            app2_title: "PDF \u0905\u0928\u0941\u0935\u093e\u0926\u0915",
+            app2_desc: "\u0905\u0902\u0917\u094d\u0930\u0947\u091c\u0940 \u0914\u0930 \u0924\u0941\u0930\u094d\u0915\u0940 \u0915\u0947 \u092c\u0940\u091a PDF, DOCX, XLSX, PPTX \u092b\u093e\u0907\u0932\u094b\u0902 \u0915\u093e \u0905\u0928\u0941\u0935\u093e\u0926",
+            app3_title: "\u0936\u092c\u094d\u0926 \u0914\u0930 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e",
+            app3_desc: "\u092a\u093e\u0920 \u0914\u0930 \u0936\u092c\u094d\u0926 \u092a\u094d\u0930\u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u0909\u092a\u0915\u0930\u0923",
+            app4_title: "Excel \u0921\u0947\u091f\u093e \u092e\u0948\u091a\u0930",
+            app4_desc: "\u0926\u094b Excel \u092b\u093e\u0907\u0932\u094b\u0902 \u0915\u0947 \u092c\u0940\u091a \u0915\u0949\u0932\u092e \u092e\u093f\u0932\u093e\u0928 \u0914\u0930 \u0921\u0947\u091f\u093e \u0938\u094d\u0925\u093e\u0928\u093e\u0902\u0924\u0930\u0923",
+            app5_title: "\u0909\u0926\u094d\u0927\u0930\u0923 \u092a\u094d\u0930\u092c\u0902\u0927\u0915",
+            app5_desc: "\u0936\u0948\u0915\u094d\u0937\u093f\u0915 \u0909\u0926\u094d\u0927\u0930\u0923 \u092a\u094d\u0930\u092c\u0902\u0927\u0928 \u0914\u0930 PDF \u0928\u093f\u0930\u094d\u092e\u093e\u0923",
+            app6_title: "Docpuan",
+            app6_desc: "\u0938\u0939\u092f\u094b\u0917\u0940 \u092a\u094d\u0930\u094b\u092b\u0947\u0938\u0930 \u0938\u094d\u0915\u094b\u0930 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930",
+            app7_title: "\u091a\u093f\u0915\u093f\u0924\u094d\u0938\u093e \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930",
+            app7_desc: "BMI, eGFR, QTc, CHA2DS2-VASc, HAS-BLED, Framingham \u0914\u0930 \u0905\u0927\u093f\u0915",
+            contact_title: "\u0938\u0902\u092a\u0930\u094d\u0915",
+            footer_text: "\u0938\u0930\u094d\u0935\u093e\u0927\u093f\u0915\u093e\u0930 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924\u0964",
+            health_title: "\u0906\u091c \u0915\u0940 \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u091c\u093e\u0928\u0915\u093e\u0930\u0940",
+            new_tip: "\u0928\u0908 \u091c\u093e\u0928\u0915\u093e\u0930\u0940",
+            about_title: "\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902",
+            about_text: "drtr.uk \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u092a\u0947\u0936\u0947\u0935\u0930\u094b\u0902 \u0914\u0930 \u0936\u094b\u0927\u0915\u0930\u094d\u0924\u093e\u0913\u0902 \u0915\u0947 \u0932\u093f\u090f \u092e\u0941\u092b\u094d\u0924 \u0911\u0928\u0932\u093e\u0907\u0928 \u0909\u092a\u0915\u0930\u0923 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u093e \u092a\u094d\u0932\u0947\u091f\u092b\u0949\u0930\u094d\u092e \u0939\u0948\u0964",
+            disclaimer: "\u0907\u0938 \u092a\u0943\u0937\u094d\u0920 \u092a\u0930 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u0915\u0947\u0935\u0932 \u0938\u0942\u091a\u0928\u093e\u0924\u094d\u092e\u0915 \u0909\u0926\u094d\u0926\u0947\u0936\u094d\u092f\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0948\u0964 \u0938\u091f\u0940\u0915 \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u0938\u0932\u093e\u0939 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u0938\u0947 \u092a\u0930\u093e\u092e\u0930\u094d\u0936 \u0915\u0930\u0947\u0902\u0964",
+            privacy_link: "\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f",
+            about_link: "\u0939\u092e\u093e\u0930\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902"
+        }
+    };
+
+    var healthTips = {
+        tr: [
+            {text: "Gunluk 30 dakika yuruyus, kalp hastaliklar riskini %35 azaltabilir.", source: "American Heart Association", url: "https://www.heart.org/"},
+            {text: "Yetiskinlerin gunde ortalama 7-9 saat uyumasi onerilir. Yetersiz uyku bagisiklik sistemini zayiflatir.", source: "National Sleep Foundation", url: "https://www.sleepfoundation.org/"},
+            {text: "Gunde 2-3 litre su icmek bobrek sagligini korur ve metabolizmayi hizlandirir.", source: "European Journal of Clinical Nutrition", url: "https://www.nature.com/ejcn/"},
+            {text: "Duzensiz kahvalti atlama aliskanligi, tip 2 diyabet riskini %21 artirabilir.", source: "American Journal of Clinical Nutrition", url: "https://academic.oup.com/ajcn"},
+            {text: "Haftada 150 dakika orta yogunlukta egzersiz, depresyon belirtilerini onemli olcude azaltir.", source: "World Health Organization", url: "https://www.who.int/"},
+            {text: "Akdeniz diyeti, kardiyovaskuler olaylari %30 oraninda azaltabilir.", source: "New England Journal of Medicine", url: "https://www.nejm.org/"},
+            {text: "D vitamini eksikligi, kas-iskelet agrisi ve yorgunluga neden olabilir. Gunluk 15 dakika gunes isigi onemlidir.", source: "Endocrine Society", url: "https://www.endocrine.org/"},
+            {text: "Sigara birakildiktan 1 yil sonra, kalp krizi riski yarisina iner.", source: "CDC", url: "https://www.cdc.gov/"},
+            {text: "Gunde 5 porsiyon sebze ve meyve tuketimi, felc riskini %26 azaltir.", source: "The Lancet", url: "https://www.thelancet.com/"},
+            {text: "Stres yonetimi icin gunluk 10 dakika meditasyon, kortizol seviyesini dusurur.", source: "JAMA Internal Medicine", url: "https://jamanetwork.com/journals/jamainternalmedicine"},
+            {text: "Asiri tuz tuketimi hipertansiyon riskini arttirir. Gunluk 5 gramdan fazla tuz tuketmekten kacinin.", source: "World Health Organization", url: "https://www.who.int/"},
+            {text: "Omega-3 yagli asitler, iltihaplanmayi azaltir ve beyin sagligini destekler.", source: "Harvard Medical School", url: "https://www.health.harvard.edu/"}
+        ],
+        en: [
+            {text: "Walking 30 minutes daily can reduce heart disease risk by up to 35%.", source: "American Heart Association", url: "https://www.heart.org/"},
+            {text: "Adults need 7-9 hours of sleep per night. Poor sleep weakens the immune system.", source: "National Sleep Foundation", url: "https://www.sleepfoundation.org/"},
+            {text: "Drinking 2-3 liters of water daily supports kidney health and boosts metabolism.", source: "European Journal of Clinical Nutrition", url: "https://www.nature.com/ejcn/"},
+            {text: "Regularly skipping breakfast may increase type 2 diabetes risk by 21%.", source: "American Journal of Clinical Nutrition", url: "https://academic.oup.com/ajcn"},
+            {text: "150 minutes of moderate exercise per week significantly reduces depression symptoms.", source: "World Health Organization", url: "https://www.who.int/"},
+            {text: "The Mediterranean diet can reduce cardiovascular events by 30%.", source: "New England Journal of Medicine", url: "https://www.nejm.org/"},
+            {text: "Vitamin D deficiency can cause musculoskeletal pain and fatigue. 15 minutes of sunlight daily is important.", source: "Endocrine Society", url: "https://www.endocrine.org/"},
+            {text: "One year after quitting smoking, heart attack risk drops by half.", source: "CDC", url: "https://www.cdc.gov/"},
+            {text: "Eating 5 servings of fruits and vegetables daily reduces stroke risk by 26%.", source: "The Lancet", url: "https://www.thelancet.com/"},
+            {text: "10 minutes of daily meditation for stress management lowers cortisol levels.", source: "JAMA Internal Medicine", url: "https://jamanetwork.com/journals/jamainternalmedicine"},
+            {text: "Excessive salt intake increases hypertension risk. Avoid consuming more than 5g of salt daily.", source: "World Health Organization", url: "https://www.who.int/"},
+            {text: "Omega-3 fatty acids reduce inflammation and support brain health.", source: "Harvard Medical School", url: "https://www.health.harvard.edu/"}
+        ],
+        ar: [
+            {text: "\u0627\u0644\u0645\u0634\u064a 30 \u062f\u0642\u064a\u0642\u0629 \u064a\u0648\u0645\u064a\u064b\u0627 \u064a\u0645\u0643\u0646 \u0623\u0646 \u064a\u0642\u0644\u0644 \u062e\u0637\u0631 \u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u0642\u0644\u0628 \u0628\u0646\u0633\u0628\u0629 35%.", source: "American Heart Association", url: "https://www.heart.org/"},
+            {text: "\u064a\u062d\u062a\u0627\u062c \u0627\u0644\u0628\u0627\u0644\u063a\u0648\u0646 \u0625\u0644\u0649 7-9 \u0633\u0627\u0639\u0627\u062a \u0646\u0648\u0645 \u0643\u0644 \u0644\u064a\u0644\u0629. \u0642\u0644\u0629 \u0627\u0644\u0646\u0648\u0645 \u062a\u0636\u0639\u0641 \u062c\u0647\u0627\u0632 \u0627\u0644\u0645\u0646\u0627\u0639\u0629.", source: "National Sleep Foundation", url: "https://www.sleepfoundation.org/"},
+            {text: "\u0634\u0631\u0628 2-3 \u0644\u062a\u0631\u0627\u062a \u0645\u0646 \u0627\u0644\u0645\u0627\u0621 \u064a\u0648\u0645\u064a\u064b\u0627 \u064a\u062f\u0639\u0645 \u0635\u062d\u0629 \u0627\u0644\u0643\u0644\u0649 \u0648\u064a\u0639\u0632\u0632 \u0627\u0644\u062a\u0645\u062b\u064a\u0644 \u0627\u0644\u063a\u0630\u0627\u0626\u064a.", source: "European Journal of Clinical Nutrition", url: "https://www.nature.com/ejcn/"},
+            {text: "\u062d\u0645\u064a\u0629 \u0627\u0644\u0628\u062d\u0631 \u0627\u0644\u0623\u0628\u064a\u0636 \u0627\u0644\u0645\u062a\u0648\u0633\u0637 \u064a\u0645\u0643\u0646 \u0623\u0646 \u062a\u0642\u0644\u0644 \u0623\u062d\u062f\u0627\u062b \u0627\u0644\u0642\u0644\u0628 \u0648\u0627\u0644\u0623\u0648\u0639\u064a\u0629 \u0628\u0646\u0633\u0628\u0629 30%.", source: "New England Journal of Medicine", url: "https://www.nejm.org/"},
+            {text: "\u0628\u0639\u062f \u0633\u0646\u0629 \u0648\u0627\u062d\u062f\u0629 \u0645\u0646 \u0627\u0644\u0625\u0642\u0644\u0627\u0639 \u0639\u0646 \u0627\u0644\u062a\u062f\u062e\u064a\u0646\u060c \u064a\u0646\u062e\u0641\u0636 \u062e\u0637\u0631 \u0627\u0644\u0646\u0648\u0628\u0629 \u0627\u0644\u0642\u0644\u0628\u064a\u0629 \u0625\u0644\u0649 \u0627\u0644\u0646\u0635\u0641.", source: "CDC", url: "https://www.cdc.gov/"},
+            {text: "\u062a\u0646\u0627\u0648\u0644 5 \u062d\u0635\u0635 \u0645\u0646 \u0627\u0644\u0641\u0648\u0627\u0643\u0647 \u0648\u0627\u0644\u062e\u0636\u0631\u0648\u0627\u062a \u064a\u0648\u0645\u064a\u064b\u0627 \u064a\u0642\u0644\u0644 \u062e\u0637\u0631 \u0627\u0644\u0633\u0643\u062a\u0629 \u0627\u0644\u062f\u0645\u0627\u063a\u064a\u0629 \u0628\u0646\u0633\u0628\u0629 26%.", source: "The Lancet", url: "https://www.thelancet.com/"}
+        ],
+        zh: [
+            {text: "\u6bcf\u5929\u6b65\u884c30\u5206\u949f\u53ef\u5c06\u5fc3\u810f\u75c5\u98ce\u9669\u964d\u4f4e\u9ad835%\u3002", source: "American Heart Association", url: "https://www.heart.org/"},
+            {text: "\u6210\u4eba\u6bcf\u665a\u9700\u89817-9\u5c0f\u65f6\u7684\u7761\u7720\u3002\u7761\u7720\u4e0d\u8db3\u4f1a\u524a\u5f31\u514d\u75ab\u7cfb\u7edf\u3002", source: "National Sleep Foundation", url: "https://www.sleepfoundation.org/"},
+            {text: "\u6bcf\u5929\u559d2-3\u5347\u6c34\u6709\u52a9\u4e8e\u80be\u810f\u5065\u5eb7\u5e76\u4fc3\u8fdb\u65b0\u9648\u4ee3\u8c22\u3002", source: "European Journal of Clinical Nutrition", url: "https://www.nature.com/ejcn/"},
+            {text: "\u5730\u4e2d\u6d77\u996e\u98df\u53ef\u5c06\u5fc3\u8840\u7ba1\u4e8b\u4ef6\u51cf\u5c1130%\u3002", source: "New England Journal of Medicine", url: "https://www.nejm.org/"},
+            {text: "\u6bcf\u5468150\u5206\u949f\u4e2d\u7b49\u5f3a\u5ea6\u8fd0\u52a8\u53ef\u663e\u8457\u51cf\u5c11\u6291\u90c1\u75c7\u72b6\u3002", source: "World Health Organization", url: "https://www.who.int/"},
+            {text: "\u6bcf\u5929\u98df\u75285\u4efd\u6c34\u679c\u548c\u852c\u83dc\u53ef\u5c06\u4e2d\u98ce\u98ce\u9669\u964d\u4f4e26%\u3002", source: "The Lancet", url: "https://www.thelancet.com/"}
+        ],
+        hi: [
+            {text: "\u0930\u094b\u091c\u093e\u0928\u093e 30 \u092e\u093f\u0928\u091f \u091a\u0932\u0928\u0947 \u0938\u0947 \u0939\u0943\u0926\u092f \u0930\u094b\u0917 \u0915\u093e \u0916\u0924\u0930\u093e 35% \u0924\u0915 \u0915\u092e \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964", source: "American Heart Association", url: "https://www.heart.org/"},
+            {text: "\u0935\u092f\u0938\u094d\u0915\u094b\u0902 \u0915\u094b \u092a\u094d\u0930\u0924\u093f \u0930\u093e\u0924 7-9 \u0918\u0902\u091f\u0947 \u0915\u0940 \u0928\u0940\u0902\u0926 \u0915\u0940 \u0906\u0935\u0936\u094d\u092f\u0915\u0924\u093e \u0939\u094b\u0924\u0940 \u0939\u0948\u0964 \u0916\u0930\u093e\u092c \u0928\u0940\u0902\u0926 \u092a\u094d\u0930\u0924\u093f\u0930\u0915\u094d\u0937\u093e \u092a\u094d\u0930\u0923\u093e\u0932\u0940 \u0915\u094b \u0915\u092e\u091c\u094b\u0930 \u0915\u0930\u0924\u0940 \u0939\u0948\u0964", source: "National Sleep Foundation", url: "https://www.sleepfoundation.org/"},
+            {text: "\u092a\u094d\u0930\u0924\u093f\u0926\u093f\u0928 2-3 \u0932\u0940\u091f\u0930 \u092a\u093e\u0928\u0940 \u092a\u0940\u0928\u0947 \u0938\u0947 \u0917\u0941\u0930\u094d\u0926\u0947 \u0915\u093e \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u092c\u0928\u093e \u0930\u0939\u0924\u093e \u0939\u0948 \u0914\u0930 \u091a\u092f\u093e\u092a\u091a\u092f \u0924\u0947\u091c \u0939\u094b\u0924\u0940 \u0939\u0948\u0964", source: "European Journal of Clinical Nutrition", url: "https://www.nature.com/ejcn/"},
+            {text: "\u092d\u0942\u092e\u0927\u094d\u092f\u0938\u093e\u0917\u0930\u0940\u092f \u0906\u0939\u093e\u0930 \u0939\u0943\u0926\u092f \u0938\u0902\u092c\u0902\u0927\u0940 \u0918\u091f\u0928\u093e\u0913\u0902 \u0915\u094b 30% \u0924\u0915 \u0915\u092e \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948\u0964", source: "New England Journal of Medicine", url: "https://www.nejm.org/"},
+            {text: "\u0927\u0942\u092e\u094d\u0930\u092a\u093e\u0928 \u091b\u094b\u0921\u093c\u0928\u0947 \u0915\u0947 1 \u0938\u093e\u0932 \u092c\u093e\u0926, \u0926\u093f\u0932 \u0915\u0947 \u0926\u094c\u0930\u0947 \u0915\u093e \u0916\u0924\u0930\u093e \u0906\u0927\u093e \u0939\u094b \u091c\u093e\u0924\u093e \u0939\u0948\u0964", source: "CDC", url: "https://www.cdc.gov/"},
+            {text: "\u092a\u094d\u0930\u0924\u093f\u0926\u093f\u0928 5 \u092a\u094b\u0930\u094d\u0936\u0928 \u092b\u0932 \u0914\u0930 \u0938\u092c\u094d\u091c\u093f\u092f\u093e\u0902 \u0916\u093e\u0928\u0947 \u0938\u0947 \u0938\u094d\u091f\u094d\u0930\u094b\u0915 \u0915\u093e \u0916\u0924\u0930\u093e 26% \u0915\u092e \u0939\u094b\u0924\u093e \u0939\u0948\u0964", source: "The Lancet", url: "https://www.thelancet.com/"}
+        ]
+    };
+
+    var currentLang = 'tr';
+
+    function showRandomTip() {
+        var tips = healthTips[currentLang] || healthTips.en;
+        var tip = tips[Math.floor(Math.random() * tips.length)];
+        document.getElementById('tipText').textContent = tip.text;
+        document.getElementById('tipSource').innerHTML = '📚 ' + tip.source + ' — <a href="' + tip.url + '" target="_blank" rel="noopener">' + (currentLang === 'ar' ? '\u0627\u0642\u0631\u0623 \u0627\u0644\u0645\u0632\u064a\u062f' : currentLang === 'zh' ? '\u4e86\u89e3\u66f4\u591a' : currentLang === 'hi' ? '\u0914\u0930 \u092a\u0922\u093c\u0947\u0902' : currentLang === 'en' ? 'Read more' : 'Devamini oku') + '</a>';
+    }
+
+    function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelector('[data-lang="' + lang + '"]').classList.add('active');
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+        var t = translations[lang];
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if (t[key]) el.textContent = t[key];
+        });
+        var titles = {
+            tr: 'drtr.uk - Ucretsiz Online Araclar',
+            en: 'drtr.uk - Free Online Tools | PDF Translator, Excel Matcher, Warfarin Calculator',
+            ar: 'drtr.uk - \u0623\u062f\u0648\u0627\u062a \u0645\u062c\u0627\u0646\u064a\u0629 \u0639\u0628\u0631 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a',
+            zh: 'drtr.uk - \u514d\u8d39\u5728\u7ebf\u5de5\u5177',
+            hi: 'drtr.uk - \u092e\u0941\u092b\u094d\u0924 \u0911\u0928\u0932\u093e\u0907\u0928 \u0909\u092a\u0915\u0930\u0923'
+        };
+        document.title = titles[lang] || titles.en;
+        localStorage.setItem('drtr_lang', lang);
+        showRandomTip();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() { setLang(this.getAttribute('data-lang')); });
+        });
+        var saved = localStorage.getItem('drtr_lang');
+        if (saved && translations[saved]) setLang(saved);
+        showRandomTip();
+    });
+    </script>
+</body>
+</html>

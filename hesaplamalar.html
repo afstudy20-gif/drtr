@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tibbi Hesaplamalar - drtr.uk</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .top-bar a:hover { color: #fff; }
+
+        .top-bar h1 {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .lang-btn {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover { background: #333; color: #fff; }
+
+        .page-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 16px 60px;
+        }
+
+        /* Sidebar Navigation */
+        .nav-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .nav-pill {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #aaa;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-pill:hover { border-color: #555; color: #fff; }
+        .nav-pill.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+
+        /* Calculator Cards */
+        .calc-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .calc-card.active { display: block; }
+
+        .calc-card h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .calc-card .subtitle {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3b82f6;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn:hover { background: #2563eb; }
+
+        .result-box {
+            margin-top: 16px;
+            padding: 16px;
+            background: #0d1b2a;
+            border: 1px solid #1e3a5f;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-box.show { display: block; }
+
+        .result-box .result-title {
+            font-size: 0.8rem;
+            color: #5b9bd5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .result-box .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .result-box .result-detail {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .result-box .result-detail.warning { color: #f59e0b; }
+        .result-box .result-detail.danger { color: #ef4444; }
+        .result-box .result-detail.success { color: #22c55e; }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        .info-note {
+            font-size: 0.78rem;
+            color: #666;
+            margin-top: 12px;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #444;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .top-bar { padding: 12px 16px; }
+            .top-bar h1 { font-size: 0.95rem; }
+            .calc-card { padding: 18px 14px; }
+            .nav-pills { gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="index.html">← drtr.uk</a>
+    <h1 id="pageTitle">Tibbi Hesaplamalar</h1>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+</div>
+
+<div class="page-wrap">
+    <div class="nav-pills" id="navPills"></div>
+
+    <!-- 1. BMI -->
+    <div class="calc-card" id="calc-bmi">
+        <h2 data-tr="BMI / Vucut Kitle Indeksi" data-en="BMI / Body Mass Index">BMI / Vucut Kitle Indeksi</h2>
+        <p class="subtitle" data-tr="Boy, kilo ve bel cevresi ile detayli degerlendirme" data-en="Detailed assessment with height, weight and waist circumference">Boy, kilo ve bel cevresi ile detayli degerlendirme</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Boy (cm)" data-en="Height (cm)">Boy (cm)</label>
+                <input type="number" id="bmi-height" placeholder="170">
+            </div>
+            <div class="form-group">
+                <label data-tr="Kilo (kg)" data-en="Weight (kg)">Kilo (kg)</label>
+                <input type="number" id="bmi-weight" placeholder="75">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Bel Cevresi (cm)" data-en="Waist Circumference (cm)">Bel Cevresi (cm)</label>
+                <input type="number" id="bmi-waist" placeholder="90">
+            </div>
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="bmi-sex">
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                    <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Kalca Cevresi (cm) - opsiyonel" data-en="Hip Circumference (cm) - optional">Kalca Cevresi (cm) - opsiyonel</label>
+                <input type="number" id="bmi-hip" placeholder="100">
+            </div>
+            <div class="form-group">
+                <label data-tr="Yas" data-en="Age">Yas</label>
+                <input type="number" id="bmi-age" placeholder="40">
+            </div>
+        </div>
+        <button class="btn" onclick="calcBMI()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="bmi-result"></div>
+    </div>
+
+    <!-- 2. Framingham 10-Year CVD Risk -->
+    <div class="calc-card" id="calc-framingham">
+        <h2 data-tr="10 Yillik Kardiyovaskuler Risk" data-en="10-Year Cardiovascular Risk">10 Yillik Kardiyovaskuler Risk</h2>
+        <p class="subtitle" data-tr="Framingham Risk Skoru" data-en="Framingham Risk Score">Framingham Risk Skoru</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Yas" data-en="Age">Yas</label>
+                <input type="number" id="fram-age" placeholder="55">
+            </div>
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="fram-sex">
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                    <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Total Kolesterol (mg/dL)" data-en="Total Cholesterol (mg/dL)">Total Kolesterol (mg/dL)</label>
+                <input type="number" id="fram-tc" placeholder="200">
+            </div>
+            <div class="form-group">
+                <label data-tr="HDL Kolesterol (mg/dL)" data-en="HDL Cholesterol (mg/dL)">HDL Kolesterol (mg/dL)</label>
+                <input type="number" id="fram-hdl" placeholder="50">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Sistolik Kan Basinci (mmHg)" data-en="Systolic Blood Pressure (mmHg)">Sistolik Kan Basinci (mmHg)</label>
+                <input type="number" id="fram-sbp" placeholder="130">
+            </div>
+            <div class="form-group">
+                <label data-tr="Antihipertansif Tedavi" data-en="Antihypertensive Treatment">Antihipertansif Tedavi</label>
+                <select id="fram-treat">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Sigara Kullanimi" data-en="Current Smoker">Sigara Kullanimi</label>
+                <select id="fram-smoke">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-tr="Diyabet" data-en="Diabetes">Diyabet</label>
+                <select id="fram-dm">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn" onclick="calcFramingham()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="fram-result"></div>
+    </div>
+
+    <!-- 3. GFR -->
+    <div class="calc-card" id="calc-gfr">
+        <h2 data-tr="eGFR Hesaplama" data-en="eGFR Calculator">eGFR Hesaplama</h2>
+        <p class="subtitle" data-tr="CKD-EPI 2021 formulu" data-en="CKD-EPI 2021 formula">CKD-EPI 2021 formulu</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Serum Kreatinin (mg/dL)" data-en="Serum Creatinine (mg/dL)">Serum Kreatinin (mg/dL)</label>
+                <input type="number" step="0.01" id="gfr-cr" placeholder="1.1">
+            </div>
+            <div class="form-group">
+                <label data-tr="Yas" data-en="Age">Yas</label>
+                <input type="number" id="gfr-age" placeholder="55">
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+            <select id="gfr-sex">
+                <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
+            </select>
+        </div>
+        <button class="btn" onclick="calcGFR()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="gfr-result"></div>
+    </div>
+
+    <!-- 4. LDL -->
+    <div class="calc-card" id="calc-ldl">
+        <h2 data-tr="LDL Kolesterol Hesaplama" data-en="LDL Cholesterol Calculator">LDL Kolesterol Hesaplama</h2>
+        <p class="subtitle" data-tr="Friedewald formulu (TG < 400 mg/dL)" data-en="Friedewald formula (TG < 400 mg/dL)">Friedewald formulu (TG &lt; 400 mg/dL)</p>
+        <div class="form-row-3">
+            <div class="form-group">
+                <label data-tr="Total Kolesterol (mg/dL)" data-en="Total Cholesterol (mg/dL)">Total Kolesterol (mg/dL)</label>
+                <input type="number" id="ldl-tc" placeholder="200">
+            </div>
+            <div class="form-group">
+                <label data-tr="HDL (mg/dL)" data-en="HDL (mg/dL)">HDL (mg/dL)</label>
+                <input type="number" id="ldl-hdl" placeholder="50">
+            </div>
+            <div class="form-group">
+                <label data-tr="Trigliserid (mg/dL)" data-en="Triglycerides (mg/dL)">Trigliserid (mg/dL)</label>
+                <input type="number" id="ldl-tg" placeholder="150">
+            </div>
+        </div>
+        <button class="btn" onclick="calcLDL()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="ldl-result"></div>
+    </div>
+
+    <!-- 5. QTc -->
+    <div class="calc-card" id="calc-qtc">
+        <h2 data-tr="QTc Hesaplama" data-en="QTc Calculator">QTc Hesaplama</h2>
+        <p class="subtitle" data-tr="Bazett ve Fridericia formulleri" data-en="Bazett and Fridericia formulas">Bazett ve Fridericia formulleri</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="QT Suresi (ms)" data-en="QT Interval (ms)">QT Suresi (ms)</label>
+                <input type="number" id="qtc-qt" placeholder="400">
+            </div>
+            <div class="form-group">
+                <label data-tr="Kalp Hizi (bpm)" data-en="Heart Rate (bpm)">Kalp Hizi (bpm)</label>
+                <input type="number" id="qtc-hr" placeholder="72">
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+            <select id="qtc-sex">
+                <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
+            </select>
+        </div>
+        <button class="btn" onclick="calcQTc()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="qtc-result"></div>
+    </div>
+
+    <!-- 6. CHA2DS2-VA (ESC 2024) -->
+    <div class="calc-card" id="calc-chadsvasc">
+        <h2>CHA₂DS₂-VA</h2>
+        <p class="subtitle" data-tr="AF'de inme riski - ESC 2024 (cinsiyet cikarildi)" data-en="Stroke risk in AF - ESC 2024 (sex removed)">AF'de inme riski - ESC 2024 (cinsiyet cikarildi)</p>
+        <div class="checkbox-group" id="chadsvasc-checks">
+            <label><input type="checkbox" id="chad-chf"> <span data-tr="[C] Konjestif Kalp Yetmezligi (+1)" data-en="[C] Congestive Heart Failure (+1)">[C] Konjestif Kalp Yetmezligi (+1)</span></label>
+            <label><input type="checkbox" id="chad-ht"> <span data-tr="[H] Hipertansiyon (+1)" data-en="[H] Hypertension (+1)">[H] Hipertansiyon (+1)</span></label>
+            <label><input type="checkbox" id="chad-age75"> <span data-tr="[A₂] Yas ≥ 75 (+2)" data-en="[A₂] Age ≥ 75 (+2)">[A₂] Yas ≥ 75 (+2)</span></label>
+            <label><input type="checkbox" id="chad-dm"> <span data-tr="[D] Diyabet (+1)" data-en="[D] Diabetes (+1)">[D] Diyabet (+1)</span></label>
+            <label><input type="checkbox" id="chad-stroke"> <span data-tr="[S₂] Inme / TIA / Tromboembolizm (+2)" data-en="[S₂] Stroke / TIA / Thromboembolism (+2)">[S₂] Inme / TIA / Tromboembolizm (+2)</span></label>
+            <label><input type="checkbox" id="chad-vasc"> <span data-tr="[V] Vaskuler Hastalik (MI, PAH, aort plagi) (+1)" data-en="[V] Vascular Disease (MI, PAD, aortic plaque) (+1)">[V] Vaskuler Hastalik (MI, PAH, aort plagi) (+1)</span></label>
+            <label><input type="checkbox" id="chad-age65"> <span data-tr="[A] Yas 65-74 (+1)" data-en="[A] Age 65-74 (+1)">[A] Yas 65-74 (+1)</span></label>
+        </div>
+        <p class="info-note" data-tr="ESC 2024 kilavuzuna gore kadin cinsiyeti bagimsiz risk faktoru olarak cikarilmistir. Maks skor: 8" data-en="Per ESC 2024 guidelines, female sex has been removed as an independent risk factor. Max score: 8">ESC 2024 kilavuzuna gore kadin cinsiyeti bagimsiz risk faktoru olarak cikarilmistir. Maks skor: 8</p>
+        <button class="btn" onclick="calcCHADS()" data-tr="Hesapla" data-en="Calculate" style="margin-top:16px">Hesapla</button>
+        <div class="result-box" id="chadsvasc-result"></div>
+    </div>
+
+    <!-- 7. HAS-BLED -->
+    <div class="calc-card" id="calc-hasbled">
+        <h2>HAS-BLED</h2>
+        <p class="subtitle" data-tr="Antikoagulan tedavide kanama riski" data-en="Bleeding risk on anticoagulation">Antikoagulan tedavide kanama riski</p>
+        <div class="checkbox-group" id="hasbled-checks">
+            <label><input type="checkbox" id="hb-ht"> <span data-tr="Hipertansiyon - sistolik >160 mmHg (+1)" data-en="Hypertension - systolic >160 mmHg (+1)">Hipertansiyon - sistolik >160 mmHg (+1)</span></label>
+            <label><input type="checkbox" id="hb-renal"> <span data-tr="Anormal Bobrek Fonksiyonu (+1)" data-en="Abnormal Renal Function (+1)">Anormal Bobrek Fonksiyonu (+1)</span></label>
+            <label><input type="checkbox" id="hb-liver"> <span data-tr="Anormal Karaciger Fonksiyonu (+1)" data-en="Abnormal Liver Function (+1)">Anormal Karaciger Fonksiyonu (+1)</span></label>
+            <label><input type="checkbox" id="hb-stroke"> <span data-tr="Inme Oykusu (+1)" data-en="Stroke History (+1)">Inme Oykusu (+1)</span></label>
+            <label><input type="checkbox" id="hb-bleed"> <span data-tr="Kanama Oykusu / Predispozisyon (+1)" data-en="Bleeding History / Predisposition (+1)">Kanama Oykusu / Predispozisyon (+1)</span></label>
+            <label><input type="checkbox" id="hb-inr"> <span data-tr="Labil INR (+1)" data-en="Labile INR (+1)">Labil INR (+1)</span></label>
+            <label><input type="checkbox" id="hb-age"> <span data-tr="Yas > 65 (+1)" data-en="Age > 65 (+1)">Yas > 65 (+1)</span></label>
+            <label><input type="checkbox" id="hb-drug"> <span data-tr="Ilac Kullanimi (antiplatelet, NSAID) (+1)" data-en="Drugs (antiplatelet, NSAID) (+1)">Ilac Kullanimi (antiplatelet, NSAID) (+1)</span></label>
+            <label><input type="checkbox" id="hb-alcohol"> <span data-tr="Alkol Kullanimi (+1)" data-en="Alcohol Use (+1)">Alkol Kullanimi (+1)</span></label>
+        </div>
+        <button class="btn" onclick="calcHASBLED()" data-tr="Hesapla" data-en="Calculate" style="margin-top:16px">Hesapla</button>
+        <div class="result-box" id="hasbled-result"></div>
+    </div>
+
+    <!-- 8. Date Difference -->
+    <div class="calc-card" id="calc-datediff">
+        <h2 data-tr="Tarih Farki Hesaplama" data-en="Date Difference Calculator">Tarih Farki Hesaplama</h2>
+        <p class="subtitle" data-tr="Iki tarih arasindaki sureyi hesaplayin" data-en="Calculate the duration between two dates">Iki tarih arasindaki sureyi hesaplayin</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Baslangic Tarihi" data-en="Start Date">Baslangic Tarihi</label>
+                <input type="date" id="date-start">
+            </div>
+            <div class="form-group">
+                <label data-tr="Bitis Tarihi" data-en="End Date">Bitis Tarihi</label>
+                <input type="date" id="date-end">
+            </div>
+        </div>
+        <button class="btn" onclick="calcDateDiff()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="datediff-result"></div>
+    </div>
+
+    <!-- 9. Age Calculator -->
+    <div class="calc-card" id="calc-age">
+        <h2 data-tr="Yas Hesaplama" data-en="Age Calculator">Yas Hesaplama</h2>
+        <p class="subtitle" data-tr="Dogum tarihinden yas hesaplayin" data-en="Calculate age from birth date">Dogum tarihinden yas hesaplayin</p>
+        <div class="form-group">
+            <label data-tr="Dogum Tarihi" data-en="Birth Date">Dogum Tarihi</label>
+            <input type="date" id="age-birth">
+        </div>
+        <button class="btn" onclick="calcAge()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="age-result"></div>
+    </div>
+
+    <!-- 10. Word & Character Counter -->
+    <div class="calc-card" id="calc-wordcount">
+        <h2 data-tr="Kelime ve Karakter Sayaci" data-en="Word & Character Counter">Kelime ve Karakter Sayaci</h2>
+        <p class="subtitle" data-tr="Metin analizi" data-en="Text analysis">Metin analizi</p>
+        <div class="form-group">
+            <label data-tr="Metni yapiştirin veya yazin" data-en="Paste or type your text">Metni yapiştirin veya yazin</label>
+            <textarea id="wc-text" oninput="calcWordCount()"></textarea>
+        </div>
+        <div class="result-box show" id="wc-result">
+            <div class="result-title" data-tr="Sonuc" data-en="Result">Sonuc</div>
+            <div class="result-detail" id="wc-detail">-</div>
+        </div>
+    </div>
+</div>
+
+<footer>&copy; 2026 drtr.uk</footer>
+
+<script>
+// ============ LANGUAGE SYSTEM ============
+let currentLang = 'tr';
+
+const calcNames = {
+    'bmi':        { tr: 'BMI', en: 'BMI' },
+    'framingham': { tr: 'KV Risk', en: 'CV Risk' },
+    'gfr':        { tr: 'eGFR', en: 'eGFR' },
+    'ldl':        { tr: 'LDL', en: 'LDL' },
+    'qtc':        { tr: 'QTc', en: 'QTc' },
+    'chadsvasc':  { tr: 'CHA₂DS₂-VA', en: 'CHA₂DS₂-VA' },
+    'hasbled':    { tr: 'HAS-BLED', en: 'HAS-BLED' },
+    'datediff':   { tr: 'Tarih Farki', en: 'Date Diff' },
+    'age':        { tr: 'Yas', en: 'Age' },
+    'wordcount':  { tr: 'Kelime Sayaci', en: 'Word Count' }
+};
+
+function toggleLang() {
+    currentLang = currentLang === 'tr' ? 'en' : 'tr';
+    document.getElementById('langBtn').textContent = currentLang === 'tr' ? 'EN' : 'TR';
+    document.getElementById('pageTitle').textContent = currentLang === 'tr' ? 'Tibbi Hesaplamalar' : 'Medical Calculators';
+
+    document.querySelectorAll('[data-tr]').forEach(el => {
+        el.textContent = el.getAttribute('data-' + currentLang);
+    });
+
+    // Update select options
+    document.querySelectorAll('select option[data-tr]').forEach(opt => {
+        opt.textContent = opt.getAttribute('data-' + currentLang);
+    });
+
+    // Update nav pills
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+        const key = pill.dataset.calc;
+        if (calcNames[key]) pill.textContent = calcNames[key][currentLang];
+    });
+}
+
+// ============ NAVIGATION ============
+let activeCalc = 'bmi';
+
+function initNav() {
+    const nav = document.getElementById('navPills');
+    Object.keys(calcNames).forEach(key => {
+        const pill = document.createElement('span');
+        pill.className = 'nav-pill' + (key === 'bmi' ? ' active' : '');
+        pill.textContent = calcNames[key][currentLang];
+        pill.dataset.calc = key;
+        pill.onclick = () => showCalc(key);
+        nav.appendChild(pill);
+    });
+    document.getElementById('calc-bmi').classList.add('active');
+}
+
+function showCalc(key) {
+    activeCalc = key;
+    document.querySelectorAll('.calc-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+    document.getElementById('calc-' + key).classList.add('active');
+    document.querySelector(`.nav-pill[data-calc="${key}"]`).classList.add('active');
+}
+
+// ============ HELPER ============
+function showResult(id, title, value, details, cls) {
+    const box = document.getElementById(id);
+    box.innerHTML = `<div class="result-title">${title}</div><div class="result-value">${value}</div>` +
+        (details ? `<div class="result-detail ${cls || ''}">${details}</div>` : '');
+    box.classList.add('show');
+}
+
+function t(tr, en) { return currentLang === 'tr' ? tr : en; }
+
+// ============ 1. BMI ============
+function calcBMI() {
+    const h = parseFloat(document.getElementById('bmi-height').value);
+    const w = parseFloat(document.getElementById('bmi-weight').value);
+    const waist = parseFloat(document.getElementById('bmi-waist').value);
+    const hip = parseFloat(document.getElementById('bmi-hip').value);
+    const sex = document.getElementById('bmi-sex').value;
+    const age = parseFloat(document.getElementById('bmi-age').value);
+
+    if (!h || !w) return;
+
+    const hm = h / 100;
+    const bmi = w / (hm * hm);
+    let cat, cls;
+
+    if (bmi < 18.5) { cat = t('Zayif', 'Underweight'); cls = 'warning'; }
+    else if (bmi < 25) { cat = t('Normal', 'Normal'); cls = 'success'; }
+    else if (bmi < 30) { cat = t('Fazla Kilolu', 'Overweight'); cls = 'warning'; }
+    else if (bmi < 35) { cat = t('Obez Sinif I', 'Obese Class I'); cls = 'danger'; }
+    else if (bmi < 40) { cat = t('Obez Sinif II', 'Obese Class II'); cls = 'danger'; }
+    else { cat = t('Obez Sinif III (Morbid)', 'Obese Class III (Morbid)'); cls = 'danger'; }
+
+    let details = `<strong>${cat}</strong>`;
+
+    // Ideal weight (Devine formula)
+    let idealW;
+    if (sex === 'male') idealW = 50 + 0.91 * (h - 152.4);
+    else idealW = 45.5 + 0.91 * (h - 152.4);
+    details += `<br>${t('Ideal Kilo (Devine):', 'Ideal Weight (Devine):')} ${idealW.toFixed(1)} kg`;
+
+    // BSA (Du Bois)
+    const bsa = 0.007184 * Math.pow(h, 0.725) * Math.pow(w, 0.425);
+    details += `<br>${t('Vucut Yuzey Alani (BSA):', 'Body Surface Area (BSA):')} ${bsa.toFixed(2)} m²`;
+
+    // Waist evaluation
+    if (waist) {
+        const waistRisk = (sex === 'male' && waist > 102) || (sex === 'female' && waist > 88);
+        const waistHigh = (sex === 'male' && waist > 94) || (sex === 'female' && waist > 80);
+        if (waistRisk) details += `<br><span style="color:#ef4444">${t('Bel cevresi: Yuksek risk', 'Waist: High risk')}</span>`;
+        else if (waistHigh) details += `<br><span style="color:#f59e0b">${t('Bel cevresi: Artmis risk', 'Waist: Increased risk')}</span>`;
+        else details += `<br><span style="color:#22c55e">${t('Bel cevresi: Normal', 'Waist: Normal')}</span>`;
+    }
+
+    // Waist-to-Hip Ratio
+    if (waist && hip) {
+        const whr = waist / hip;
+        const whrRisk = (sex === 'male' && whr > 0.90) || (sex === 'female' && whr > 0.85);
+        details += `<br>${t('Bel/Kalca Orani:', 'Waist-to-Hip Ratio:')} ${whr.toFixed(2)}`;
+        if (whrRisk) details += ` <span style="color:#ef4444">(${t('Yuksek', 'High')})</span>`;
+        else details += ` <span style="color:#22c55e">(${t('Normal', 'Normal')})</span>`;
+    }
+
+    // Waist-to-Height Ratio
+    if (waist) {
+        const whtr = waist / h;
+        details += `<br>${t('Bel/Boy Orani:', 'Waist-to-Height Ratio:')} ${whtr.toFixed(2)}`;
+        if (whtr > 0.5) details += ` <span style="color:#ef4444">(${t('Artmis risk', 'Increased risk')})</span>`;
+        else details += ` <span style="color:#22c55e">(${t('Normal', 'Normal')})</span>`;
+    }
+
+    showResult('bmi-result', 'BMI', bmi.toFixed(1) + ' kg/m²', details, cls);
+}
+
+// ============ 2. Framingham ============
+function calcFramingham() {
+    const age = parseFloat(document.getElementById('fram-age').value);
+    const sex = document.getElementById('fram-sex').value;
+    const tc = parseFloat(document.getElementById('fram-tc').value);
+    const hdl = parseFloat(document.getElementById('fram-hdl').value);
+    const sbp = parseFloat(document.getElementById('fram-sbp').value);
+    const treat = parseInt(document.getElementById('fram-treat').value);
+    const smoke = parseInt(document.getElementById('fram-smoke').value);
+    const dm = parseInt(document.getElementById('fram-dm').value);
+
+    if (!age || !tc || !hdl || !sbp) return;
+
+    let risk;
+    if (sex === 'male') {
+        const lnAge = Math.log(age);
+        const lnTC = Math.log(tc);
+        const lnHDL = Math.log(hdl);
+        const lnSBP = Math.log(sbp);
+        const sbpCoef = treat ? 1.99881 : 1.93303;
+
+        const sum = 12.344 * lnAge + 11.853 * lnTC - 2.664 * lnAge * lnTC
+            - 7.990 * lnHDL + 1.769 * lnAge * lnHDL
+            + sbpCoef * lnSBP + 0.549 * smoke + 0.420 * dm;
+        const base = 1 - Math.pow(0.88936, Math.exp(sum - 23.9802));
+        risk = Math.max(0, Math.min(base * 100, 100));
+    } else {
+        const lnAge = Math.log(age);
+        const lnTC = Math.log(tc);
+        const lnHDL = Math.log(hdl);
+        const lnSBP = Math.log(sbp);
+        const sbpCoef = treat ? 2.019 : 1.957;
+
+        const sum = -29.799 * lnAge + 4.884 * lnAge * lnAge
+            + 13.540 * lnTC - 3.114 * lnAge * lnTC
+            - 13.578 * lnHDL + 3.149 * lnAge * lnHDL
+            + sbpCoef * lnSBP + 7.574 * smoke - 1.665 * lnAge * smoke + 0.661 * dm;
+        const base = 1 - Math.pow(0.95012, Math.exp(sum + 29.1817));
+        risk = Math.max(0, Math.min(base * 100, 100));
+    }
+
+    let cls, cat;
+    if (risk < 10) { cls = 'success'; cat = t('Dusuk risk', 'Low risk'); }
+    else if (risk < 20) { cls = 'warning'; cat = t('Orta risk', 'Moderate risk'); }
+    else { cls = 'danger'; cat = t('Yuksek risk', 'High risk'); }
+
+    showResult('fram-result', t('10 Yillik KV Risk', '10-Year CV Risk'),
+        '%' + risk.toFixed(1), `<strong>${cat}</strong>`, cls);
+}
+
+// ============ 3. eGFR (CKD-EPI 2021) ============
+function calcGFR() {
+    const cr = parseFloat(document.getElementById('gfr-cr').value);
+    const age = parseFloat(document.getElementById('gfr-age').value);
+    const sex = document.getElementById('gfr-sex').value;
+
+    if (!cr || !age) return;
+
+    let kappa, alpha, sexCoef;
+    if (sex === 'female') {
+        kappa = 0.7; alpha = -0.241; sexCoef = 1.012;
+    } else {
+        kappa = 0.9; alpha = -0.302; sexCoef = 1.0;
+    }
+
+    const gfr = 142 * Math.pow(Math.min(cr / kappa, 1), alpha) *
+        Math.pow(Math.max(cr / kappa, 1), -1.200) *
+        Math.pow(0.9938, age) * sexCoef;
+
+    let stage, cls;
+    if (gfr >= 90) { stage = t('Evre 1 - Normal', 'Stage 1 - Normal'); cls = 'success'; }
+    else if (gfr >= 60) { stage = t('Evre 2 - Hafif azalmis', 'Stage 2 - Mildly decreased'); cls = 'success'; }
+    else if (gfr >= 45) { stage = t('Evre 3a - Hafif-orta azalmis', 'Stage 3a - Mildly-moderately decreased'); cls = 'warning'; }
+    else if (gfr >= 30) { stage = t('Evre 3b - Orta-siddetli azalmis', 'Stage 3b - Moderately-severely decreased'); cls = 'warning'; }
+    else if (gfr >= 15) { stage = t('Evre 4 - Siddetli azalmis', 'Stage 4 - Severely decreased'); cls = 'danger'; }
+    else { stage = t('Evre 5 - Bobrek yetmezligi', 'Stage 5 - Kidney failure'); cls = 'danger'; }
+
+    showResult('gfr-result', 'eGFR (CKD-EPI 2021)',
+        gfr.toFixed(1) + ' mL/min/1.73m²', stage, cls);
+}
+
+// ============ 4. LDL (Friedewald) ============
+function calcLDL() {
+    const tc = parseFloat(document.getElementById('ldl-tc').value);
+    const hdl = parseFloat(document.getElementById('ldl-hdl').value);
+    const tg = parseFloat(document.getElementById('ldl-tg').value);
+
+    if (!tc || !hdl || !tg) return;
+
+    if (tg >= 400) {
+        showResult('ldl-result', 'LDL', '-',
+            t('Trigliserid >= 400 mg/dL oldugunda Friedewald formulu gecersizdir.',
+              'Friedewald formula is not valid when triglycerides >= 400 mg/dL.'), 'danger');
+        return;
+    }
+
+    const ldl = tc - hdl - (tg / 5);
+
+    let cls, cat;
+    if (ldl < 100) { cls = 'success'; cat = t('Optimal', 'Optimal'); }
+    else if (ldl < 130) { cls = 'success'; cat = t('Normale yakin', 'Near optimal'); }
+    else if (ldl < 160) { cls = 'warning'; cat = t('Sinirda yuksek', 'Borderline high'); }
+    else if (ldl < 190) { cls = 'danger'; cat = t('Yuksek', 'High'); }
+    else { cls = 'danger'; cat = t('Cok yuksek', 'Very high'); }
+
+    const nonHDL = tc - hdl;
+    const details = `<strong>${cat}</strong><br>Non-HDL ${t('Kolesterol', 'Cholesterol')}: ${nonHDL.toFixed(0)} mg/dL<br>TC/HDL ${t('Orani', 'Ratio')}: ${(tc/hdl).toFixed(1)}`;
+
+    showResult('ldl-result', 'LDL (Friedewald)', ldl.toFixed(0) + ' mg/dL', details, cls);
+}
+
+// ============ 5. QTc ============
+function calcQTc() {
+    const qt = parseFloat(document.getElementById('qtc-qt').value);
+    const hr = parseFloat(document.getElementById('qtc-hr').value);
+    const sex = document.getElementById('qtc-sex').value;
+
+    if (!qt || !hr) return;
+
+    const rr = 60 / hr; // seconds
+    const bazett = qt / Math.sqrt(rr);
+    const fridericia = qt / Math.pow(rr, 1 / 3);
+
+    const upperLimit = sex === 'male' ? 450 : 470;
+
+    function evalQTc(val) {
+        if (val > 500) return { cls: 'danger', cat: t('Belirgin uzamis - Yuksek risk', 'Markedly prolonged - High risk') };
+        if (val > upperLimit) return { cls: 'warning', cat: t('Uzamis', 'Prolonged') };
+        return { cls: 'success', cat: t('Normal', 'Normal') };
+    }
+
+    const bEval = evalQTc(bazett);
+    const fEval = evalQTc(fridericia);
+
+    const details = `<strong>Bazett:</strong> ${bazett.toFixed(0)} ms - <span class="${bEval.cls}" style="color:${bEval.cls === 'success' ? '#22c55e' : bEval.cls === 'warning' ? '#f59e0b' : '#ef4444'}">${bEval.cat}</span>` +
+        `<br><strong>Fridericia:</strong> ${fridericia.toFixed(0)} ms - <span style="color:${fEval.cls === 'success' ? '#22c55e' : fEval.cls === 'warning' ? '#f59e0b' : '#ef4444'}">${fEval.cat}</span>` +
+        `<br>RR ${t('intervali', 'interval')}: ${(rr * 1000).toFixed(0)} ms` +
+        `<br>${t('Ust sinir', 'Upper limit')} (${sex === 'male' ? t('Erkek', 'Male') : t('Kadin', 'Female')}): ${upperLimit} ms`;
+
+    showResult('qtc-result', 'QTc', `Bazett: ${bazett.toFixed(0)} ms | Fridericia: ${fridericia.toFixed(0)} ms`, details, '');
+}
+
+// ============ 6. CHA2DS2-VASc ============
+function calcCHADS() {
+    let score = 0;
+    if (document.getElementById('chad-chf').checked) score += 1;
+    if (document.getElementById('chad-ht').checked) score += 1;
+    if (document.getElementById('chad-age75').checked) score += 2;
+    if (document.getElementById('chad-dm').checked) score += 1;
+    if (document.getElementById('chad-stroke').checked) score += 2;
+    if (document.getElementById('chad-vasc').checked) score += 1;
+    if (document.getElementById('chad-age65').checked) score += 1;
+
+    // ESC 2024 CHA₂DS₂-VA annual ischemic stroke risk (%)
+    const riskTable = {
+        0: 0.5, 1: 1.5, 2: 2.9, 3: 5.1, 4: 7.3,
+        5: 11.2, 6: 15.5, 7: 14.7, 8: 19.5
+    };
+
+    const annualRisk = riskTable[score] !== undefined ? riskTable[score] : 19.5;
+    let cls, rec;
+
+    if (score === 0) {
+        cls = 'success';
+        rec = t('Antikoagulan onerilmez', 'No anticoagulation recommended');
+    } else if (score === 1) {
+        cls = 'warning';
+        rec = t('Antikoagulan tedavi dusunulebilir', 'Anticoagulation should be considered');
+    } else {
+        cls = 'danger';
+        rec = t('Antikoagulan tedavi onerilir (OAC)', 'Anticoagulation recommended (OAC)');
+    }
+
+    showResult('chadsvasc-result', 'CHA₂DS₂-VA (ESC 2024)',
+        `${t('Skor', 'Score')}: ${score}`,
+        `${t('Yillik iskemik inme riski', 'Annual ischemic stroke risk')}: %${annualRisk}<br><strong>${rec}</strong>`, cls);
+}
+
+// ============ 7. HAS-BLED ============
+function calcHASBLED() {
+    let score = 0;
+    ['hb-ht','hb-renal','hb-liver','hb-stroke','hb-bleed','hb-inr','hb-age','hb-drug','hb-alcohol'].forEach(id => {
+        if (document.getElementById(id).checked) score += 1;
+    });
+
+    const riskData = {
+        0: 1.13, 1: 1.02, 2: 1.88, 3: 3.74, 4: 8.70, 5: 12.50
+    };
+
+    const annualRisk = riskData[Math.min(score, 5)] || 12.50;
+    let cls, cat;
+
+    if (score <= 2) { cls = 'success'; cat = t('Dusuk kanama riski', 'Low bleeding risk'); }
+    else { cls = 'danger'; cat = t('Yuksek kanama riski - dikkatli takip gerektirir', 'High bleeding risk - requires careful monitoring'); }
+
+    showResult('hasbled-result', 'HAS-BLED',
+        `${t('Skor', 'Score')}: ${score}`,
+        `${t('Yillik majör kanama riski', 'Annual major bleeding risk')}: %${annualRisk}<br><strong>${cat}</strong>`, cls);
+}
+
+// ============ 8. Date Difference ============
+function calcDateDiff() {
+    const start = document.getElementById('date-start').value;
+    const end = document.getElementById('date-end').value;
+    if (!start || !end) return;
+
+    const d1 = new Date(start);
+    const d2 = new Date(end);
+
+    if (d2 < d1) {
+        showResult('datediff-result', t('Hata', 'Error'), '-',
+            t('Bitis tarihi baslangictan once olamaz.', 'End date cannot be before start date.'), 'danger');
+        return;
+    }
+
+    // Total days
+    const diffMs = d2 - d1;
+    const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    // Years, months, days
+    let years = d2.getFullYear() - d1.getFullYear();
+    let months = d2.getMonth() - d1.getMonth();
+    let days = d2.getDate() - d1.getDate();
+
+    if (days < 0) {
+        months--;
+        const prevMonth = new Date(d2.getFullYear(), d2.getMonth(), 0);
+        days += prevMonth.getDate();
+    }
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    const totalWeeks = Math.floor(totalDays / 7);
+    const remainDays = totalDays % 7;
+
+    const detail = `${t('Toplam', 'Total')}: ${totalDays} ${t('gun', 'days')}` +
+        `<br>${totalWeeks} ${t('hafta', 'weeks')} ${remainDays} ${t('gun', 'days')}` +
+        `<br>${t('Toplam ay (yaklasik)', 'Total months (approx)')}: ${(totalDays / 30.44).toFixed(1)}`;
+
+    showResult('datediff-result', t('Tarih Farki', 'Date Difference'),
+        `${years} ${t('yil', 'years')}, ${months} ${t('ay', 'months')}, ${days} ${t('gun', 'days')}`,
+        detail, '');
+}
+
+// ============ 9. Age Calculator ============
+function calcAge() {
+    const birth = document.getElementById('age-birth').value;
+    if (!birth) return;
+
+    const d1 = new Date(birth);
+    const d2 = new Date();
+
+    let years = d2.getFullYear() - d1.getFullYear();
+    let months = d2.getMonth() - d1.getMonth();
+    let days = d2.getDate() - d1.getDate();
+
+    if (days < 0) {
+        months--;
+        const prevMonth = new Date(d2.getFullYear(), d2.getMonth(), 0);
+        days += prevMonth.getDate();
+    }
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    const totalDays = Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+    const totalMonths = years * 12 + months;
+
+    const detail = `${t('Toplam', 'Total')}: ${totalDays.toLocaleString()} ${t('gun', 'days')}` +
+        `<br>${t('Toplam', 'Total')}: ${totalMonths} ${t('ay', 'months')}` +
+        `<br>${t('Toplam hafta', 'Total weeks')}: ${Math.floor(totalDays / 7).toLocaleString()}`;
+
+    showResult('age-result', t('Yas', 'Age'),
+        `${years} ${t('yil', 'years')}, ${months} ${t('ay', 'months')}, ${days} ${t('gun', 'days')}`,
+        detail, '');
+}
+
+// ============ 10. Word & Character Counter ============
+function calcWordCount() {
+    const text = document.getElementById('wc-text').value;
+    const chars = text.length;
+    const charsNoSpace = text.replace(/\s/g, '').length;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    const sentences = text.trim() ? text.split(/[.!?]+/).filter(s => s.trim()).length : 0;
+    const paragraphs = text.trim() ? text.split(/\n\s*\n/).filter(p => p.trim()).length : 0;
+    const lines = text ? text.split('\n').length : 0;
+
+    document.getElementById('wc-detail').innerHTML =
+        `<strong>${t('Kelime', 'Words')}:</strong> ${words}` +
+        ` &nbsp;|&nbsp; <strong>${t('Karakter', 'Characters')}:</strong> ${chars}` +
+        ` &nbsp;|&nbsp; <strong>${t('Karakter (bosluksuz)', 'Chars (no spaces)')}:</strong> ${charsNoSpace}` +
+        `<br><strong>${t('Cumle', 'Sentences')}:</strong> ${sentences}` +
+        ` &nbsp;|&nbsp; <strong>${t('Paragraf', 'Paragraphs')}:</strong> ${paragraphs}` +
+        ` &nbsp;|&nbsp; <strong>${t('Satir', 'Lines')}:</strong> ${lines}`;
+}
+
+// ============ INIT ============
+initNav();
+</script>
+
+</body>
+</html>
