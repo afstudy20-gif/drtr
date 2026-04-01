@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="4" y="4" width="112" height="112" rx="24" fill="url(#bg)"/>
+  <!-- Three module lines (clinical, academic, document) -->
+  <rect x="20" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.9"/>
+  <rect x="48" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.6"/>
+  <rect x="76" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.3"/>
+  <!-- D letter -->
+  <text x="30" y="74" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="56" font-weight="700" fill="#CBD5E1" letter-spacing="-2">D</text>
+  <!-- T letter with teal accent -->
+  <text x="66" y="74" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="56" font-weight="700" fill="#0F766E" letter-spacing="-2">T</text>
+</svg>

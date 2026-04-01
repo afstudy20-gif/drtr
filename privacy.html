@@ -3,30 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gizlilik Politikasi - drtr.uk</title>
-    <meta name="description" content="drtr.uk gizlilik politikasi ve cerez kullanimi hakkinda bilgilendirme.">
+    <title>Gizlilik Politikasi - DrTR Tools</title>
+    <meta name="description" content="DrTR Tools gizlilik politikasi, cerez kullanimi ve veri isleme hakkinda bilgilendirme.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://drtr.uk/privacy.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
+        :root { --navy: #0F172A; --teal: #0F766E; --teal-light: #14B8A6; --gray-100: #F1F5F9; --gray-200: #CBD5E1; --gray-400: #94A3B8; --gray-500: #64748B; --gray-700: #334155; --surface: #151C2C; --border: #1E293B; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f0f;
-            color: #ccc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--navy); color: var(--gray-200); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         .container { max-width: 720px; width: 100%; padding: 40px 20px; }
-        h1 { font-size: 1.8rem; color: #fff; margin-bottom: 24px; text-align: center; }
-        h2 { font-size: 1.2rem; color: #ddd; margin: 24px 0 10px; }
-        p { font-size: 0.92rem; line-height: 1.7; color: #aaa; margin-bottom: 12px; }
-        ul { margin: 8px 0 16px 24px; color: #aaa; font-size: 0.92rem; line-height: 1.7; }
-        a { color: #6b9fff; text-decoration: none; }
+        h1 { font-size: 1.6rem; color: var(--gray-100); margin-bottom: 24px; text-align: center; }
+        h2 { font-size: 1.1rem; color: var(--gray-100); margin: 24px 0 10px; }
+        p { font-size: 0.9rem; line-height: 1.7; color: var(--gray-400); margin-bottom: 12px; }
+        ul { margin: 8px 0 16px 24px; color: var(--gray-400); font-size: 0.9rem; line-height: 1.7; }
+        a { color: var(--teal-light); text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .back { display: inline-block; margin-bottom: 24px; color: #888; font-size: 0.9rem; }
-        footer { text-align: center; padding: 32px 20px; color: #444; font-size: 0.8rem; }
+        .back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; color: var(--gray-500); font-size: 0.85rem; }
+        footer { text-align: center; padding: 32px 20px; color: var(--gray-700); font-size: 0.78rem; }
     </style>
 </head>
 <body>
@@ -35,40 +29,58 @@
         <h1>Gizlilik Politikasi</h1>
         <p><strong>Son guncelleme:</strong> 1 Nisan 2026</p>
 
-        <h2>1. Toplanan Bilgiler</h2>
-        <p>drtr.uk, kullanicilarindan dogrudan kisisel bilgi toplamamaktadir. Sitede kullanici hesabi olusturma veya giris yapma zorunlulugu bulunmamaktadir. Ancak ucuncu taraf hizmetleri (Google AdSense, Google Analytics) araciligiyla asagidaki bilgiler otomatik olarak toplanabilir:</p>
+        <h2>1. Genel Bakis</h2>
+        <p>DrTR Tools (drtr.uk) olarak kullanicilarimizin gizliligini onemsiyoruz. Bu politika, sitemizi ziyaret ettiginizde hangi bilgilerin toplandigi, nasil kullanildigi ve nasil korundugunun aciklamaktadir.</p>
+
+        <h2>2. Toplanan Bilgiler</h2>
+        <p>DrTR Tools, kullanicilarindan dogrudan kisisel bilgi toplamamaktadir. Sitede kullanici hesabi olusturma veya giris yapma zorunlulugu bulunmamaktadir. Ancak ucuncu taraf hizmetleri araciligiyla asagidaki bilgiler otomatik olarak toplanabilir:</p>
         <ul>
-            <li>IP adresi</li>
+            <li>IP adresi (anonimlestirilmis)</li>
             <li>Tarayici turu ve surumu</li>
             <li>Isletim sistemi bilgileri</li>
             <li>Ziyaret edilen sayfalar ve ziyaret suresi</li>
             <li>Yonlendiren URL</li>
+            <li>Cihaz turu (masaustu, mobil, tablet)</li>
         </ul>
 
-        <h2>2. Cerezler (Cookies)</h2>
-        <p>Sitemiz, kullanici deneyimini iyilestirmek ve reklam hizmetleri saglamak icin cerezler kullanmaktadir. Google AdSense, kullanicilara ilgi alanina dayali reklamlar gostermek icin cerezler kullanabilir. Cerez tercihlerinizi tarayici ayarlarinizdan yonetebilirsiniz.</p>
+        <h2>3. Cerezler (Cookies)</h2>
+        <p>Sitemiz asagidaki amaclarla cerezler kullanmaktadir:</p>
+        <ul>
+            <li><strong>Zorunlu cerezler:</strong> Dil tercihlerinizi kaydetmek (localStorage)</li>
+            <li><strong>Analitik cerezler:</strong> Ziyaretci istatistiklerini anlamak icin (Google Analytics - ileride eklenebilir)</li>
+            <li><strong>Reklam cerezleri:</strong> Google AdSense araciligiyla ilgi alanina dayali reklamlar gostermek icin</li>
+        </ul>
+        <p>Cerez tercihlerinizi sitemizin alt kismindaki cerez bildirimi araciligiyla veya tarayici ayarlarinizdan yonetebilirsiniz.</p>
 
-        <h2>3. Google AdSense</h2>
-        <p>Bu sitede Google AdSense reklamlari gosterilmektedir. Google, reklam gosterimi icin DART cerezini kullanabilir. Kullanicilar, Google reklam ayarlari sayfasindan kisisellestirilmis reklamlari devre disi birakabilirler.</p>
+        <h2>4. Google AdSense ve Reklam</h2>
+        <p>Bu sitede Google AdSense reklamlari gosterilmektedir. Google ve reklam partnerleri, reklam gosterimi icin cerezler kullanabilir. Kisisellestirilmis reklamlari devre disi birakmak icin:</p>
+        <ul>
+            <li><a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Reklam Ayarlari</a> sayfasini ziyaret edin</li>
+            <li><a href="https://optout.aboutads.info/" target="_blank" rel="noopener">DAA Opt-out</a> sayfasini kullanin</li>
+        </ul>
         <p>Daha fazla bilgi icin: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Gizlilik Politikasi</a></p>
 
-        <h2>4. Ucuncu Taraf Baglantilari</h2>
-        <p>Sitemiz, ucuncu taraf web sitelerine baglantilar icerebilir. Bu sitelerin gizlilik uygulamalarindan sorumlu degiliz. Ucuncu taraf sitelerine giderken kendi gizlilik politikalarini incelemenizi oneririz.</p>
+        <h2>5. Veri Isleme ve Depolama</h2>
+        <p>Klinik hesaplama araclari (Varfarin Doz Asistani, BMI hesaplayici vb.) tamamen tarayicinizda calisir; girdiginiz veriler sunucularimiza gonderilmez. Dosya ceviri araci (PDF Translator) yuklemelerinizi islem sonrasi otomatik olarak siler.</p>
 
-        <h2>5. Veri Guvenligi</h2>
-        <p>Kullanici verilerinin guvenligini saglamak icin makul teknik onlemler almaktayiz. Ancak internet uzerinden hicbir veri aktarimi veya depolama yontemi %100 guvenli degildir.</p>
+        <h2>6. Ucuncu Taraf Baglantilari</h2>
+        <p>Sitemiz ucuncu taraf web sitelerine baglantilar icerebilir. Bu sitelerin gizlilik uygulamalarindan sorumlu degiliz.</p>
 
-        <h2>6. Cocuklarin Gizliligi</h2>
+        <h2>7. Veri Guvenligi</h2>
+        <p>Kullanici verilerinin guvenligini saglamak icin HTTPS sifreleme ve guncel guvenlik standartlarini kullanmaktayiz.</p>
+
+        <h2>8. Cocuklarin Gizliligi</h2>
         <p>Hizmetlerimiz 13 yasin altindaki cocuklara yonelik degildir. Bilerek 13 yasin altindaki cocuklardan kisisel bilgi toplamamaktayiz.</p>
 
-        <h2>7. Degisiklikler</h2>
-        <p>Bu gizlilik politikasi zaman zaman guncellenebilir. Degisiklikler bu sayfada yayinlanacaktir.</p>
+        <h2>9. Avrupa Birligi Kullanicilari (GDPR)</h2>
+        <p>AB/AEA'dan sitemizi ziyaret eden kullanicilar, GDPR kapsaminda asagidaki haklara sahiptir: verilerine erisim, duzeltme, silme talep etme ve veri tasinabilirligi. Bu haklarinizi kullanmak icin bizimle iletisime gecin.</p>
 
-        <h2>8. Iletisim</h2>
+        <h2>10. Degisiklikler</h2>
+        <p>Bu gizlilik politikasi zaman zaman guncellenebilir. Onemli degisiklikler bu sayfada duyurulacaktir.</p>
+
+        <h2>11. Iletisim</h2>
         <p>Gizlilik politikamizla ilgili sorulariniz icin: <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a></p>
     </div>
-    <footer>
-        <p>&copy; 2026 drtr.uk</p>
-    </footer>
+    <footer><p>&copy; 2026 DrTR Tools</p></footer>
 </body>
 </html>
