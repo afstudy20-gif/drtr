@@ -219,57 +219,78 @@
         /* Hero */
         .hero {
             max-width: 960px;
-            margin: 0 auto;
-            padding: 32px 24px 24px;
+            margin: 20px auto 0;
+            padding: 36px 24px 32px;
             text-align: center;
+            background: linear-gradient(135deg, #F0FDFA 0%, #EFF6FF 50%, #F5F3FF 100%);
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0F766E, #3B82F6, #7C3AED);
         }
 
         .hero h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 800;
             color: var(--text-primary);
             margin-bottom: 12px;
             line-height: 1.3;
         }
 
         .hero p {
-            font-size: 0.92rem;
-            color: var(--text-muted);
+            font-size: 0.93rem;
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
-            line-height: 1.7;
+            line-height: 1.75;
         }
 
         /* Categories */
-        .main { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .main { max-width: 960px; margin: 24px auto 0; padding: 0 24px; }
 
-        .category { margin-bottom: 28px; }
+        .category { margin-bottom: 32px; }
 
         .category-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
         }
+
+        .cat-clinical .category-header { border-bottom-color: #99F6E4; }
+        .cat-academic .category-header { border-bottom-color: #BFDBFE; }
+        .cat-productivity .category-header { border-bottom-color: #DDD6FE; }
 
         .category-icon {
-            width: 28px; height: 28px;
-            border-radius: 6px;
+            width: 32px; height: 32px;
+            border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+            font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
         }
 
-        .cat-clinical .category-icon { background: var(--teal-bg); color: var(--teal); }
-        .cat-academic .category-icon { background: var(--blue-bg); color: var(--blue-accent); }
-        .cat-productivity .category-icon { background: var(--purple-bg); color: var(--purple-accent); }
+        .cat-clinical .category-icon { background: linear-gradient(135deg, #CCFBF1, #99F6E4); color: #0F766E; }
+        .cat-academic .category-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
+        .cat-productivity .category-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
 
         .category-header h3 {
-            font-size: 0.8rem; font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.8px;
+            font-size: 0.85rem; font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 1px;
         }
+
+        .cat-clinical .category-header h3 { color: #0F766E; }
+        .cat-academic .category-header h3 { color: #2563EB; }
+        .cat-productivity .category-header h3 { color: #6D28D9; }
 
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -277,6 +298,7 @@
             display: flex; align-items: center; gap: 14px;
             background: var(--surface);
             border: 1px solid var(--border);
+            border-left-width: 3px;
             border-radius: 10px;
             padding: 14px 16px;
             text-decoration: none;
@@ -285,26 +307,33 @@
             box-shadow: var(--shadow);
         }
 
+        .cat-clinical .tool-card { border-left-color: #0F766E; }
+        .cat-academic .tool-card { border-left-color: #3B82F6; }
+        .cat-productivity .tool-card { border-left-color: #7C3AED; }
+
         .tool-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
         }
 
+        .cat-clinical .tool-card:hover { background: #F0FDFA; border-color: #0F766E; border-left-color: #0F766E; }
+        .cat-academic .tool-card:hover { background: #EFF6FF; border-color: #3B82F6; border-left-color: #3B82F6; }
+        .cat-productivity .tool-card:hover { background: #F5F3FF; border-color: #7C3AED; border-left-color: #7C3AED; }
+
         .tool-icon {
-            width: 36px; height: 36px; border-radius: 8px;
+            width: 38px; height: 38px; border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; font-weight: 700; font-size: 0.75rem;
+            flex-shrink: 0; font-weight: 800; font-size: 0.75rem;
         }
 
-        .cat-clinical .tool-icon { background: var(--teal-bg); color: var(--teal); }
-        .cat-academic .tool-icon { background: var(--blue-bg); color: var(--blue-accent); }
-        .cat-productivity .tool-icon { background: var(--purple-bg); color: var(--purple-accent); }
+        .cat-clinical .tool-icon { background: linear-gradient(135deg, #CCFBF1, #99F6E4); color: #0F766E; }
+        .cat-academic .tool-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
+        .cat-productivity .tool-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
 
-        .tool-info h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+        .tool-info h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
         .tool-info p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
 
-        .tool-arrow { margin-left: auto; color: var(--text-faint); font-size: 1rem; flex-shrink: 0; }
+        .tool-arrow { margin-left: auto; color: var(--text-faint); font-size: 1.1rem; flex-shrink: 0; }
 
         /* FAQ */
         .faq { max-width: 960px; margin: 0 auto; padding: 24px; }
@@ -377,7 +406,15 @@
     <header class="topbar">
         <div class="topbar-inner">
             <a href="/" class="brand">
-                <img src="logo.svg" alt="DrTR Tools" width="36" height="36">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="36" height="36" style="border-radius:8px;flex-shrink:0">
+                  <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0F172A"/><stop offset="100%" stop-color="#1E293B"/></linearGradient></defs>
+                  <rect x="4" y="4" width="112" height="112" rx="24" fill="url(#bg)"/>
+                  <rect x="20" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.9"/>
+                  <rect x="48" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.6"/>
+                  <rect x="76" y="88" width="24" height="4" rx="2" fill="#0F766E" opacity="0.3"/>
+                  <text x="30" y="74" font-family="system-ui,-apple-system,sans-serif" font-size="56" font-weight="700" fill="#CBD5E1" letter-spacing="-2">D</text>
+                  <text x="66" y="74" font-family="system-ui,-apple-system,sans-serif" font-size="56" font-weight="700" fill="#0F766E" letter-spacing="-2">T</text>
+                </svg>
                 <div class="brand-text">
                     <h1>DrTR Tools</h1>
                     <span data-i18n="brand_sub">Clinical, Research & Productivity Tools</span>
