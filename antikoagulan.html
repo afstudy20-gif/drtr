@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antikoagülan Rehberi - DOAC Doz Ayarı & Cerrahi Yönetim | DrTR Tools</title>
+    <meta name="description" content="Oral antikoagülanlar için doz ayarı kılavuzu. Dabigatran, rivaroksaban, apiksan, edoksaban DOAC doz ayarı; cerrahi, diş çekimi ve endoskopi öncesi köprü tedavi ve doz atlama protokolleri.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/antikoagulan.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg: #F8FAFC; --surface: #FFFFFF;
+            --text-primary: #0F172A; --text-secondary: #334155; --text-muted: #64748B; --text-faint: #94A3B8;
+            --border: #E2E8F0; --border-hover: #CBD5E1;
+            --teal: #0F766E; --teal-bg: #F0FDFA; --teal-light: #0D9488;
+            --blue: #1D4ED8; --blue-bg: #EFF6FF; --blue-light: #3B82F6;
+            --orange: #C2410C; --orange-bg: #FFF7ED; --orange-light: #F97316;
+            --red: #B91C1C; --red-bg: #FEF2F2;
+            --yellow: #B45309; --yellow-bg: #FFFBEB;
+            --green: #15803D; --green-bg: #F0FDF4;
+            --purple: #6D28D9; --purple-bg: #F5F3FF;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.09);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-secondary); min-height: 100vh; }
+
+        .topbar { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .topbar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+        .back { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-muted); font-size: 0.84rem; }
+        .back:hover { color: var(--teal); }
+        .topbar h1 { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .topbar span { font-size: 0.72rem; color: var(--teal); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+        .disclaimer-box {
+            background: var(--yellow-bg); border: 1px solid #FCD34D; border-radius: 10px;
+            padding: 16px 20px; margin-bottom: 28px; display: flex; gap: 12px; align-items: flex-start;
+        }
+        .disclaimer-box span { font-size: 1.2rem; flex-shrink: 0; }
+        .disclaimer-box p { font-size: 0.84rem; color: var(--yellow); line-height: 1.6; }
+        .disclaimer-box strong { color: #92400E; }
+
+        .page-header { margin-bottom: 28px; }
+        .page-header h2 { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .page-header p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; }
+
+        /* Tab nav */
+        .tab-nav { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 28px; overflow-x: auto; }
+        .tab-btn { padding: 10px 18px; border: none; background: none; cursor: pointer; font-size: 0.84rem; font-weight: 500; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--teal); }
+        .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Section */
+        .section { margin-bottom: 32px; }
+        .section-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; display: block; width: 4px; height: 18px; background: var(--teal); border-radius: 2px; }
+
+        /* Drug cards */
+        .drug-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+        .drug-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); }
+        .drug-card:hover { box-shadow: var(--shadow-hover); }
+        .drug-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+        .drug-brand { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 12px; }
+        .drug-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .drug-table th { background: var(--bg); padding: 7px 10px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        .drug-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+        .drug-table tr:last-child td { border-bottom: none; }
+        .drug-table .highlight { background: var(--teal-bg); font-weight: 600; color: var(--teal); }
+
+        /* Info box */
+        .info-box { border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 0.84rem; line-height: 1.6; }
+        .info-blue { background: var(--blue-bg); border: 1px solid #BFDBFE; color: var(--blue); }
+        .info-orange { background: var(--orange-bg); border: 1px solid #FED7AA; color: var(--orange); }
+        .info-red { background: var(--red-bg); border: 1px solid #FECACA; color: var(--red); }
+        .info-green { background: var(--green-bg); border: 1px solid #BBF7D0; color: var(--green); }
+        .info-purple { background: var(--purple-bg); border: 1px solid #DDD6FE; color: var(--purple); }
+
+        /* Procedure table */
+        .proc-table-wrap { overflow-x: auto; }
+        .proc-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .proc-table th { background: var(--teal-bg); color: var(--teal); padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #99F6E4; }
+        .proc-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+        .proc-table tr:nth-child(even) td { background: #FAFBFC; }
+        .proc-table .risk-low { color: var(--green); font-weight: 600; }
+        .proc-table .risk-high { color: var(--red); font-weight: 600; }
+        .proc-table .risk-mod { color: var(--orange); font-weight: 600; }
+
+        /* Steps */
+        .steps { list-style: none; counter-reset: step; }
+        .steps li { counter-increment: step; display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .steps li::before { content: counter(step); min-width: 28px; height: 28px; background: var(--teal); color: #fff; border-radius: 50%; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+        .steps li p { font-size: 0.87rem; color: var(--text-secondary); line-height: 1.6; }
+        .steps li strong { color: var(--text-primary); }
+
+        /* Comparison table */
+        .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .cmp-table th { background: var(--navy,#0F172A); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+        .cmp-table th:first-child { background: var(--teal); }
+        .cmp-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        .cmp-table tr:nth-child(even) td { background: #FAFBFC; }
+        .cmp-table td:first-child { font-weight: 600; color: var(--text-primary); }
+        .yes { color: var(--green); }
+        .no { color: var(--red); }
+        .partial { color: var(--orange); }
+
+        .ref-list { font-size: 0.78rem; color: var(--text-muted); line-height: 1.8; margin-top: 12px; }
+        .ref-list a { color: var(--teal); text-decoration: none; }
+        .ref-list a:hover { text-decoration: underline; }
+
+        footer { text-align: center; padding: 24px; color: var(--text-faint); font-size: 0.76rem; border-top: 1px solid var(--border); max-width: 960px; margin: 20px auto 0; }
+        footer a { color: var(--text-muted); text-decoration: none; margin: 0 5px; }
+        footer a:hover { color: var(--teal); }
+
+        @media (max-width: 640px) { .drug-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <a href="/" class="back">&larr; Ana Sayfa</a>
+            <div>
+                <h1>DrTR Tools</h1>
+                <span>Antikoagülan Rehberi</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="disclaimer-box">
+            <span>⚠️</span>
+            <p><strong>Önemli Uyarı:</strong> Bu rehber yalnızca bilgilendirme amacıyla hazırlanmıştır. Antikoagülan tedavi yönetimi bireysel hasta özelliklerine göre farklılık gösterir. Tüm klinik kararlar sorumlu hekim tarafından verilmelidir. Güncel kılavuzları ve ilaç prospektüslerini referans alınız.</p>
+        </div>
+
+        <div class="page-header">
+            <h2>Oral Antikoagülan Rehberi</h2>
+            <p>Varfarin ve DOAC'ların doz ayarı, böbrek/karaciğer yetmezliğinde kullanım, ilaç etkileşimleri ile cerrahi, diş çekimi, endoskopi ve invazif girişimler öncesi yönetim protokolleri.</p>
+        </div>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('doac', this)">DOAC Doz Rehberi</button>
+            <button class="tab-btn" onclick="showTab('cerrahi', this)">Cerrahi & Girişim Öncesi</button>
+            <button class="tab-btn" onclick="showTab('dis', this)">Diş Çekimi</button>
+            <button class="tab-btn" onclick="showTab('endoskopi', this)">Endoskopi</button>
+            <button class="tab-btn" onclick="showTab('warfarin', this)">Varfarin</button>
+            <button class="tab-btn" onclick="showTab('karsilastirma', this)">Karşılaştırma</button>
+        </nav>
+
+        <!-- DOAC DOZ REHBERİ -->
+        <div class="tab-panel active" id="tab-doac">
+            <div class="section">
+                <div class="section-title">Dabigatran (Pradaxa®)</div>
+                <div class="drug-grid">
+                    <div class="drug-card">
+                        <div class="drug-name">Atriyal Fibrilasyon</div>
+                        <div class="drug-brand">İnme profilaksisi – AF</div>
+                        <table class="drug-table">
+                            <tr><th>Durum</th><th>Doz</th></tr>
+                            <tr><td>Standart</td><td class="highlight">150 mg × 2/gün</td></tr>
+                            <tr><td>≥80 yaş veya ilaç etkileşimi</td><td>110 mg × 2/gün</td></tr>
+                            <tr><td>CrCl 30–50 mL/dk</td><td>110 mg × 2/gün (değerlendirin)</td></tr>
+                            <tr><td>CrCl 15–30 mL/dk</td><td>75 mg × 2/gün (TR onayı yok)</td></tr>
+                            <tr><td>CrCl &lt;15 mL/dk</td><td class="no">Kontrendike</td></tr>
+                        </table>
+                    </div>
+                    <div class="drug-card">
+                        <div class="drug-name">VTE Tedavi & Profilaksi</div>
+                        <div class="drug-brand">DVT/PE – Ortopedik profilaksi</div>
+                        <table class="drug-table">
+                            <tr><th>Endikasyon</th><th>Doz</th></tr>
+                            <tr><td>DVT/PE tedavisi (5-10 gün DMAH sonrası)</td><td class="highlight">150 mg × 2/gün</td></tr>
+                            <tr><td>VTE ikincil profilaksi</td><td>150 mg × 2/gün</td></tr>
+                            <tr><td>Diz artroplastisi profilaksi</td><td>110 mg → 220 mg/gün</td></tr>
+                            <tr><td>Kalça artroplastisi profilaksi</td><td>110 mg → 220 mg/gün (28-35 gün)</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="info-blue">💊 <strong>Antagonist:</strong> İdarucizumab (Praxbind®) 5 g IV — tam ve hızlı reversal sağlar. Diyaliz ile uzaklaştırılabilir (%60–70).</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Rivaroksaban (Xarelto®)</div>
+                <div class="drug-grid">
+                    <div class="drug-card">
+                        <div class="drug-name">Atriyal Fibrilasyon</div>
+                        <div class="drug-brand">İnme profilaksisi – AF</div>
+                        <table class="drug-table">
+                            <tr><th>Durum</th><th>Doz</th></tr>
+                            <tr><td>Standart</td><td class="highlight">20 mg × 1/gün (akşam yemeğiyle)</td></tr>
+                            <tr><td>CrCl 15–49 mL/dk</td><td>15 mg × 1/gün (akşam yemeğiyle)</td></tr>
+                            <tr><td>CrCl &lt;15 mL/dk</td><td class="no">Kontrendike</td></tr>
+                        </table>
+                    </div>
+                    <div class="drug-card">
+                        <div class="drug-name">VTE Tedavi</div>
+                        <div class="drug-brand">DVT/PE akut ve uzun dönem</div>
+                        <table class="drug-table">
+                            <tr><th>Dönem</th><th>Doz</th></tr>
+                            <tr><td>İlk 21 gün (akut)</td><td class="highlight">15 mg × 2/gün (yemeğiyle)</td></tr>
+                            <tr><td>22. günden itibaren</td><td>20 mg × 1/gün (yemeğiyle)</td></tr>
+                            <tr><td>Uzun dönem profilaksi</td><td>10 mg × 1/gün</td></tr>
+                            <tr><td>Ortopedik profilaksi</td><td>10 mg × 1/gün</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="info-blue">💊 <strong>Antagonist:</strong> Andeksanet alfa (Ondexxya®) — Faktör Xa inhibitörü reversali. PCC (25–50 IU/kg) alternatif seçenek.</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Apiksan (Eliquis®)</div>
+                <div class="drug-grid">
+                    <div class="drug-card">
+                        <div class="drug-name">Atriyal Fibrilasyon</div>
+                        <div class="drug-brand">İnme profilaksisi – AF</div>
+                        <table class="drug-table">
+                            <tr><th>Durum</th><th>Doz</th></tr>
+                            <tr><td>Standart</td><td class="highlight">5 mg × 2/gün</td></tr>
+                            <tr><td>≥2 kriter*</td><td>2.5 mg × 2/gün</td></tr>
+                            <tr><td>CrCl 15–29 mL/dk</td><td>2.5 mg × 2/gün (dikkatli kullanın)</td></tr>
+                            <tr><td>Diyaliz</td><td>2.5 mg × 2/gün (kısıtlı veri)</td></tr>
+                        </table>
+                    </div>
+                    <div class="drug-card">
+                        <div class="drug-name">VTE Tedavi</div>
+                        <div class="drug-brand">DVT/PE akut ve uzun dönem</div>
+                        <table class="drug-table">
+                            <tr><th>Dönem</th><th>Doz</th></tr>
+                            <tr><td>İlk 7 gün (akut)</td><td class="highlight">10 mg × 2/gün</td></tr>
+                            <tr><td>8. günden itibaren</td><td>5 mg × 2/gün</td></tr>
+                            <tr><td>Uzun dönem profilaksi</td><td>2.5 mg × 2/gün</td></tr>
+                            <tr><td>Ortopedik profilaksi</td><td>2.5 mg × 2/gün</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="info-green">* Doz azaltma kriterleri (≥2 tanesi): yaş ≥80, kilo ≤60 kg, kreatinin ≥1.5 mg/dL</div>
+                <div class="info-blue">💊 <strong>Antagonist:</strong> Andeksanet alfa — Faktör Xa reversali. PCC (25–50 IU/kg) alternatif.</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Edoksaban (Lixiana®)</div>
+                <div class="drug-grid">
+                    <div class="drug-card">
+                        <div class="drug-name">Atriyal Fibrilasyon</div>
+                        <div class="drug-brand">İnme profilaksisi – AF</div>
+                        <table class="drug-table">
+                            <tr><th>Durum</th><th>Doz</th></tr>
+                            <tr><td>Standart</td><td class="highlight">60 mg × 1/gün</td></tr>
+                            <tr><td>CrCl 15–50 mL/dk</td><td>30 mg × 1/gün</td></tr>
+                            <tr><td>Kilo ≤60 kg veya güçlü P-gp inhibitörü</td><td>30 mg × 1/gün</td></tr>
+                            <tr><td>CrCl &lt;15 mL/dk</td><td class="no">Kontrendike</td></tr>
+                        </table>
+                    </div>
+                    <div class="drug-card">
+                        <div class="drug-name">VTE Tedavi</div>
+                        <div class="drug-brand">DVT/PE (5-10 gün parenteral sonrası)</div>
+                        <table class="drug-table">
+                            <tr><th>Durum</th><th>Doz</th></tr>
+                            <tr><td>Standart (≥5 gün DMAH/UFH sonrası)</td><td class="highlight">60 mg × 1/gün</td></tr>
+                            <tr><td>CrCl 15–50 mL/dk veya kilo ≤60 kg</td><td>30 mg × 1/gün</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="info-blue">💊 <strong>Antagonist:</strong> Andeksanet alfa (Ondexxya®). PCC alternatif seçenek.</div>
+            </div>
+        </div>
+
+        <!-- CERRAHİ YÖNETİM -->
+        <div class="tab-panel" id="tab-cerrahi">
+            <div class="section">
+                <div class="info-orange">📋 Bu bölüm ESC 2024, ACC/AHA 2023 ve EHRA 2021 kılavuzları doğrultusunda hazırlanmıştır. Bireysel hasta risk değerlendirmesi gerektirir.</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Prosedür Kanama Risk Sınıflaması</div>
+                <div class="proc-table-wrap">
+                    <table class="proc-table">
+                        <tr><th>Kanama Riski</th><th>Prosedür Örnekleri</th><th>DOAC Yönetimi</th></tr>
+                        <tr>
+                            <td><span class="risk-low">Düşük / İhmal edilebilir</span></td>
+                            <td>Katarakt, göz içi enjeksiyon, yüzeyel deri lezyonu, küçük dermatolojik cerrahi, diş dolgusu</td>
+                            <td>Genellikle kesinti gerekmez veya 1 doz atla</td>
+                        </tr>
+                        <tr>
+                            <td><span class="risk-mod">Orta</span></td>
+                            <td>Diş çekimi (1–3 diş), implant, diş eti cerrahisi, gastroskopi/kolonoskopi (biyopsi yok), ekokardiyografi (TEE), küçük ortopedik prosedürler</td>
+                            <td>Son dozu 24 saat önce kes (dabigatran CrCl&lt;50 ise 36–48 saat)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>Kalça/diz artroplastisi, abdominal cerrahi, torasik cerrahi, nörocerrahi, kardiyak cerrahi, üriner sistem cerrahisi, kolonoskopi+polipektomi, pacemaker implantasyonu</td>
+                            <td>Son dozu 48 saat önce kes (dabigatran CrCl&lt;50 ise 72–96 saat)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">DOAC Kesme ve Yeniden Başlama Protokolü</div>
+                <div class="drug-grid">
+                    <div class="drug-card">
+                        <div class="drug-name">Dabigatran</div>
+                        <div class="drug-brand">Böbrek klirensine bağımlı (%80 renal atılım)</div>
+                        <table class="drug-table">
+                            <tr><th>CrCl</th><th>Orta risk</th><th>Yüksek risk</th></tr>
+                            <tr><td>≥80 mL/dk</td><td>24 saat önce</td><td>48 saat önce</td></tr>
+                            <tr><td>50–79 mL/dk</td><td>36 saat önce</td><td>72 saat önce</td></tr>
+                            <tr><td>30–49 mL/dk</td><td>48 saat önce</td><td>96 saat önce</td></tr>
+                        </table>
+                    </div>
+                    <div class="drug-card">
+                        <div class="drug-name">Rivaroksaban / Apiksan / Edoksaban</div>
+                        <div class="drug-brand">Karaciğer metabolizması ağırlıklı</div>
+                        <table class="drug-table">
+                            <tr><th>Kanama riski</th><th>Kesme zamanı</th></tr>
+                            <tr><td>Orta</td><td class="highlight">24 saat önce</td></tr>
+                            <tr><td>Yüksek</td><td class="highlight">48 saat önce</td></tr>
+                            <tr><td>CrCl &lt;30 (Rivaroksaban)</td><td>+12–24 saat ekle</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="info-green">
+                    <strong>Yeniden başlama:</strong> Hemostaz sağlandıktan sonra:
+                    <ul style="margin-top:6px;margin-left:18px;font-size:0.83rem">
+                        <li>Orta risk prosedürler: 6–8 saat sonra düşük dozla başlayın, 24 saatte tam doza geçin</li>
+                        <li>Yüksek risk prosedürler: 48–72 saat sonra yeniden başlayın</li>
+                        <li>Nörocerrahi / spinal: 24–48 saat bekleyin</li>
+                    </ul>
+                </div>
+
+                <div class="info-purple">
+                    <strong>Köprü (bridge) tedavi hakkında:</strong> DOAC kullanan hastalarda rutin köprü tedavi önerilmez (PERIOP-2 çalışması). Yüksek tromboz riski olan mekanik kalp kapağı hastalarında warfarin ile köprü gereklidir. Varfarin kullanan AF hastalarında köprü tedavinin yararı sınırlıdır.
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Acil Cerrahi / Reversal Protokolü</div>
+                <ol class="steps">
+                    <li><p><strong>Son doz zamanını ve ilacı belirleyin.</strong> Son DOAC dozu ≥12 saat önce alınmışsa antikoagülan etkisi büyük ölçüde azalmış olabilir.</p></li>
+                    <li><p><strong>Böbrek fonksiyonunu değerlendirin.</strong> Dabigatran renal atılım bağımlı olduğundan CrCl ölçümü kritik önem taşır.</p></li>
+                    <li><p><strong>Spesifik antidot kullanın:</strong> Dabigatran → İdarucizumab 5 g IV | Faktör Xa inhibitörleri → Andeksanet alfa veya 4F-PCC 25–50 IU/kg</p></li>
+                    <li><p><strong>Traneksamik asit ekleyin</strong> (1 g IV 10 dk'da). Fibrinolizi inhibe ederek destekleyici etki sağlar.</p></li>
+                    <li><p><strong>Hematolog veya tromboz uzmanına danışın</strong> karmaşık veya yüksek riskli vakalarda.</p></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- DİŞ ÇEKİMİ -->
+        <div class="tab-panel" id="tab-dis">
+            <div class="section">
+                <div class="section-title">Diş Çekimi ve Oral Cerrahi</div>
+                <div class="info-green">
+                    <strong>Genel Prensip:</strong> Tek diş çekimi veya basit oral cerrahide çoğu hastada antikoagülasyonun kesilmesi gerekmez. Yerel hemostatik önlemler (oksitlenmiş selüloz, sıkıştırma, traneksamik asit gargarası) yeterlidir.
+                </div>
+
+                <div class="proc-table-wrap" style="margin-top:16px">
+                    <table class="proc-table">
+                        <tr><th>Prosedür</th><th>Kanama Riski</th><th>DOAC Önerisi</th><th>Varfarin Önerisi</th></tr>
+                        <tr>
+                            <td>1–3 basit diş çekimi</td>
+                            <td><span class="risk-low">Düşük</span></td>
+                            <td>Kesmeyiniz. Son dozu işlemden sonra alın.</td>
+                            <td>Kesmeyiniz. INR ≤3.5 ise devam.</td>
+                        </tr>
+                        <tr>
+                            <td>Birden fazla diş çekimi (≥4)</td>
+                            <td><span class="risk-mod">Orta</span></td>
+                            <td>Son dozu 24 saat önce kesin. İşlemden 6 saat sonra alın.</td>
+                            <td>INR ≤2.5 ise devam, INR ≥3.5 ise erteleme.</td>
+                        </tr>
+                        <tr>
+                            <td>Gömük diş, implant cerrahisi</td>
+                            <td><span class="risk-mod">Orta</span></td>
+                            <td>Son dozu 24–36 saat önce kesin.</td>
+                            <td>INR ≤2.5 ise yürütün.</td>
+                        </tr>
+                        <tr>
+                            <td>Geniş alveoler cerrahi, apse drenajı</td>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>48 saat önce kesin, cerrahi-hematolog konsültasyonu.</td>
+                            <td>Uzman konsültasyonu.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-blue" style="margin-top:16px">
+                    <strong>Yerel hemostatik önlemler:</strong>
+                    <ul style="margin-top:6px;margin-left:18px;font-size:0.83rem">
+                        <li>Sürgelaspon veya oksitlenmiş selüloz alveolusuna yerleştir</li>
+                        <li>Traneksamik asit %5 gargara — 2 dk tutun, 4 × /gün, 5 gün</li>
+                        <li>Rezorbabl sütür koy</li>
+                        <li>Hastayı 1 saat sıkıştırması için gazlı bezle gönderin</li>
+                        <li>İlk 24 saat: sıcak içecek, sigara, egzersiz yasak</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENDOSKOPİ -->
+        <div class="tab-panel" id="tab-endoskopi">
+            <div class="section">
+                <div class="section-title">Endoskopik Prosedürler</div>
+                <div class="info-orange">ESC 2020 ve BSG/ESGE kılavuzlarına dayanmaktadır.</div>
+
+                <div class="proc-table-wrap" style="margin-top:16px">
+                    <table class="proc-table">
+                        <tr><th>Prosedür</th><th>Kanama Riski</th><th>DOAC</th><th>Varfarin</th></tr>
+                        <tr>
+                            <td>Tanısal gastroskopi / kolonoskopi</td>
+                            <td><span class="risk-low">Düşük</span></td>
+                            <td>Kesmeyiniz</td>
+                            <td>Kesmeyiniz</td>
+                        </tr>
+                        <tr>
+                            <td>Gastroskopi + biyopsi</td>
+                            <td><span class="risk-low">Düşük</span></td>
+                            <td>Kesmeyiniz</td>
+                            <td>Kesmeyiniz (INR ≤3)</td>
+                        </tr>
+                        <tr>
+                            <td>Kolonoskopi + polipektomi (küçük, ≤1 cm)</td>
+                            <td><span class="risk-mod">Orta</span></td>
+                            <td>Son dozu 24 saat önce kesin</td>
+                            <td>Devam (INR ≤2.5)</td>
+                        </tr>
+                        <tr>
+                            <td>Kolonoskopi + polipektomi (büyük, &gt;1 cm)</td>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>48 saat önce kesin</td>
+                            <td>Kesme ve köprü değerlendirme</td>
+                        </tr>
+                        <tr>
+                            <td>EUS + ince iğne biyopsi</td>
+                            <td><span class="risk-mod">Orta</span></td>
+                            <td>24 saat önce kesin</td>
+                            <td>INR ≤2.5 ise yürütün</td>
+                        </tr>
+                        <tr>
+                            <td>ERCP + sfinkterotomi</td>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>48 saat önce kesin</td>
+                            <td>Kes, köprü değerlendir</td>
+                        </tr>
+                        <tr>
+                            <td>Peroral endoskopik miyotomi (POEM)</td>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>48 saat önce kesin</td>
+                            <td>Kes, uzman görüşü al</td>
+                        </tr>
+                        <tr>
+                            <td>Özofageal / gastrik band takma</td>
+                            <td><span class="risk-high">Yüksek</span></td>
+                            <td>48 saat önce kesin</td>
+                            <td>Uzman konsültasyonu</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-green" style="margin-top:16px">
+                    <strong>İşlem sonrası DOAC yeniden başlama:</strong> Hemostaz sağlandıktan sonra 6–8 saat bekleyin. Yüksek riskli prosedürlerde 24–48 saat bekleyerek yeniden başlayın.
+                </div>
+            </div>
+        </div>
+
+        <!-- VARFARİN -->
+        <div class="tab-panel" id="tab-warfarin">
+            <div class="section">
+                <div class="section-title">Varfarin Yönetimi</div>
+                <div class="info-blue">Varfarin için ayrıntılı INR tabanlı doz önerileri için <a href="https://varf.drtr.uk/" target="_blank" rel="noopener">Varfarin Doz Asistanımızı</a> kullanabilirsiniz.</div>
+
+                <div class="section-title" style="margin-top:20px">Hedef INR Aralıkları</div>
+                <div class="proc-table-wrap">
+                    <table class="proc-table">
+                        <tr><th>Endikasyon</th><th>Hedef INR</th><th>Notlar</th></tr>
+                        <tr><td>Atriyal fibrilasyon</td><td class="highlight">2.0–3.0</td><td>CHADS₂-VASc skoru ≥2 olan hastalarda</td></tr>
+                        <tr><td>DVT / PE tedavi ve profilaksi</td><td class="highlight">2.0–3.0</td><td></td></tr>
+                        <tr><td>Mekanik aort kapak</td><td class="highlight">2.0–3.0</td><td>Eski model protez veya ek risk faktörü varsa 2.5–3.5</td></tr>
+                        <tr><td>Mekanik mitral kapak</td><td class="highlight">2.5–3.5</td><td>Tromboembolik risk yüksektir</td></tr>
+                        <tr><td>Antifosfolipid sendromu (VTE)</td><td>2.0–3.0</td><td>Tromboz tekrarlıyorsa 3.0–4.0</td></tr>
+                    </table>
+                </div>
+
+                <div class="section-title" style="margin-top:20px">Cerrahi Öncesi Varfarin Yönetimi</div>
+                <ol class="steps">
+                    <li><p><strong>Tromboz riskini değerlendirin:</strong> Düşük (AF, CHA₂DS₂-VASc ≤4), Orta, Yüksek (mekanik kapak, yakın DVT/PE, yüksek riskli AF)</p></li>
+                    <li><p><strong>Düşük tromboembolik risk:</strong> Cerrahiden 5 gün önce kesin. Köprü gerekmez. Cerrahi sonrası hemostaz sağlanınca yeniden başlayın.</p></li>
+                    <li><p><strong>Yüksek tromboembolik risk:</strong> 5 gün önce kesin. INR &lt;2.0 olduğunda DMAH köprüsü başlayın. Son DMAH dozunu 24 saat önce verin.</p></li>
+                    <li><p><strong>Acil reversal:</strong> K vitamini 5–10 mg IV (12–24 saatte etki) + 4F-PCC 25–50 IU/kg (hızlı reversal için)</p></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- KARŞILAŞTIRMA -->
+        <div class="tab-panel" id="tab-karsilastirma">
+            <div class="section">
+                <div class="section-title">DOAC vs Varfarin Karşılaştırması</div>
+                <div class="proc-table-wrap">
+                    <table class="cmp-table">
+                        <tr>
+                            <th>Özellik</th>
+                            <th>Dabigatran</th>
+                            <th>Rivaroksaban</th>
+                            <th>Apiksan</th>
+                            <th>Edoksaban</th>
+                            <th>Varfarin</th>
+                        </tr>
+                        <tr>
+                            <td>Etki mekanizması</td>
+                            <td>Direkt trombin inh.</td>
+                            <td>Faktör Xa inh.</td>
+                            <td>Faktör Xa inh.</td>
+                            <td>Faktör Xa inh.</td>
+                            <td>Vit K antagonisti</td>
+                        </tr>
+                        <tr>
+                            <td>Günlük doz sıklığı</td>
+                            <td>2×/gün</td>
+                            <td>1×/gün (AF)</td>
+                            <td>2×/gün</td>
+                            <td>1×/gün</td>
+                            <td>1×/gün</td>
+                        </tr>
+                        <tr>
+                            <td>Rutin izlem gereksinimi</td>
+                            <td class="yes">Hayır</td>
+                            <td class="yes">Hayır</td>
+                            <td class="yes">Hayır</td>
+                            <td class="yes">Hayır</td>
+                            <td class="no">Evet (INR)</td>
+                        </tr>
+                        <tr>
+                            <td>Spesifik antidot</td>
+                            <td class="yes">İdarucizumab</td>
+                            <td class="partial">Andeksanet alfa</td>
+                            <td class="partial">Andeksanet alfa</td>
+                            <td class="partial">Andeksanet alfa</td>
+                            <td class="yes">K vit / PCC</td>
+                        </tr>
+                        <tr>
+                            <td>Mekanik kalp kapağı</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="yes">Endike</td>
+                        </tr>
+                        <tr>
+                            <td>Gebelik</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="no">Kontrendike</td>
+                            <td class="partial">1./3. trimester kontrendike</td>
+                        </tr>
+                        <tr>
+                            <td>Renal dozaj ayarı</td>
+                            <td class="no">Gerekli (↑renal)</td>
+                            <td class="partial">Gerekli</td>
+                            <td class="partial">Gerekli</td>
+                            <td class="partial">Gerekli</td>
+                            <td class="yes">Genellikle gerekmez</td>
+                        </tr>
+                        <tr>
+                            <td>İlaç-gıda etkileşimi</td>
+                            <td class="yes">Az</td>
+                            <td class="yes">Az</td>
+                            <td class="yes">Az</td>
+                            <td class="yes">Az</td>
+                            <td class="no">Çok (K vitamini)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="ref-list">
+            <strong>Referanslar:</strong><br>
+            • ESC Guidelines on Atrial Fibrillation 2024 — <a href="https://www.escardio.org/Guidelines" target="_blank" rel="noopener">escardio.org</a><br>
+            • EHRA Practical Guide on NOAC Use 2021 — <a href="https://academic.oup.com/europace" target="_blank" rel="noopener">Europace</a><br>
+            • ACC/AHA Guideline on Valvular Heart Disease 2021<br>
+            • BSG/ESGE Endoscopy in Patients on Antiplatelet/Anticoagulant Therapy 2016 (güncel)<br>
+            • Douketis JD et al. Perioperative Management of Anticoagulant Therapy. CHEST 2022
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
+        <p style="margin-top:6px">
+            <a href="/">Ana Sayfa</a> | <a href="https://varf.drtr.uk/" target="_blank">Varfarin Doz Asistanı</a> | <a href="kaynaklar.html">Akademik Kaynaklar</a> | <a href="sozluk.html">Tıp Sözlüğü</a>
+        </p>
+    </footer>
+
+    <script>
+    function showTab(id, btn) {
+        document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.getElementById('tab-' + id).classList.add('active');
+        btn.classList.add('active');
+    }
+    </script>
+</body>
+</html>

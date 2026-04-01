@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademik Kaynaklar & Veritabanları - DrTR Tools</title>
+    <meta name="description" content="PubMed, DergiPark, TRDizin, ULAKBİM, ScienceDirect ve diğer profesyonel akademik veritabanlarına hızlı erişim.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/kaynaklar.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg: #F8FAFC; --surface: #FFFFFF;
+            --text-primary: #0F172A; --text-secondary: #334155; --text-muted: #64748B; --text-faint: #94A3B8;
+            --border: #E2E8F0; --border-hover: #CBD5E1;
+            --teal: #0F766E; --teal-bg: #F0FDFA;
+            --blue: #1D4ED8; --blue-bg: #EFF6FF; --blue-light: #3B82F6;
+            --orange: #C2410C; --orange-bg: #FFF7ED;
+            --purple: #6D28D9; --purple-bg: #F5F3FF;
+            --green: #15803D; --green-bg: #F0FDF4;
+            --red: #B91C1C; --red-bg: #FEF2F2;
+            --shadow: 0 1px 3px rgba(0,0,0,0.07);
+            --shadow-hover: 0 4px 14px rgba(0,0,0,0.10);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-secondary); min-height: 100vh; }
+
+        .topbar { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .topbar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+        .back { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-muted); font-size: 0.84rem; }
+        .back:hover { color: var(--teal); }
+        .topbar h1 { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .topbar span { font-size: 0.72rem; color: var(--teal); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+        .page-header { margin-bottom: 32px; }
+        .page-header h2 { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .page-header p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; max-width: 640px; }
+
+        .search-bar { display: flex; gap: 8px; margin-bottom: 32px; }
+        .search-bar input {
+            flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.88rem; color: var(--text-primary); background: var(--surface); outline: none;
+        }
+        .search-bar input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,0.08); }
+        .search-bar button {
+            padding: 10px 20px; background: var(--teal); color: #fff; border: none;
+            border-radius: 8px; cursor: pointer; font-size: 0.84rem; font-weight: 500;
+        }
+
+        .section { margin-bottom: 36px; }
+        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .section-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+        .section-header h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+        .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+        .resource-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            padding: 16px; text-decoration: none; color: var(--text-secondary);
+            display: flex; flex-direction: column; gap: 6px;
+            transition: all 0.2s; box-shadow: var(--shadow);
+        }
+        .resource-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+        .resource-header { display: flex; align-items: center; gap: 10px; }
+        .resource-badge {
+            font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .resource-card h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+        .resource-card p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.5; }
+        .resource-tag { font-size: 0.68rem; color: var(--text-faint); margin-top: 2px; }
+
+        /* Badge renkleri */
+        .badge-int { background: var(--blue-bg); color: var(--blue); }
+        .badge-tr { background: var(--red-bg); color: var(--red); }
+        .badge-open { background: var(--green-bg); color: var(--green); }
+        .badge-med { background: var(--teal-bg); color: var(--teal); }
+        .badge-sci { background: var(--orange-bg); color: var(--orange); }
+        .badge-guide { background: var(--purple-bg); color: var(--purple); }
+
+        /* Renk temalı sol kenarlık */
+        .sec-pubmed .resource-card { border-left: 3px solid #3B82F6; }
+        .sec-tr .resource-card { border-left: 3px solid #EF4444; }
+        .sec-open .resource-card { border-left: 3px solid #22C55E; }
+        .sec-guide .resource-card { border-left: 3px solid #8B5CF6; }
+        .sec-tool .resource-card { border-left: 3px solid #F59E0B; }
+
+        .featured { background: linear-gradient(135deg, #F0FDFA, #EFF6FF); border-color: #99F6E4; }
+        .featured h4 { color: var(--teal); }
+
+        footer { text-align: center; padding: 24px; color: var(--text-faint); font-size: 0.76rem; border-top: 1px solid var(--border); max-width: 960px; margin: 20px auto 0; }
+        footer a { color: var(--text-muted); text-decoration: none; margin: 0 5px; }
+        footer a:hover { color: var(--teal); }
+
+        @media (max-width: 640px) { .resources-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .resources-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <a href="/" class="back">&larr; Ana Sayfa</a>
+            <div>
+                <h1>DrTR Tools</h1>
+                <span>Akademik Kaynaklar & Veritabanları</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Akademik Kaynaklar & Profesyonel Veritabanları</h2>
+            <p>Sağlık bilimleri araştırmacıları ve klinisyenler için özenle derlenmiş uluslararası ve ulusal akademik veritabanları, kılavuzlar ve referans kaynakları.</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Kaynak ara... (PubMed, DergiPark, ScienceDirect...)" oninput="filterCards()">
+            <button onclick="filterCards()">Ara</button>
+        </div>
+
+        <!-- Uluslararası Biyomedikal -->
+        <section class="section sec-pubmed">
+            <div class="section-header">
+                <div class="section-icon" style="background:#EFF6FF;color:#1D4ED8">Int</div>
+                <h3>Uluslararası Biyomedikal Veritabanları</h3>
+            </div>
+            <div class="resources-grid" id="grid-int">
+                <a href="https://pubmed.ncbi.nlm.nih.gov/" class="resource-card featured" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-int">NIH</span><h4>PubMed / MEDLINE</h4></div>
+                    <p>NLM tarafından yönetilen, 35 milyondan fazla biyomedikal makale içeren dünyanın en kapsamlı tıp veritabanı.</p>
+                    <span class="resource-tag">pubmed.ncbi.nlm.nih.gov</span>
+                </a>
+                <a href="https://www.cochranelibrary.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-int">EBM</span><h4>Cochrane Library</h4></div>
+                    <p>Sistematik derlemeler ve meta-analizler için altın standart. Kanıta dayalı tıbbın temel kaynağı.</p>
+                    <span class="resource-tag">cochranelibrary.com</span>
+                </a>
+                <a href="https://www.sciencedirect.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-sci">Elsevier</span><h4>ScienceDirect</h4></div>
+                    <p>Elsevier'in 18 milyondan fazla makale ve kitap bölümü içeren multidisipliner platformu.</p>
+                    <span class="resource-tag">sciencedirect.com</span>
+                </a>
+                <a href="https://www.embase.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-sci">Elsevier</span><h4>Embase</h4></div>
+                    <p>Farmakoloji ve ilaç araştırmaları için uzmanlaşmış, Avrupa odaklı biyomedikal veritabanı.</p>
+                    <span class="resource-tag">embase.com</span>
+                </a>
+                <a href="https://www.webofscience.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-int">Clarivate</span><h4>Web of Science</h4></div>
+                    <p>Atıf analizi ve etki faktörü hesaplamaları için vazgeçilmez multidisipliner veritabanı.</p>
+                    <span class="resource-tag">webofscience.com</span>
+                </a>
+                <a href="https://www.scopus.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-sci">Elsevier</span><h4>Scopus</h4></div>
+                    <p>Peer-reviewed literatürün en büyük soyut ve atıf veritabanı. 77 milyondan fazla kayıt.</p>
+                    <span class="resource-tag">scopus.com</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Türkiye Akademik -->
+        <section class="section sec-tr">
+            <div class="section-header">
+                <div class="section-icon" style="background:#FEF2F2;color:#B91C1C">TR</div>
+                <h3>Türkiye Akademik Veritabanları</h3>
+            </div>
+            <div class="resources-grid" id="grid-tr">
+                <a href="https://dergipark.org.tr/" class="resource-card featured" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TÜBİTAK</span><h4>DergiPark</h4></div>
+                    <p>TÜBİTAK ULAKBİM tarafından işletilen Türk akademik dergilerinin açık erişim platformu.</p>
+                    <span class="resource-tag">dergipark.org.tr</span>
+                </a>
+                <a href="https://www.ulakbim.gov.tr/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TÜBİTAK</span><h4>ULAKBİM</h4></div>
+                    <p>Türkiye Ulusal Akademik Ağ ve Bilgi Merkezi. Türk akademik kaynaklarının merkezi.</p>
+                    <span class="resource-tag">ulakbim.gov.tr</span>
+                </a>
+                <a href="https://www.trdizin.gov.tr/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TÜBİTAK</span><h4>TR Dizin</h4></div>
+                    <p>Türkiye'nin ulusal atıf dizini. Türk bilim dergilerini uluslararası standartlarda indeksler.</p>
+                    <span class="resource-tag">trdizin.gov.tr</span>
+                </a>
+                <a href="https://www.yok.gov.tr/tez" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">YÖK</span><h4>YÖK Tez Merkezi</h4></div>
+                    <p>Türk üniversitelerinde hazırlanan lisansüstü tezlere erişim sağlayan ulusal tez veritabanı.</p>
+                    <span class="resource-tag">yok.gov.tr/tez</span>
+                </a>
+                <a href="https://www.turkiyeklinikleri.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TR</span><h4>Türkiye Klinikleri</h4></div>
+                    <p>Türk tıp literatürüne odaklanan, açık erişimli hakemli tıp dergileri platformu.</p>
+                    <span class="resource-tag">turkiyeklinikleri.com</span>
+                </a>
+                <a href="https://www.tubitak.gov.tr/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TR</span><h4>TÜBİTAK</h4></div>
+                    <p>Türkiye Bilimsel ve Teknolojik Araştırma Kurumu. Araştırma destek ve kaynak merkezi.</p>
+                    <span class="resource-tag">tubitak.gov.tr</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Açık Erişim -->
+        <section class="section sec-open">
+            <div class="section-header">
+                <div class="section-icon" style="background:#F0FDF4;color:#15803D">OA</div>
+                <h3>Açık Erişim Kaynakları</h3>
+            </div>
+            <div class="resources-grid" id="grid-open">
+                <a href="https://www.ncbi.nlm.nih.gov/pmc/" class="resource-card featured" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>PubMed Central (PMC)</h4></div>
+                    <p>NIH'in açık erişim arşivi. Tam metin biyomedikal makalelere ücretsiz erişim.</p>
+                    <span class="resource-tag">ncbi.nlm.nih.gov/pmc</span>
+                </a>
+                <a href="https://europepmc.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>Europe PMC</h4></div>
+                    <p>Avrupa Biyoinformatik Enstitüsü destekli açık erişim biyomedikal literatür platformu.</p>
+                    <span class="resource-tag">europepmc.org</span>
+                </a>
+                <a href="https://doaj.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>DOAJ</h4></div>
+                    <p>Açık erişim dergilerin dizini. Kaliteli, hakemli açık erişim yayınlara rehber.</p>
+                    <span class="resource-tag">doaj.org</span>
+                </a>
+                <a href="https://unpaywall.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Araç</span><h4>Unpaywall</h4></div>
+                    <p>Makalelerin yasal açık erişim versiyonlarını otomatik bulan tarayıcı eklentisi.</p>
+                    <span class="resource-tag">unpaywall.org</span>
+                </a>
+                <a href="https://scholar.google.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>Google Scholar</h4></div>
+                    <p>Akademik makaleler, tezler, kitaplar ve konferans bildirilerini indeksleyen arama motoru.</p>
+                    <span class="resource-tag">scholar.google.com</span>
+                </a>
+                <a href="https://www.semanticscholar.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Yapay Zekâ</span><h4>Semantic Scholar</h4></div>
+                    <p>Yapay zekâ destekli akademik arama motoru. 220 milyondan fazla makale.</p>
+                    <span class="resource-tag">semanticscholar.org</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Klinik Kılavuzlar -->
+        <section class="section sec-guide">
+            <div class="section-header">
+                <div class="section-icon" style="background:#F5F3FF;color:#6D28D9">Kıl</div>
+                <h3>Klinik Kılavuzlar & Profesyonel Kuruluşlar</h3>
+            </div>
+            <div class="resources-grid" id="grid-guide">
+                <a href="https://www.uptodate.com/" class="resource-card featured" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-guide">Klinik</span><h4>UpToDate</h4></div>
+                    <p>Kanıta dayalı klinik karar destek kaynağı. Güncel tedavi kılavuzları ve uzman önerileri.</p>
+                    <span class="resource-tag">uptodate.com</span>
+                </a>
+                <a href="https://www.nice.org.uk/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-guide">UK</span><h4>NICE Guidelines</h4></div>
+                    <p>İngiltere Ulusal Sağlık ve Bakım Mükemmelliyet Enstitüsü klinik uygulama kılavuzları.</p>
+                    <span class="resource-tag">nice.org.uk</span>
+                </a>
+                <a href="https://www.escardio.org/Guidelines" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-guide">ESC</span><h4>ESC Kılavuzları</h4></div>
+                    <p>Avrupa Kardiyoloji Derneği'nin güncel kardiyoloji pratik kılavuzları.</p>
+                    <span class="resource-tag">escardio.org/Guidelines</span>
+                </a>
+                <a href="https://www.who.int/publications" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-guide">WHO</span><h4>WHO Yayınları</h4></div>
+                    <p>Dünya Sağlık Örgütü kılavuzları, raporları ve teknik dokümanları.</p>
+                    <span class="resource-tag">who.int/publications</span>
+                </a>
+                <a href="https://www.acc.org/guidelines" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-guide">ACC</span><h4>ACC/AHA Kılavuzları</h4></div>
+                    <p>Amerikan Kardiyoloji Koleji ve Amerikan Kalp Derneği kardiyoloji kılavuzları.</p>
+                    <span class="resource-tag">acc.org/guidelines</span>
+                </a>
+                <a href="https://www.turkishheart.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TR</span><h4>Türk Kardiyoloji Derneği</h4></div>
+                    <p>Türk kardiyoloji uzmanlarının kılavuzları, kongreler ve eğitim kaynakları.</p>
+                    <span class="resource-tag">turkishheart.org</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Araştırma Araçları -->
+        <section class="section sec-tool">
+            <div class="section-header">
+                <div class="section-icon" style="background:#FFFBEB;color:#D97706">Araç</div>
+                <h3>Araştırma & Referans Yönetimi Araçları</h3>
+            </div>
+            <div class="resources-grid" id="grid-tool">
+                <a href="https://www.zotero.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>Zotero</h4></div>
+                    <p>Açık kaynaklı referans yönetimi yazılımı. Makale topla, düzenle ve atıf oluştur.</p>
+                    <span class="resource-tag">zotero.org</span>
+                </a>
+                <a href="https://www.mendeley.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-sci">Elsevier</span><h4>Mendeley</h4></div>
+                    <p>PDF okuma, not alma ve atıf yönetimini birleştiren araştırmacı platformu.</p>
+                    <span class="resource-tag">mendeley.com</span>
+                </a>
+                <a href="https://www.endnote.com/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-int">Clarivate</span><h4>EndNote</h4></div>
+                    <p>Profesyonel referans yönetimi yazılımı. Büyük çaplı araştırmalar için tercih edilen çözüm.</p>
+                    <span class="resource-tag">endnote.com</span>
+                </a>
+                <a href="https://www.researchgate.net/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-int">Ağ</span><h4>ResearchGate</h4></div>
+                    <p>Araştırmacılar için sosyal ağ. Makale paylaşımı, işbirliği ve atıf takibi.</p>
+                    <span class="resource-tag">researchgate.net</span>
+                </a>
+                <a href="https://orcid.org/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-open">Ücretsiz</span><h4>ORCID</h4></div>
+                    <p>Araştırmacılara kalıcı kimlik numarası sağlayan uluslararası sistem.</p>
+                    <span class="resource-tag">orcid.org</span>
+                </a>
+                <a href="https://atif.drtr.uk/" class="resource-card featured" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-med">DrTR</span><h4>Doçentlik Atıf Sistemi</h4></div>
+                    <p>ÜAK standartlarında atıf yönetimi ve PDF rapor oluşturma aracımız.</p>
+                    <span class="resource-tag">atif.drtr.uk</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
+        <p style="margin-top:6px">
+            <a href="/">Ana Sayfa</a> | <a href="sozluk.html">Tıp Sözlüğü</a> | <a href="antikoagulan.html">Antikoagülan Rehberi</a> | <a href="about.html">Hakkımızda</a>
+        </p>
+    </footer>
+
+    <script>
+    function filterCards() {
+        var q = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.resource-card').forEach(function(card) {
+            var text = card.textContent.toLowerCase();
+            card.style.display = text.includes(q) ? '' : 'none';
+        });
+    }
+    </script>
+</body>
+</html>

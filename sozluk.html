@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tıp Sözlüğü - DrTR Tools</title>
+    <meta name="description" content="Türkçe-İngilizce tıbbi terimler sözlüğü. Klinik, farmakoloji, anatomi ve laboratuvar terimlerini arayın.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/sozluk.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg: #F8FAFC; --surface: #FFFFFF;
+            --text-primary: #0F172A; --text-secondary: #334155; --text-muted: #64748B; --text-faint: #94A3B8;
+            --border: #E2E8F0; --border-hover: #CBD5E1;
+            --teal: #0F766E; --teal-bg: #F0FDFA; --teal-light: #0D9488;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.09);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-secondary); min-height: 100vh; }
+
+        .topbar { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .topbar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+        .back { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-muted); font-size: 0.84rem; }
+        .back:hover { color: var(--teal); }
+        .topbar h1 { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .topbar span { font-size: 0.72rem; color: var(--teal); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+        .page-header { margin-bottom: 24px; }
+        .page-header h2 { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .page-header p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+        .search-area { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); }
+        .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .search-row input {
+            flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.9rem; color: var(--text-primary); outline: none;
+        }
+        .search-row input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,0.08); }
+        .search-row button { padding: 10px 20px; background: var(--teal); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.84rem; font-weight: 500; }
+        .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+        .filter-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 16px; background: none; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+        .filter-btn:hover, .filter-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+        .stats { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; }
+        .stats span { font-weight: 600; color: var(--teal); }
+
+        .alphabet { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 20px; }
+        .alpha-btn { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+        .alpha-btn:hover, .alpha-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+        .terms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .term-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            padding: 14px 16px; box-shadow: var(--shadow); transition: all 0.2s;
+        }
+        .term-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-hover); }
+        .term-card.hidden { display: none; }
+
+        .term-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+        .term-tr { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+        .term-en { font-size: 0.8rem; color: var(--teal-light); font-style: italic; }
+        .term-cat { font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+        .cat-klinik { background: #F0FDFA; color: #0F766E; }
+        .cat-farma { background: #EFF6FF; color: #1D4ED8; }
+        .cat-anatomi { background: #FFF7ED; color: #C2410C; }
+        .cat-lab { background: #F0FDF4; color: #15803D; }
+        .cat-cerrahi { background: #F5F3FF; color: #6D28D9; }
+        .cat-kardio { background: #FEF2F2; color: #B91C1C; }
+        .cat-noro { background: #FFFBEB; color: #D97706; }
+        .cat-gis { background: #FDF4FF; color: #9333EA; }
+
+        .term-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+        .term-abbr { font-size: 0.72rem; color: var(--text-faint); margin-top: 4px; }
+
+        .no-result { text-align: center; padding: 48px; color: var(--text-muted); font-size: 0.9rem; display: none; }
+
+        footer { text-align: center; padding: 24px; color: var(--text-faint); font-size: 0.76rem; border-top: 1px solid var(--border); max-width: 960px; margin: 20px auto 0; }
+        footer a { color: var(--text-muted); text-decoration: none; margin: 0 5px; }
+        footer a:hover { color: var(--teal); }
+
+        @media (max-width: 640px) { .terms-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <a href="/" class="back">&larr; Ana Sayfa</a>
+            <div>
+                <h1>DrTR Tools</h1>
+                <span>Tıp Sözlüğü</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Tıp Sözlüğü</h2>
+            <p>Türkçe–İngilizce tıbbi terimler sözlüğü. Klinik, farmakoloji, anatomi, laboratuvar ve cerrahi alanlarını kapsar.</p>
+        </div>
+
+        <div class="search-area">
+            <div class="search-row">
+                <input type="text" id="termSearch" placeholder="Türkçe veya İngilizce terim arayın... (örn: hipertansiyon, tachycardia)" oninput="filterTerms()">
+                <button onclick="filterTerms()">Ara</button>
+            </div>
+            <div class="filter-row">
+                <button class="filter-btn active" onclick="setCategory('tümü', this)">Tümü</button>
+                <button class="filter-btn" onclick="setCategory('klinik', this)">Klinik</button>
+                <button class="filter-btn" onclick="setCategory('farma', this)">Farmakoloji</button>
+                <button class="filter-btn" onclick="setCategory('anatomi', this)">Anatomi</button>
+                <button class="filter-btn" onclick="setCategory('lab', this)">Laboratuvar</button>
+                <button class="filter-btn" onclick="setCategory('kardio', this)">Kardiyoloji</button>
+                <button class="filter-btn" onclick="setCategory('noro', this)">Nöroloji</button>
+                <button class="filter-btn" onclick="setCategory('cerrahi', this)">Cerrahi</button>
+                <button class="filter-btn" onclick="setCategory('gis', this)">Gastroenteroloji</button>
+            </div>
+        </div>
+
+        <div class="alphabet" id="alphabetBar"></div>
+
+        <div class="stats">Toplam <span id="visibleCount">0</span> terim gösteriliyor</div>
+
+        <div class="terms-grid" id="termsGrid"></div>
+        <div class="no-result" id="noResult">Arama kriterlerinize uygun terim bulunamadı.</div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
+        <p style="margin-top:6px">
+            <a href="/">Ana Sayfa</a> | <a href="kaynaklar.html">Akademik Kaynaklar</a> | <a href="antikoagulan.html">Antikoagülan Rehberi</a>
+        </p>
+    </footer>
+
+    <script>
+    var terms = [
+        // KLİNİK
+        {tr:"Hipertansiyon", en:"Hypertension", cat:"kardio", desc:"Sistolik ≥140 mmHg veya diastolik ≥90 mmHg olarak tanımlanan kronik yüksek kan basıncı durumu.", abbr:"HT, HTN"},
+        {tr:"Hipotansiyon", en:"Hypotension", cat:"kardio", desc:"Sistolik kan basıncının 90 mmHg'nin altına düşmesi durumu.", abbr:""},
+        {tr:"Taşikardi", en:"Tachycardia", cat:"kardio", desc:"İstirahat kalp hızının dakikada 100'ün üzerinde olması.", abbr:""},
+        {tr:"Bradikardi", en:"Bradycardia", cat:"kardio", desc:"İstirahat kalp hızının dakikada 60'ın altında olması.", abbr:""},
+        {tr:"Atriyal fibrilasyon", en:"Atrial Fibrillation", cat:"kardio", desc:"Atriyumların düzensiz ve hızlı elektriksel aktivitesiyle karakterize en sık görülen kalp ritim bozukluğu.", abbr:"AF, AFib"},
+        {tr:"Miyokard enfarktüsü", en:"Myocardial Infarction", cat:"kardio", desc:"Koroner arterin tıkanması sonucu kalp kasının bir bölgesinin oksijensiz kalarak hasar görmesi.", abbr:"MI, AMI, Kalp krizi"},
+        {tr:"Kalp yetmezliği", en:"Heart Failure", cat:"kardio", desc:"Kalbin vücudun ihtiyacına yeterli kan pompalamasında yetersiz kaldığı klinik sendrom.", abbr:"KY, HF"},
+        {tr:"Anjina pektoris", en:"Angina Pectoris", cat:"kardio", desc:"Koroner arterlerdeki yetersiz kan akımına bağlı göğüs ağrısı veya baskı hissi.", abbr:"AP"},
+        {tr:"İnme", en:"Stroke", cat:"noro", desc:"Beyin damarının tıkanması (iskemik) veya yırtılması (hemorajik) sonucu gelişen nörolojik defisit.", abbr:"CVA, Serebrovasküler olay"},
+        {tr:"Transient iskemik atak", en:"Transient Ischemic Attack", cat:"noro", desc:"24 saatten kısa süren, görüntülemede infarkt saptanmayan geçici nörolojik belirti.", abbr:"TİA, TIA"},
+        {tr:"Epilepsi", en:"Epilepsy", cat:"noro", desc:"Nöronların aşırı ve senkron aktivasyonu sonucu tekrarlayan nöbetlerle karakterize kronik beyin hastalığı.", abbr:""},
+        {tr:"Nöbet", en:"Seizure", cat:"noro", desc:"Anormal, aşırı veya senkron nöronal aktivitenin yol açtığı geçici belirti veya belirti kümeleri.", abbr:""},
+        {tr:"Demans", en:"Dementia", cat:"noro", desc:"Günlük işlevleri etkileyen, bellek ve bilişsel işlevlerde ilerleyici gerileme ile karakterize sendrom.", abbr:""},
+        {tr:"Diyabet mellitüs", en:"Diabetes Mellitus", cat:"klinik", desc:"İnsülin eksikliği veya direnci nedeniyle oluşan kronik hiperglisemi ile karakterize metabolik hastalık.", abbr:"DM, Şeker hastalığı"},
+        {tr:"Hipoglisemi", en:"Hypoglycemia", cat:"klinik", desc:"Kan şekerinin 70 mg/dL'nin altına düşmesi durumu; titreme, terleme ve bilinç bozukluğuna yol açabilir.", abbr:""},
+        {tr:"Hiperglisemi", en:"Hyperglycemia", cat:"klinik", desc:"Kan şekerinin normalin üzerinde olması (>180 mg/dL). Diyabetin temel bulgusudur.", abbr:""},
+        {tr:"Hipotiroidi", en:"Hypothyroidism", cat:"klinik", desc:"Tiroid bezinin yetersiz tiroid hormonu üretmesi durumu. Halsizlik, kilo alımı ve soğuk intoleransı ile seyreder.", abbr:""},
+        {tr:"Hipertiroidi", en:"Hyperthyroidism", cat:"klinik", desc:"Tiroid bezinin aşırı tiroid hormonu üretmesi. Çarpıntı, kilo kaybı ve sinirlilik ile seyreder.", abbr:""},
+        {tr:"Pnömoni", en:"Pneumonia", cat:"klinik", desc:"Akciğer parankiminin enfeksiyona bağlı iltihabı; ateş, öksürük ve nefes darlığı ile seyreder.", abbr:""},
+        {tr:"Kronik obstrüktif akciğer hastalığı", en:"Chronic Obstructive Pulmonary Disease", cat:"klinik", desc:"Kalıcı hava yolu kısıtlılığıyla karakterize ilerleyici akciğer hastalığı. Amfizem ve kronik bronşiti kapsar.", abbr:"KOAH, COPD"},
+        {tr:"Astım", en:"Asthma", cat:"klinik", desc:"Hava yollarının kronik iltihaplanması, aşırı duyarlılığı ve geri dönüşümlü obstrüksiyonuyla karakterize hastalık.", abbr:""},
+        {tr:"Sepsis", en:"Sepsis", cat:"klinik", desc:"Enfeksiyona karşı kontrolsüz konak yanıtı sonucu gelişen hayatı tehdit eden organ disfonksiyonu.", abbr:""},
+        {tr:"Şok", en:"Shock", cat:"klinik", desc:"Doku perfüzyonunun yetersiz kalmasıyla sonuçlanan akut dolaşım yetmezliği.", abbr:""},
+        {tr:"Akut böbrek hasarı", en:"Acute Kidney Injury", cat:"klinik", desc:"Böbrek fonksiyonunun ani ve hızlı kötüleşmesi; kreatinin yükselmesi ve idrar çıkışında azalma.", abbr:"ABH, AKI"},
+        {tr:"Kronik böbrek hastalığı", en:"Chronic Kidney Disease", cat:"klinik", desc:"Böbrek yapı veya fonksiyon bozukluğunun 3 aydan uzun sürmesi. eGFR <60 mL/dk/1.73m² ile tanımlanır.", abbr:"KBH, CKD"},
+        {tr:"Anemi", en:"Anemia", cat:"klinik", desc:"Hemoglobin seviyesinin normal değerlerin altına düşmesi. Erkeklerde <13 g/dL, kadınlarda <12 g/dL.", abbr:""},
+        {tr:"Trombositopeni", en:"Thrombocytopenia", cat:"lab", desc:"Trombosit sayısının 150.000/μL'nin altına düşmesi.", abbr:""},
+        {tr:"Lökositoz", en:"Leukocytosis", cat:"lab", desc:"Beyaz küre sayısının 11.000/μL'nin üzerine çıkması. Genellikle enfeksiyon veya inflamasyon göstergesi.", abbr:""},
+        {tr:"Lökopeni", en:"Leukopenia", cat:"lab", desc:"Beyaz küre sayısının 4.000/μL'nin altına düşmesi.", abbr:""},
+        {tr:"Hiponatremi", en:"Hyponatremia", cat:"lab", desc:"Serum sodyumunun 135 mEq/L'nin altına düşmesi; baş ağrısı, bulantı ve nöbet riskiyle seyreder.", abbr:""},
+        {tr:"Hipernatremi", en:"Hypernatremia", cat:"lab", desc:"Serum sodyumunun 145 mEq/L'nin üzerine çıkması; dehidratasyon ile ilişkilidir.", abbr:""},
+        {tr:"Hipokalemi", en:"Hypokalemia", cat:"lab", desc:"Serum potasyumunun 3.5 mEq/L'nin altına düşmesi; kas güçsüzlüğü ve ritim bozukluğuna yol açabilir.", abbr:""},
+        {tr:"Hiperkalemi", en:"Hyperkalemia", cat:"lab", desc:"Serum potasyumunun 5.0 mEq/L'nin üzerine çıkması; kardiyak toksisite riski taşır.", abbr:""},
+        // FARMAKOLOJİ
+        {tr:"Antikoagülan", en:"Anticoagulant", cat:"farma", desc:"Kan pıhtılaşmasını önleyen veya geciktiren ilaç grubu. Varfarin, heparin, DOAC'lar bu gruptandır.", abbr:""},
+        {tr:"Antiplatelet", en:"Antiplatelet", cat:"farma", desc:"Trombosit agregasyonunu inhibe eden ilaçlar. Aspirin ve klopidogrel en yaygın örneklerdir.", abbr:""},
+        {tr:"Beta bloker", en:"Beta Blocker", cat:"farma", desc:"Beta-adrenerjik reseptörleri bloke ederek kalp hızı ve kan basıncını düşüren ilaç grubu.", abbr:"BB, β-bloker"},
+        {tr:"ACE inhibitörü", en:"ACE Inhibitor", cat:"farma", desc:"Anjiotensin dönüştürücü enzimi inhibe ederek kan basıncını düşüren ilaç grubu.", abbr:"ACEi"},
+        {tr:"ARB", en:"Angiotensin Receptor Blocker", cat:"farma", desc:"Anjiotensin II reseptörlerini bloke ederek kan basıncını düşüren ilaç grubu.", abbr:"ARB, Sartan"},
+        {tr:"Statin", en:"Statin / HMG-CoA Reductase Inhibitor", cat:"farma", desc:"Kolesterol sentezini inhibe eden, kardiyovasküler riski azaltan ilaç grubu.", abbr:""},
+        {tr:"Proton pompası inhibitörü", en:"Proton Pump Inhibitor", cat:"farma", desc:"Mide asidi sekresyonunu azaltan, ülser ve reflü tedavisinde kullanılan ilaç grubu.", abbr:"PPI"},
+        {tr:"NSAID", en:"Non-Steroidal Anti-Inflammatory Drug", cat:"farma", desc:"COX enzimlerini inhibe ederek ağrı, ateş ve iltihabı gideren ilaç grubu.", abbr:"NSAİİ"},
+        {tr:"Kortikosteroid", en:"Corticosteroid", cat:"farma", desc:"Güçlü antiinflamatuvar ve immünsüpresif etkilere sahip steroid hormonları.", abbr:""},
+        {tr:"Biyoyararlanım", en:"Bioavailability", cat:"farma", desc:"Uygulanan ilacın değişmeden sistemik dolaşıma ulaşan fraksiyonu.", abbr:"F"},
+        {tr:"Yarı ömür", en:"Half-life", cat:"farma", desc:"Plazmadaki ilaç konsantrasyonunun %50 azalması için geçen süre.", abbr:"t₁/₂"},
+        {tr:"İlk geçiş etkisi", en:"First-pass Effect", cat:"farma", desc:"Oral alınan ilacın karaciğerde metabolize edilmesi sonucu sistemik biyoyararlanımının azalması.", abbr:""},
+        // ANATOMİ
+        {tr:"Miyokard", en:"Myocardium", cat:"anatomi", desc:"Kalp kasını oluşturan özel çizgili kas dokusu.", abbr:""},
+        {tr:"Perikardit", en:"Pericarditis", cat:"kardio", desc:"Kalbi çevreleyen perikard zarının iltihabı. Göğüs ağrısı ve sürtünme sesi ile karakterizedir.", abbr:""},
+        {tr:"Aorta", en:"Aorta", cat:"anatomi", desc:"Kalpten çıkan en büyük arter. Sol ventrikülden başlar ve tüm vücuda kan taşır.", abbr:""},
+        {tr:"Femoral arter", en:"Femoral Artery", cat:"anatomi", desc:"İnguinal ligamanın altında devam eden, uyluk bölgesinin ana arteri.", abbr:""},
+        {tr:"Karotis", en:"Carotid Artery", cat:"anatomi", desc:"Beyne kan taşıyan boyundaki büyük arterler. İç ve dış karotis olarak ikiye ayrılır.", abbr:""},
+        {tr:"Glomerül", en:"Glomerulus", cat:"anatomi", desc:"Böbrekteki Bowman kapsülü içinde yer alan kılcal damar kümesi; ilk filtrasyon burada gerçekleşir.", abbr:""},
+        {tr:"Hepatosit", en:"Hepatocyte", cat:"anatomi", desc:"Karaciğerin ana hücreleri; metabolizma, detoksifikasyon ve protein sentezinden sorumludur.", abbr:""},
+        // CERRAHİ
+        {tr:"Laparoskopi", en:"Laparoscopy", cat:"cerrahi", desc:"Karın duvarına küçük kesiler yapılarak optik kamera ile gerçekleştirilen minimal invazif cerrahi yöntemi.", abbr:""},
+        {tr:"Anastomoz", en:"Anastomosis", cat:"cerrahi", desc:"İki içi boş yapının (bağırsak, damar) cerrahi olarak birleştirilmesi.", abbr:""},
+        {tr:"Debridman", en:"Debridement", cat:"cerrahi", desc:"Yaradaki nekrotik, enfekte veya cansız dokunun cerrahi olarak temizlenmesi.", abbr:""},
+        {tr:"Hemostaz", en:"Hemostasis", cat:"cerrahi", desc:"Kanama kontrolü süreci; primer (trombosit tıkacı) ve sekonder (koagülasyon kaskadı) hemostazı kapsar.", abbr:""},
+        // GASTROENTEROLOJİ
+        {tr:"Gastrointestinal", en:"Gastrointestinal", cat:"gis", desc:"Ağızdan anüse kadar uzanan sindirim sistemi ile ilgili.", abbr:"GİS, GI"},
+        {tr:"Peptik ülser", en:"Peptic Ulcer", cat:"gis", desc:"Mide asidi ve pepsinin etkisiyle mide veya duodenum mukozasında oluşan yara.", abbr:""},
+        {tr:"Gaströzofageal reflü", en:"Gastroesophageal Reflux Disease", cat:"gis", desc:"Mide içeriğinin özofagusa kaçması sonucu oluşan semptom ve komplikasyon topluluğu.", abbr:"GÖRH, GERD"},
+        {tr:"Siroz", en:"Cirrhosis", cat:"gis", desc:"Karaciğerde uzun süreli hasar sonucu gelişen fibrozis ve nodüler rejenerasyonla karakterize son dönem hastalığı.", abbr:""},
+        {tr:"Kolestaz", en:"Cholestasis", cat:"gis", desc:"Safra akışının durması veya azalması; kaşıntı, sarılık ve alkalen fosfataz yüksekliği ile seyreder.", abbr:""},
+        // LAB
+        {tr:"C-reaktif protein", en:"C-Reactive Protein", cat:"lab", desc:"Karaciğerde üretilen akut faz reaktanı; enfeksiyon ve inflamasyonun özgül olmayan belirteci.", abbr:"CRP"},
+        {tr:"Prokalsitonin", en:"Procalcitonin", cat:"lab", desc:"Bakteriyel enfeksiyonun özgül biyobelirteci; sepsis tanı ve izleminde kullanılır.", abbr:"PCT"},
+        {tr:"Troponin", en:"Troponin", cat:"lab", desc:"Kardiyak hasar belirteci. Miyokard enfarktüsü tanısında yüksek duyarlılığa sahiptir.", abbr:"cTnI, cTnT"},
+        {tr:"BNP / NT-proBNP", en:"Brain Natriuretic Peptide", cat:"lab", desc:"Kalp yetmezliği tanı ve izleminde kullanılan nörohormonal belirteç.", abbr:"BNP, NT-proBNP"},
+        {tr:"HbA1c", en:"Glycated Hemoglobin", cat:"lab", desc:"Son 2-3 ayın ortalama kan şekerini yansıtan belirteç; diyabet tanı ve takibinde kullanılır.", abbr:"Glikozillenmiş hemoglobin"},
+        {tr:"INR", en:"International Normalized Ratio", cat:"lab", desc:"Protrombin zamanının standardize edilmiş ifadesi. Varfarin tedavi takibinde kullanılır.", abbr:"PT/INR"},
+        {tr:"eGFR", en:"Estimated Glomerular Filtration Rate", cat:"lab", desc:"Böbrek fonksiyonunu değerlendiren tahmini glomerüler filtrasyon hızı. CKD-EPI formülü ile hesaplanır.", abbr:""},
+        {tr:"Kreatinin", en:"Creatinine", cat:"lab", desc:"Kas metabolizması sonucu oluşan ve böbreklerden atılan katabolit; böbrek fonksiyon belirteci.", abbr:"Cr"},
+        {tr:"Üre", en:"Blood Urea Nitrogen", cat:"lab", desc:"Protein metabolizmasının son ürünü; böbrek atılımına bağlıdır.", abbr:"BUN"},
+        {tr:"ALT / SGPT", en:"Alanine Aminotransferase", cat:"lab", desc:"Karaciğer hasarının özgül belirteci; hepatosit hasarında yükselir.", abbr:"ALT, SGPT"},
+        {tr:"AST / SGOT", en:"Aspartate Aminotransferase", cat:"lab", desc:"Karaciğer ve kas hasarı belirteci. ALT ile birlikte değerlendirilir.", abbr:"AST, SGOT"},
+    ];
+
+    var currentCategory = 'tümü';
+
+    function renderTerms(list) {
+        var grid = document.getElementById('termsGrid');
+        var noResult = document.getElementById('noResult');
+        if (list.length === 0) {
+            grid.innerHTML = '';
+            noResult.style.display = 'block';
+            document.getElementById('visibleCount').textContent = '0';
+            return;
+        }
+        noResult.style.display = 'none';
+        document.getElementById('visibleCount').textContent = list.length;
+        grid.innerHTML = list.map(function(t) {
+            return '<div class="term-card" data-cat="' + t.cat + '">' +
+                '<div class="term-header">' +
+                '<div><div class="term-tr">' + t.tr + '</div>' +
+                '<div class="term-en">' + t.en + '</div></div>' +
+                '<span class="term-cat cat-' + t.cat + '">' + t.cat + '</span>' +
+                '</div>' +
+                '<p class="term-desc">' + t.desc + '</p>' +
+                (t.abbr ? '<div class="term-abbr">Kısaltma: ' + t.abbr + '</div>' : '') +
+                '</div>';
+        }).join('');
+    }
+
+    function filterTerms() {
+        var q = document.getElementById('termSearch').value.toLowerCase().trim();
+        var filtered = terms.filter(function(t) {
+            var matchCat = currentCategory === 'tümü' || t.cat === currentCategory;
+            var matchQ = !q || t.tr.toLowerCase().includes(q) || t.en.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || (t.abbr && t.abbr.toLowerCase().includes(q));
+            return matchCat && matchQ;
+        });
+        filtered.sort(function(a,b){ return a.tr.localeCompare(b.tr,'tr'); });
+        renderTerms(filtered);
+    }
+
+    function setCategory(cat, btn) {
+        currentCategory = cat;
+        document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('termSearch').value = '';
+        filterTerms();
+    }
+
+    function buildAlphabet() {
+        var bar = document.getElementById('alphabetBar');
+        var letters = 'ABCDEFGHİJKLMNOÖPRSTUÜVY'.split('');
+        bar.innerHTML = letters.map(function(l) {
+            return '<button class="alpha-btn" onclick="jumpLetter(\'' + l + '\')">' + l + '</button>';
+        }).join('');
+    }
+
+    function jumpLetter(l) {
+        var q = l.toLowerCase();
+        var found = terms.find(function(t){ return t.tr.toLowerCase().startsWith(q); });
+        if (found) {
+            currentCategory = 'tümü';
+            document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+            document.querySelector('.filter-btn').classList.add('active');
+            document.getElementById('termSearch').value = l;
+            filterTerms();
+        }
+    }
+
+    buildAlphabet();
+    filterTerms();
+    </script>
+</body>
+</html>
