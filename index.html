@@ -137,12 +137,12 @@
 
         .clock-date { font-weight: 600; color: var(--text-secondary); }
 
-        .weather-strip { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-muted); }
-        .ws-location { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; margin-right: 2px; }
-        .weather-slot { display: flex; flex-direction: column; align-items: center; gap: 1px; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 7px; padding: 4px 7px; min-width: 38px; }
-        .weather-slot .ws-icon { font-size: 1rem; line-height: 1; }
-        .weather-slot .ws-temp { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); }
-        .weather-slot .ws-hour { font-size: 0.65rem; color: var(--text-faint); }
+        .weather-strip { display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; font-size: 0.72rem; color: var(--text-muted); }
+        .ws-location { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; margin-right: 1px; }
+        .weather-slot { display: flex; flex-direction: column; align-items: center; gap: 1px; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 7px; padding: 3px 6px; min-width: 34px; }
+        .weather-slot .ws-icon { font-size: 0.88rem; line-height: 1; }
+        .weather-slot .ws-temp { font-size: 0.68rem; font-weight: 600; color: var(--text-secondary); }
+        .weather-slot .ws-hour { font-size: 0.62rem; color: var(--text-faint); }
 
         .lang-switcher { display: flex; gap: 3px; flex-wrap: wrap; }
 
@@ -1019,7 +1019,7 @@
                 .then(function(r) { return r.json(); })
                 .then(function(geo) {
                     var a = geo.address || {};
-                    cityName = a.city || a.town || a.village || a.municipality || a.county || a.state_district || '';
+                    cityName = a.city_district || a.suburb || a.neighbourhood || a.town || a.village || a.city || a.county || '';
                     applyCity();
                 }).catch(function() {});
 
