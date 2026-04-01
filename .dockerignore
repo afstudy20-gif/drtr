@@ -2,4 +2,3 @@
 .claude
 .dockerignore
 Dockerfile
-nginx.conf
