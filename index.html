@@ -1008,17 +1008,19 @@
             var lat = pos.coords.latitude.toFixed(4);
             var lon = pos.coords.longitude.toFixed(4);
             var strip = document.getElementById('weather-strip');
+            var cityName = '';
 
-            // Reverse geocode for city name
+            function applyCity() {
+                var loc = strip ? strip.querySelector('.ws-location') : null;
+                if (loc && cityName) loc.textContent = cityName;
+            }
+
             fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
                 .then(function(r) { return r.json(); })
                 .then(function(geo) {
                     var a = geo.address || {};
-                    var city = a.city || a.town || a.village || a.county || '';
-                    if (city && strip) {
-                        var loc = strip.querySelector('.ws-location');
-                        if (loc) loc.textContent = city;
-                    }
+                    cityName = a.city || a.town || a.village || a.municipality || a.county || a.state_district || '';
+                    applyCity();
                 }).catch(function() {});
 
             var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
@@ -1039,7 +1041,7 @@
                         '<span class="ws-hour">' + String(h).padStart(2,'0') + ':00</span></div>';
                     shown++;
                 }
-                if (shown && strip) strip.innerHTML = html;
+                if (shown && strip) { strip.innerHTML = html; applyCity(); }
             }).catch(function() {});
         }, function() {}, { timeout: 8000 });
     }
