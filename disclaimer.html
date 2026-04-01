@@ -19,16 +19,23 @@
         ul { margin: 8px 0 16px 24px; color: var(--gray-400); font-size: 0.9rem; line-height: 1.7; }
         a { color: var(--teal-light); text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; color: var(--gray-500); font-size: 0.85rem; }
+        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .back { display: inline-flex; align-items: center; gap: 6px; color: var(--gray-500); font-size: 0.85rem; }
+        .lang-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; font-weight: 600; color: var(--gray-500); cursor: pointer; letter-spacing: 0.5px; }
+        .lang-btn:hover { color: var(--teal-light); border-color: var(--teal-light); }
         .warning-box { background: #7C2D1222; border: 1px solid #7C2D1244; border-radius: 10px; padding: 20px; margin: 20px 0; }
         .warning-box h3 { color: #FCA5A5; font-size: 0.95rem; margin-bottom: 8px; }
         .warning-box p { color: #FDA4AF; }
         footer { text-align: center; padding: 32px 20px; color: var(--gray-700); font-size: 0.78rem; }
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
-        <a href="/" class="back">&larr; Ana Sayfa</a>
+        <div class="nav-row">
+            <a href="/" class="back">&larr; Ana Sayfa</a>
+            <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+        </div>
         <h1>Tibbi Sorumluluk Reddi</h1>
         <p><strong>Son guncelleme:</strong> 1 Nisan 2026</p>
 
@@ -72,5 +79,13 @@
         <p>Tibbi iceriklerimizle ilgili soru veya onerileriniz icin: <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a></p>
     </div>
     <footer><p>&copy; 2026 DrTR Tools</p></footer>
+    <script>
+    var _lang = 'tr';
+    function toggleLang() {
+        _lang = _lang === 'tr' ? 'en' : 'tr';
+        document.getElementById('langBtn').textContent = _lang === 'tr' ? 'EN' : 'TR';
+        document.documentElement.lang = _lang;
+    }
+    </script>
 </body>
 </html>

@@ -305,6 +305,19 @@ const themeToggle = document.querySelector("#theme-toggle");
 const drugInput = document.querySelector("#drug-input");
 const clearHistoryButton = document.querySelector("#clear-history");
 
+// ─── Language Toggle ─────────────────────────────────────────────────
+
+let _appLang = 'tr';
+function toggleLang() {
+  _appLang = _appLang === 'tr' ? 'en' : 'tr';
+  const btn = document.getElementById('langBtn');
+  if (btn) btn.textContent = _appLang === 'tr' ? 'EN' : 'TR';
+  document.documentElement.lang = _appLang;
+  document.querySelectorAll('[data-tr]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + _appLang);
+  });
+}
+
 // ─── Theme ──────────────────────────────────────────────────────────
 
 function initTheme() {

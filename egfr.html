@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eGFR Calculator (CKD-EPI 2021) — Kidney Function & CKD Staging | DrTR Tools</title>
+  <meta name="description" content="Free eGFR calculator using the race-free CKD-EPI 2021 equation. Enter serum creatinine, age, and sex to estimate glomerular filtration rate and determine CKD stage with clinical guidance.">
+  <meta name="keywords" content="eGFR calculator, CKD-EPI 2021, creatinine calculator, kidney function, GFR, chronic kidney disease staging, KDIGO, estimated glomerular filtration rate">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/egfr.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://drtr.uk/egfr.html">
+  <meta property="og:title" content="eGFR Calculator (CKD-EPI 2021) | DrTR Tools">
+  <meta property="og:description" content="Calculate eGFR using the race-free CKD-EPI 2021 equation. Get CKD stage, clinical interpretation, and drug dosing guidance.">
+  <meta property="og:site_name" content="DrTR Tools">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="eGFR Calculator (CKD-EPI 2021) | DrTR Tools">
+  <meta name="twitter:description" content="Free online eGFR calculator. CKD-EPI 2021 formula, race-free, CKD staging included.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "eGFR Calculator (CKD-EPI 2021)",
+    "url": "https://drtr.uk/egfr.html",
+    "description": "Estimates glomerular filtration rate using the race-free CKD-EPI 2021 equation with automatic CKD staging per KDIGO guidelines.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "DrTR Tools", "url": "https://drtr.uk" },
+    "dateModified": "2026-04-01",
+    "medicalSpecialty": "Nephrology"
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #F8FAFC; --surface: #FFFFFF;
+      --text-primary: #0F172A; --text-secondary: #334155;
+      --text-muted: #64748B; --text-faint: #94A3B8;
+      --border: #E2E8F0; --teal: #0F766E; --teal-bg: #F0FDFA;
+      --blue: #1D4ED8; --blue-bg: #EFF6FF;
+      --good: #15803D; --good-bg: #F0FDF4;
+      --warn: #B45309; --warn-bg: #FFFBEB;
+      --danger: #B91C1C; --danger-bg: #FEF2F2;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-secondary); }
+
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .topbar-inner { max-width: 860px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-weight: 700; font-size: 0.95rem; }
+    .nav-logo { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg,#0F172A,#1E293B); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; color: #0F766E; flex-shrink: 0; }
+    .nav-back { font-size: 0.82rem; color: var(--teal); text-decoration: none; padding: 5px 12px; border-radius: 6px; background: var(--teal-bg); font-weight: 600; }
+    .lang-toggle { font-size: 0.78rem; background: var(--border); border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; color: var(--text-muted); font-weight: 600; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 32px 24px 60px; }
+
+    .hero { margin-bottom: 28px; }
+    .hero-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); background: var(--teal-bg); padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+    .hero h1 { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; margin-bottom: 12px; }
+    .hero p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
+    .hero-stats { display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
+    .stat { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+    .stat strong { color: var(--text-secondary); }
+
+    .layout { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+    @media(max-width:640px) { .layout { grid-template-columns: 1fr; } .hero h1 { font-size: 1.4rem; } }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
+    .card-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 10px; }
+    .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .field label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); }
+    .field input, .field select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font: inherit; font-size: 0.9rem; background: #fff; color: var(--text-primary); outline: none; }
+    .field input:focus, .field select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,0.1); }
+
+    .calc-btn { width: 100%; padding: 11px; background: var(--teal); color: #fff; border: none; border-radius: 9px; font: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 4px; transition: background 0.2s; }
+    .calc-btn:hover { background: #0d6460; }
+
+    .result-box { margin-top: 14px; padding: 14px; border-radius: 10px; display: none; }
+    .result-box.show { display: block; }
+    .result-box.success { background: var(--good-bg); border: 1px solid #BBF7D0; }
+    .result-box.warning { background: var(--warn-bg); border: 1px solid #FDE68A; }
+    .result-box.danger { background: var(--danger-bg); border: 1px solid #FECACA; }
+    .result-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
+    .result-value { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .result-detail { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6; }
+
+    .full-width { grid-column: 1 / -1; }
+
+    .stage-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 12px; }
+    .stage-table th { text-align: left; padding: 7px 10px; background: var(--bg); color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid var(--border); }
+    .stage-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+    .stage-table tr:last-child td { border-bottom: 0; }
+
+    .section { margin-top: 32px; }
+    .section h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--teal-bg); }
+    .section p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 20px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.8; }
+
+    .formula-box { background: var(--blue-bg); border: 1px solid #BFDBFE; border-radius: 10px; padding: 16px; font-family: 'SF Mono', 'Fira Mono', monospace; font-size: 0.82rem; color: #1E3A5F; line-height: 1.7; margin: 12px 0; }
+
+    .faq-item { border-bottom: 1px solid var(--border); padding: 12px 0; }
+    .faq-item summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .faq-item summary::after { content: '+'; color: var(--text-faint); font-size: 1.1rem; font-weight: 300; flex-shrink: 0; }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-item p { margin-top: 8px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.65; }
+
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    @media(max-width:600px){ .related-grid { grid-template-columns: 1fr; } }
+    .related-card { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.82rem; transition: box-shadow 0.2s; }
+    .related-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+    .related-card strong { color: var(--text-primary); font-size: 0.85rem; }
+
+    .disclaimer { margin-top: 28px; padding: 14px 16px; background: var(--warn-bg); border: 1px solid #FDE68A; border-radius: 10px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: 0.82rem; color: var(--text-muted); padding: 5px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .ref-list li:last-child { border: 0; }
+    .ref-list a { color: var(--teal); text-decoration: none; }
+    .ref-list a:hover { text-decoration: underline; }
+
+    footer { text-align: center; padding: 20px; color: var(--text-faint); font-size: 0.76rem; border-top: 1px solid var(--border); max-width: 860px; margin: 0 auto; }
+    footer a { color: var(--text-muted); text-decoration: none; margin: 0 5px; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">DT</div>
+      DrTR Tools
+    </a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="/hesaplamalar.html" class="nav-back">← Tüm Hesaplamalar</a>
+      <button class="lang-toggle" onclick="toggleLang()" id="langBtn">TR</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge" data-en="Nephrology · Clinical Tool" data-tr="Nefroloji · Klinik Araç">Nephrology · Clinical Tool</div>
+    <h1 data-en="eGFR Calculator — CKD-EPI 2021" data-tr="eGFR Hesaplayıcı — CKD-EPI 2021">eGFR Calculator — CKD-EPI 2021</h1>
+    <p data-en="Calculate estimated glomerular filtration rate (eGFR) using the race-free CKD-EPI 2021 equation. Automatic CKD staging per KDIGO 2024 guidelines with drug dosing context." data-tr="CKD-EPI 2021 (ırk bağımsız) formülüyle tahmini glomerüler filtrasyon hızını (eGFR) hesaplayın. KDIGO 2024 kılavuzuna göre otomatik KBH evreleme ve ilaç dozu rehberliği.">Calculate estimated glomerular filtration rate (eGFR) using the race-free CKD-EPI 2021 equation. Automatic CKD staging per KDIGO 2024 guidelines with drug dosing context.</p>
+    <div class="hero-stats">
+      <span class="stat"><strong>CKD-EPI 2021</strong> · race-free</span>
+      <span class="stat"><strong>KDIGO 2024</strong> staging</span>
+      <span class="stat" data-en="Validated for adults" data-tr="Erişkinlerde geçerli">Validated for adults</span>
+    </div>
+  </div>
+
+  <!-- Calculator + Result -->
+  <div class="layout">
+    <div class="card">
+      <div class="card-label" data-en="Input" data-tr="Girdi">Input</div>
+      <h2 data-en="Patient Parameters" data-tr="Hasta Parametreleri">Patient Parameters</h2>
+      <div class="field">
+        <label data-en="Serum Creatinine (mg/dL)" data-tr="Serum Kreatinin (mg/dL)">Serum Creatinine (mg/dL)</label>
+        <input type="number" id="gfr-cr" step="0.01" min="0.1" max="20" placeholder="1.1">
+      </div>
+      <div class="field">
+        <label data-en="Age (years)" data-tr="Yaş (yıl)">Age (years)</label>
+        <input type="number" id="gfr-age" min="18" max="100" placeholder="55">
+      </div>
+      <div class="field">
+        <label data-en="Sex" data-tr="Cinsiyet">Sex</label>
+        <select id="gfr-sex">
+          <option value="male" data-en="Male" data-tr="Erkek">Male</option>
+          <option value="female" data-en="Female" data-tr="Kadın">Female</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calcGFR()" data-en="Calculate eGFR" data-tr="eGFR Hesapla">Calculate eGFR</button>
+    </div>
+
+    <div class="card">
+      <div class="card-label" data-en="Result" data-tr="Sonuç">Result</div>
+      <h2 data-en="eGFR &amp; CKD Stage" data-tr="eGFR &amp; KBH Evresi">eGFR &amp; CKD Stage</h2>
+      <div class="result-box" id="gfr-result">
+        <div class="result-label">eGFR (CKD-EPI 2021)</div>
+        <div class="result-value" id="res-value">—</div>
+        <div class="result-detail" id="res-detail"></div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-faint);margin-top:10px" data-en="Enter values and press Calculate." data-tr="Değerleri girip Hesapla'ya basın.">Enter values and press Calculate.</p>
+    </div>
+  </div>
+
+  <!-- CKD Staging Table -->
+  <div class="card full-width" style="margin-top:20px">
+    <div class="card-label" data-en="Reference" data-tr="Referans">Reference</div>
+    <h2 data-en="CKD Stages (KDIGO 2024)" data-tr="KBH Evreleri (KDIGO 2024)">CKD Stages (KDIGO 2024)</h2>
+    <table class="stage-table">
+      <thead>
+        <tr>
+          <th data-en="Stage" data-tr="Evre">Stage</th>
+          <th data-en="eGFR (mL/min/1.73m²)" data-tr="eGFR (mL/min/1.73m²)">eGFR (mL/min/1.73m²)</th>
+          <th data-en="Description" data-tr="Tanım">Description</th>
+          <th data-en="Action" data-tr="Yönetim">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>G1</strong></td><td>≥ 90</td><td data-en="Normal or high" data-tr="Normal veya yüksek">Normal or high</td><td data-en="Monitor + manage risk factors" data-tr="İzlem + risk faktörü kontrolü">Monitor + manage risk factors</td></tr>
+        <tr><td><strong>G2</strong></td><td>60–89</td><td data-en="Mildly decreased" data-tr="Hafif azalmış">Mildly decreased</td><td data-en="Monitor annually" data-tr="Yıllık izlem">Monitor annually</td></tr>
+        <tr style="background:#FFFBEB"><td><strong>G3a</strong></td><td>45–59</td><td data-en="Mildly–moderately decreased" data-tr="Hafif–orta azalmış">Mildly–moderately decreased</td><td data-en="Nephrology referral if progression" data-tr="İlerleme varsa nefroloji">Nephrology referral if progression</td></tr>
+        <tr style="background:#FFFBEB"><td><strong>G3b</strong></td><td>30–44</td><td data-en="Moderately–severely decreased" data-tr="Orta–ağır azalmış">Moderately–severely decreased</td><td data-en="Nephrology referral" data-tr="Nefroloji yönlendirmesi">Nephrology referral</td></tr>
+        <tr style="background:#FEF2F2"><td><strong>G4</strong></td><td>15–29</td><td data-en="Severely decreased" data-tr="Ağır azalmış">Severely decreased</td><td data-en="Prepare for RRT" data-tr="RRT hazırlığı">Prepare for RRT</td></tr>
+        <tr style="background:#FEF2F2"><td><strong>G5</strong></td><td>&lt; 15</td><td data-en="Kidney failure" data-tr="Böbrek yetmezliği">Kidney failure</td><td data-en="RRT or conservative management" data-tr="RRT veya konservatif tedavi">RRT or conservative management</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Methodology -->
+  <div class="section">
+    <h2 data-en="Methodology: CKD-EPI 2021 Equation" data-tr="Metodoloji: CKD-EPI 2021 Formülü">Methodology: CKD-EPI 2021 Equation</h2>
+    <p data-en="The CKD-EPI 2021 equation was developed by Inker et al. and published in the New England Journal of Medicine (2021). It replaced the race-based 2009 version following recommendations from the NKF-ASN Task Force to remove race as a variable due to concerns about health equity." data-tr="CKD-EPI 2021 formülü, Inker ve ark. tarafından geliştirilmiş ve New England Journal of Medicine'de (2021) yayımlanmıştır. Sağlık eşitliği kaygılarıyla NKF-ASN Görev Gücü'nün önerisi doğrultusunda ırk değişkenini kaldırarak 2009 versiyonunun yerini almıştır.">The CKD-EPI 2021 equation was developed by Inker et al. and published in the New England Journal of Medicine (2021). It replaced the race-based 2009 version following recommendations from the NKF-ASN Task Force to remove race as a variable due to concerns about health equity.</p>
+    <div class="formula-box">
+      eGFR = 142 × min(Scr/κ, 1)<sup>α</sup> × max(Scr/κ, 1)<sup>–1.200</sup> × 0.9938<sup>Age</sup> × Sex coefficient<br><br>
+      Female: κ = 0.7, α = –0.241, sex coef = 1.012<br>
+      Male:   κ = 0.9, α = –0.302, sex coef = 1.000<br><br>
+      Units: Scr in mg/dL · Age in years · eGFR in mL/min/1.73 m²
+    </div>
+    <p data-en="This calculator implements the full CKD-EPI 2021 equation as published, without race adjustment. Results are expressed as mL/min/1.73 m² (normalized to standard body surface area)." data-tr="Bu hesaplayıcı, yayımlanan CKD-EPI 2021 formülünü ırk düzeltmesi olmaksızın tam olarak uygular. Sonuçlar mL/dak/1,73 m² olarak ifade edilir.">This calculator implements the full CKD-EPI 2021 equation as published, without race adjustment. Results are expressed as mL/min/1.73 m² (normalized to standard body surface area).</p>
+  </div>
+
+  <!-- Clinical Context -->
+  <div class="section">
+    <h2 data-en="Clinical Use &amp; Drug Dosing" data-tr="Klinik Kullanım ve İlaç Dozu">Clinical Use &amp; Drug Dosing</h2>
+    <p data-en="eGFR is the cornerstone of CKD management. Key clinical applications include:" data-tr="eGFR, KBH yönetiminin temel taşıdır. Başlıca klinik uygulamalar:">eGFR is the cornerstone of CKD management. Key clinical applications include:</p>
+    <ul>
+      <li data-en="Drug dose adjustment (metformin, DOACs, aminoglycosides, NSAIDs, contrast media)" data-tr="İlaç dozu ayarlaması (metformin, DOAC'lar, aminoglikozidler, NSAID'ler, kontrast madde)">Drug dose adjustment (metformin, DOACs, aminoglycosides, NSAIDs, contrast media)</li>
+      <li data-en="Staging and monitoring CKD progression with albuminuria (CGA classification)" data-tr="Albüminüri ile KBH evreleme ve ilerleme izlemi (CGA sınıflaması)">Staging and monitoring CKD progression with albuminuria (CGA classification)</li>
+      <li data-en="Cardiovascular risk stratification — eGFR &lt;60 independently increases CVD risk" data-tr="Kardiyovasküler risk sınıflaması — eGFR &lt;60, CVD riskini bağımsız olarak artırır">Cardiovascular risk stratification — eGFR &lt;60 independently increases CVD risk</li>
+      <li data-en="Pre-procedural assessment (CT contrast, surgery, cardiac catheterization)" data-tr="Girişim öncesi değerlendirme (BT kontrastı, cerrahi, kardiyak kateterizasyon)">Pre-procedural assessment (CT contrast, surgery, cardiac catheterization)</li>
+      <li data-en="Transplant eligibility assessment" data-tr="Nakil uygunluğu değerlendirmesi">Transplant eligibility assessment</li>
+    </ul>
+    <p style="margin-top:12px" data-en="Important note on drug dosing: Some drug labels (e.g., DOACs like dabigatran, rivaroxaban) use Cockcroft–Gault creatinine clearance (CrCl) rather than eGFR for dosing decisions. Always check the specific drug's SmPC." data-tr="İlaç dozu notu: Bazı ilaç prospektüsleri (örn. dabigatran, rivaroksaban gibi DOAC'lar), doz kararı için eGFR yerine Cockcroft–Gault kreatinin klerensi (CrCl) kullanır. Her ilacın kısa ürün bilgisini mutlaka kontrol edin."><strong data-en="Note:" data-tr="Not:">Note:</strong> Some drug labels (e.g., DOACs like dabigatran, rivaroxaban) use Cockcroft–Gault CrCl rather than eGFR for dosing. Always check the drug's SmPC.</p>
+  </div>
+
+  <!-- Limitations -->
+  <div class="section">
+    <h2 data-en="Limitations" data-tr="Sınırlamalar">Limitations</h2>
+    <ul>
+      <li data-en="Not validated for children under 18 — use Bedside Schwartz equation instead" data-tr="18 yaş altı çocuklar için geçerli değil — Bedside Schwartz formülü kullanılmalı">Not validated for children under 18 — use Bedside Schwartz equation instead</li>
+      <li data-en="Not appropriate for acute kidney injury (AKI) — creatinine is not at steady state" data-tr="Akut böbrek hasarında (AKH) uygun değil — kreatinin kararlı durumda değil">Not appropriate for acute kidney injury (AKI) — creatinine is not at steady state</li>
+      <li data-en="Less accurate at extremes of muscle mass (sarcopenia, amputations, bodybuilders)" data-tr="Aşırı düşük/yüksek kas kitlelerinde daha az güvenilir (sarkopeni, amputasyon, vücut geliştirme)">Less accurate at extremes of muscle mass (sarcopenia, amputations, bodybuilders)</li>
+      <li data-en="Single creatinine measurement — eGFR should be confirmed over ≥3 months for CKD diagnosis" data-tr="Tek kreatinin ölçümü — KBH tanısı için ≥3 ay boyunca teyit gerekir">Single creatinine measurement — eGFR should be confirmed over ≥3 months for CKD diagnosis</li>
+      <li data-en="Cystatin C–based eGFR (eGFRcys) may be more accurate in populations where muscle mass is atypical" data-tr="Kas kitlesi atipik olan populasyonlarda sistatin C temelli eGFR daha doğru olabilir">Cystatin C–based eGFR may be more accurate when muscle mass is atypical</li>
+      <li data-en="Dietary creatine supplementation, meat consumption, and certain medications (trimethoprim, cimetidine) can raise creatinine artificially" data-tr="Kreatin takviyesi, et tüketimi ve bazı ilaçlar (trimetoprim, simetidin) kreatinini yapay olarak yükseltebilir">Creatine supplementation, meat consumption, and certain medications can raise creatinine artificially</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <h2 data-en="Frequently Asked Questions" data-tr="Sık Sorulan Sorular">Frequently Asked Questions</h2>
+    <details class="faq-item">
+      <summary data-en="What is a normal eGFR level?" data-tr="Normal eGFR değeri nedir?">What is a normal eGFR level?</summary>
+      <p data-en="An eGFR ≥ 60 mL/min/1.73m² is generally considered normal in the absence of other markers of kidney damage. eGFR naturally declines with age — a value of 55 in a healthy 75-year-old may be expected and not represent CKD if there is no albuminuria or structural kidney abnormality." data-tr="Böbrek hasarına ait başka bulgu yoksa eGFR ≥ 60 mL/dak/1,73m² genellikle normal kabul edilir. eGFR yaşla birlikte doğal olarak düşer; 75 yaşında sağlıklı bir kişide 55 değeri, albüminüri veya yapısal böbrek anomalisi yoksa KBH anlamına gelmeyebilir.">An eGFR ≥ 60 mL/min/1.73m² is generally considered normal in the absence of other markers of kidney damage. eGFR naturally declines with age — a value of 55 in a healthy 75-year-old may be expected and not represent CKD if there is no albuminuria.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-en="What medications require dose adjustment for low eGFR?" data-tr="Düşük eGFR'de hangi ilaçların dozu ayarlanmalıdır?">What medications require dose adjustment for low eGFR?</summary>
+      <p data-en="Key medications requiring dose reduction or avoidance with declining kidney function include: metformin (hold if eGFR &lt;30, caution 30–45), DOACs (dabigatran, rivaroxaban, apixaban, edoxaban — each has specific eGFR/CrCl thresholds), allopurinol, digoxin, vancomycin, aminoglycosides, NSAIDs (avoid if eGFR &lt;30), and iodinated contrast agents (risk assessment for eGFR &lt;45). Always consult drug-specific guidelines." data-tr="Böbrek fonksiyonu düştükçe doz azaltma veya kaçınma gerektiren başlıca ilaçlar: metformin (eGFR &lt;30'da durdur, 30-45'te dikkat), DOAC'lar (dabigatran, rivaroksaban, apiksaban, edoksaban — her birinin özel eGFR/CrCl eşiği vardır), allopürinol, digoksin, vankomisin, aminoglikozidler, NSAID'ler (eGFR &lt;30'da kaçınılmalı) ve iyotlu kontrast maddeler. Her zaman ilaca özgü kılavuzlara başvurun.">Key medications requiring dose reduction or avoidance include: metformin (hold if eGFR &lt;30), DOACs (dabigatran, rivaroxaban, apixaban, edoxaban — each has specific thresholds), allopurinol, digoxin, vancomycin, aminoglycosides, NSAIDs (avoid if eGFR &lt;30), and iodinated contrast agents. Always consult drug-specific guidelines.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-en="Why did the CKD-EPI equation remove race in 2021?" data-tr="CKD-EPI formülü neden 2021'de ırk faktörünü kaldırdı?">Why did the CKD-EPI equation remove race in 2021?</summary>
+      <p data-en="The original 2009 CKD-EPI and MDRD equations included a race coefficient that assigned higher eGFR to Black patients, based on observed differences in creatinine generation. Critics argued this perpetuated systemic bias by potentially delaying nephrology referral and transplant listing. In 2021, the NKF-ASN task force recommended a race-free equation, which performs comparably across populations and eliminates health equity concerns." data-tr="2009 orijinal CKD-EPI ve MDRD formülleri, kreatinin üretiminde gözlenen farklılıklara dayanarak Siyah hastalara daha yüksek eGFR atayan bir ırk katsayısı içeriyordu. Eleştirmenler bunun nefroloji yönlendirmesini ve nakil listesini potansiyel olarak geciktirerek sistematik önyargıyı sürdürdüğünü savundu. 2021'de NKF-ASN görev gücü, tüm populasyonlarda benzer performans gösteren ırk bağımsız bir formül önerdi.">The 2009 equation included a race coefficient that assigned higher eGFR to Black patients. Critics argued this perpetuated systemic bias by potentially delaying nephrology referral. In 2021, the NKF-ASN task force recommended a race-free equation that performs comparably across populations.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-en="How often should eGFR be monitored in CKD patients?" data-tr="KBH hastalarında eGFR ne sıklıkta izlenmelidir?">How often should eGFR be monitored in CKD patients?</summary>
+      <p data-en="KDIGO 2024 recommends monitoring frequency based on CKD stage and risk: G1–G2 with low risk: annually; G3a–G3b: every 6 months; G4: every 3 months; G5: every 1–3 months. Rapid progression is defined as &gt;5 mL/min/1.73m² decline per year and warrants nephrology referral." data-tr="KDIGO 2024, izleme sıklığını KBH evresine ve riske göre belirler: G1–G2 düşük risk: yıllık; G3a–G3b: 6 ayda bir; G4: 3 ayda bir; G5: 1–3 ayda bir. Yılda >5 mL/dak/1,73m² gerileme hızlı ilerleme olarak tanımlanır ve nefroloji yönlendirmesi gerektirir.">KDIGO 2024 recommends: G1–G2 low risk: annually; G3a–G3b: every 6 months; G4: every 3 months; G5: every 1–3 months. Rapid progression (&gt;5 mL/min/year) warrants nephrology referral.</p>
+    </details>
+  </div>
+
+  <!-- References -->
+  <div class="section">
+    <h2 data-en="References" data-tr="Kaynaklar">References</h2>
+    <ul class="ref-list">
+      <li>Inker LA, et al. New Creatinine- and Cystatin C–Based Equations to Estimate GFR without Race. <em>N Engl J Med.</em> 2021;385:1737–1749. <a href="https://doi.org/10.1056/NEJMoa2102953" target="_blank" rel="noopener">doi:10.1056/NEJMoa2102953</a></li>
+      <li>KDIGO 2024 CKD Guideline. <em>Kidney Int.</em> 2024;105(4S):S117–S314. <a href="https://kdigo.org/guidelines/ckd-evaluation-and-management/" target="_blank" rel="noopener">kdigo.org</a></li>
+      <li>NKF-ASN Task Force on Reassessing the Inclusion of Race in Diagnosing Kidney Disease. <em>J Am Soc Nephrol.</em> 2021;32(6):1305–1312.</li>
+    </ul>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="section">
+    <h2 data-en="Related Clinical Tools" data-tr="İlgili Klinik Araçlar">Related Clinical Tools</h2>
+    <div class="related-grid">
+      <a href="/cha2ds2vasc.html" class="related-card">
+        <strong>CHA₂DS₂-VA Score</strong>
+        <span data-en="Stroke risk in AF (ESC 2024)" data-tr="AF'de inme riski (ESC 2024)">Stroke risk in AF (ESC 2024)</span>
+      </a>
+      <a href="/hasbled.html" class="related-card">
+        <strong>HAS-BLED Score</strong>
+        <span data-en="Bleeding risk on anticoagulation" data-tr="Antikoagülan tedavide kanama riski">Bleeding risk on anticoagulation</span>
+      </a>
+      <a href="/antikoagulan.html" class="related-card" style="border-left-color:#3B82F6">
+        <strong data-en="Anticoagulant Guide" data-tr="Antikoagülan Rehberi">Anticoagulant Guide</strong>
+        <span data-en="DOAC dosing by renal function" data-tr="Böbrek fonksiyonuna göre DOAC dozu">DOAC dosing by renal function</span>
+      </a>
+      <a href="/varf/" class="related-card" style="border-left-color:#8B5CF6">
+        <strong data-en="Warfarin Dose Assistant" data-tr="Varfarin Doz Asistanı">Warfarin Dose Assistant</strong>
+        <span data-en="Weekly INR-based dose adjustment" data-tr="INR'ye göre haftalık doz önerisi">Weekly INR-based dose adjustment</span>
+      </a>
+      <a href="/hesaplamalar.html" class="related-card" style="border-left-color:#F59E0B">
+        <strong data-en="All Calculators" data-tr="Tüm Hesaplamalar">All Calculators</strong>
+        <span data-en="BMI, QTc, LDL, PREVENT, SCORE2" data-tr="BMI, QTc, LDL, PREVENT, SCORE2">BMI, QTc, LDL, PREVENT, SCORE2</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong data-en="Medical Disclaimer:" data-tr="Tıbbi Sorumluluk Reddi:">Medical Disclaimer:</strong>
+    <span data-en="This calculator is for informational and educational purposes only. It does not constitute medical advice. Clinical decisions should always be made by a qualified healthcare professional in the context of the individual patient. Drug dosing must be verified against current prescribing information." data-tr="Bu hesaplayıcı yalnızca bilgilendirme ve eğitim amaçlıdır. Tıbbi tavsiye niteliği taşımaz. Klinik kararlar her zaman nitelikli bir sağlık profesyoneli tarafından bireysel hasta bağlamında verilmelidir. İlaç dozları güncel kısa ürün bilgisine göre doğrulanmalıdır.">This calculator is for informational and educational purposes only. It does not constitute medical advice. Clinical decisions must always be made by a qualified healthcare professional. Drug dosing must be verified against current prescribing information.</span>
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 DrTR Tools &mdash; <a href="/">Home</a> | <a href="/hesaplamalar.html" data-en="Calculators" data-tr="Hesaplamalar">Calculators</a> | <a href="/about.html">About</a> | <a href="/disclaimer.html" data-en="Medical Disclaimer" data-tr="Sorumluluk Reddi">Medical Disclaimer</a> | <a href="/privacy.html">Privacy</a></p>
+</footer>
+
+<script>
+let lang = 'en';
+
+function toggleLang() {
+  lang = lang === 'en' ? 'tr' : 'en';
+  document.getElementById('langBtn').textContent = lang === 'en' ? 'TR' : 'EN';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'OPTION') return;
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+  document.querySelectorAll('select option[data-en]').forEach(opt => {
+    opt.textContent = opt.getAttribute('data-' + lang);
+  });
+}
+
+function calcGFR() {
+  const cr = parseFloat(document.getElementById('gfr-cr').value);
+  const age = parseFloat(document.getElementById('gfr-age').value);
+  const sex = document.getElementById('gfr-sex').value;
+
+  if (!cr || !age) return;
+
+  let kappa, alpha, sexCoef;
+  if (sex === 'female') { kappa = 0.7; alpha = -0.241; sexCoef = 1.012; }
+  else { kappa = 0.9; alpha = -0.302; sexCoef = 1.0; }
+
+  const gfr = 142 * Math.pow(Math.min(cr / kappa, 1), alpha) *
+    Math.pow(Math.max(cr / kappa, 1), -1.200) *
+    Math.pow(0.9938, age) * sexCoef;
+
+  let stage, cls;
+  if (gfr >= 90) { stage = lang === 'en' ? 'Stage G1 — Normal or high' : 'Evre G1 — Normal veya yüksek'; cls = 'success'; }
+  else if (gfr >= 60) { stage = lang === 'en' ? 'Stage G2 — Mildly decreased' : 'Evre G2 — Hafif azalmış'; cls = 'success'; }
+  else if (gfr >= 45) { stage = lang === 'en' ? 'Stage G3a — Mildly–moderately decreased' : 'Evre G3a — Hafif–orta azalmış'; cls = 'warning'; }
+  else if (gfr >= 30) { stage = lang === 'en' ? 'Stage G3b — Moderately–severely decreased' : 'Evre G3b — Orta–ağır azalmış'; cls = 'warning'; }
+  else if (gfr >= 15) { stage = lang === 'en' ? 'Stage G4 — Severely decreased' : 'Evre G4 — Ağır azalmış'; cls = 'danger'; }
+  else { stage = lang === 'en' ? 'Stage G5 — Kidney failure' : 'Evre G5 — Böbrek yetmezliği'; cls = 'danger'; }
+
+  const box = document.getElementById('gfr-result');
+  box.className = 'result-box show ' + cls;
+  document.getElementById('res-value').textContent = gfr.toFixed(1) + ' mL/min/1.73m²';
+  document.getElementById('res-detail').innerHTML = '<strong>' + stage + '</strong>';
+  box.previousElementSibling.style.display = 'none';
+}
+</script>
+</body>
+</html>

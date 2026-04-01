@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tibbi Hesaplamalar - drtr.uk</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -305,18 +306,96 @@
         <div class="result-box" id="bmi-result"></div>
     </div>
 
-    <!-- 2. Framingham 10-Year CVD Risk -->
-    <div class="calc-card" id="calc-framingham">
-        <h2 data-tr="10 Yillik Kardiyovaskuler Risk" data-en="10-Year Cardiovascular Risk">10 Yillik Kardiyovaskuler Risk</h2>
-        <p class="subtitle" data-tr="Framingham Risk Skoru" data-en="Framingham Risk Score">Framingham Risk Skoru</p>
+    <!-- 2. PREVENT 10-Year ASCVD Risk (ACC 2026) -->
+    <div class="calc-card" id="calc-prevent">
+        <h2 data-tr="10 Yillik ASCVD Riski (PREVENT)" data-en="10-Year ASCVD Risk (PREVENT)">10 Yillik ASCVD Riski (PREVENT)</h2>
+        <p class="subtitle" data-tr="AHA PREVENT 2023 / 2026 ACC Kolesterol Kilavuzu" data-en="AHA PREVENT 2023 / 2026 ACC Cholesterol Guideline">AHA PREVENT 2023 / 2026 ACC Kolesterol Kilavuzu</p>
         <div class="form-row">
             <div class="form-group">
-                <label data-tr="Yas" data-en="Age">Yas</label>
-                <input type="number" id="fram-age" placeholder="55">
+                <label data-tr="Yas (30-79)" data-en="Age (30-79)">Yas (30-79)</label>
+                <input type="number" id="prev-age" placeholder="55" min="30" max="79">
             </div>
             <div class="form-group">
                 <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
-                <select id="fram-sex">
+                <select id="prev-sex">
+                    <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Total Kolesterol (mg/dL)" data-en="Total Cholesterol (mg/dL)">Total Kolesterol (mg/dL)</label>
+                <input type="number" id="prev-tc" placeholder="200">
+            </div>
+            <div class="form-group">
+                <label data-tr="HDL Kolesterol (mg/dL)" data-en="HDL Cholesterol (mg/dL)">HDL Kolesterol (mg/dL)</label>
+                <input type="number" id="prev-hdl" placeholder="50">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Sistolik KB (mmHg)" data-en="Systolic BP (mmHg)">Sistolik KB (mmHg)</label>
+                <input type="number" id="prev-sbp" placeholder="130">
+            </div>
+            <div class="form-group">
+                <label data-tr="BMI (kg/m²)" data-en="BMI (kg/m²)">BMI (kg/m²)</label>
+                <input type="number" step="0.1" id="prev-bmi" placeholder="27">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="eGFR (mL/min/1.73m²)" data-en="eGFR (mL/min/1.73m²)">eGFR (mL/min/1.73m²)</label>
+                <input type="number" id="prev-egfr" placeholder="90">
+            </div>
+            <div class="form-group">
+                <label data-tr="Statin Kullanimi" data-en="On Statin">Statin Kullanimi</label>
+                <select id="prev-statin">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Antihipertansif Ilac" data-en="BP Medication">Antihipertansif Ilac</label>
+                <select id="prev-bpmed">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-tr="Diyabet" data-en="Diabetes">Diyabet</label>
+                <select id="prev-dm">
+                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="Sigara Kullanimi" data-en="Current Smoker">Sigara Kullanimi</label>
+            <select id="prev-smoke">
+                <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
+                <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
+            </select>
+        </div>
+        <button class="btn" onclick="calcPREVENT()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="prevent-result"></div>
+        <p class="info-note" data-tr="Kaynak: Khan SS ve ark. Circulation 2024;149:430-449. 2026 ACC kilavuzunda benimsenmistir. Birincil koruma, yas 30-79." data-en="Source: Khan SS et al. Circulation 2024;149:430-449. Adopted in 2026 ACC guideline. Primary prevention, ages 30-79.">Kaynak: Khan SS ve ark. Circulation 2024;149:430-449. 2026 ACC kilavuzunda benimsenmistir.</p>
+    </div>
+
+    <!-- 2b. SCORE2 ESC 2021 -->
+    <div class="calc-card" id="calc-score2">
+        <h2 data-tr="SCORE2 KV Riski (ESC 2021)" data-en="SCORE2 CV Risk (ESC 2021)">SCORE2 KV Riski (ESC 2021)</h2>
+        <p class="subtitle" data-tr="Avrupa Kalp Dernegi - Turkiye = Yuksek Risk Bolgesi" data-en="European Society of Cardiology - Turkey = High Risk Region">Avrupa Kalp Dernegi - Turkiye = Yuksek Risk Bolgesi</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Yas (40-69)" data-en="Age (40-69)">Yas (40-69)</label>
+                <input type="number" id="s2-age" placeholder="55" min="40" max="69">
+            </div>
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="s2-sex">
                     <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
                     <option value="female" data-tr="Kadin" data-en="Female">Kadin</option>
                 </select>
@@ -325,44 +404,37 @@
         <div class="form-row">
             <div class="form-group">
                 <label data-tr="Total Kolesterol (mg/dL)" data-en="Total Cholesterol (mg/dL)">Total Kolesterol (mg/dL)</label>
-                <input type="number" id="fram-tc" placeholder="200">
+                <input type="number" id="s2-tc" placeholder="200">
             </div>
             <div class="form-group">
                 <label data-tr="HDL Kolesterol (mg/dL)" data-en="HDL Cholesterol (mg/dL)">HDL Kolesterol (mg/dL)</label>
-                <input type="number" id="fram-hdl" placeholder="50">
+                <input type="number" id="s2-hdl" placeholder="50">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label data-tr="Sistolik Kan Basinci (mmHg)" data-en="Systolic Blood Pressure (mmHg)">Sistolik Kan Basinci (mmHg)</label>
-                <input type="number" id="fram-sbp" placeholder="130">
+                <label data-tr="Sistolik KB (mmHg)" data-en="Systolic BP (mmHg)">Sistolik KB (mmHg)</label>
+                <input type="number" id="s2-sbp" placeholder="130">
             </div>
             <div class="form-group">
-                <label data-tr="Antihipertansif Tedavi" data-en="Antihypertensive Treatment">Antihipertansif Tedavi</label>
-                <select id="fram-treat">
+                <label data-tr="Sigara" data-en="Smoking">Sigara</label>
+                <select id="s2-smoke">
                     <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
                     <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
                 </select>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label data-tr="Sigara Kullanimi" data-en="Current Smoker">Sigara Kullanimi</label>
-                <select id="fram-smoke">
-                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
-                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label data-tr="Diyabet" data-en="Diabetes">Diyabet</label>
-                <select id="fram-dm">
-                    <option value="0" data-tr="Hayir" data-en="No">Hayir</option>
-                    <option value="1" data-tr="Evet" data-en="Yes">Evet</option>
-                </select>
-            </div>
+        <div class="form-group">
+            <label data-tr="Risk Bolgesi" data-en="Risk Region">Risk Bolgesi</label>
+            <select id="s2-region">
+                <option value="high" selected data-tr="Yuksek (Turkiye)" data-en="High (Turkey)">Yuksek (Turkiye)</option>
+                <option value="low" data-tr="Dusuk (Fransa, Ispanya vb.)" data-en="Low (France, Spain etc.)">Dusuk (Fransa, Ispanya vb.)</option>
+                <option value="moderate" data-tr="Orta (Almanya, Italya vb.)" data-en="Moderate (Germany, Italy etc.)">Orta (Almanya, Italya vb.)</option>
+                <option value="veryhigh" data-tr="Cok Yuksek (Rusya, Romanya vb.)" data-en="Very High (Russia, Romania etc.)">Cok Yuksek (Rusya, Romanya vb.)</option>
+            </select>
         </div>
-        <button class="btn" onclick="calcFramingham()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
-        <div class="result-box" id="fram-result"></div>
+        <button class="btn" onclick="calcSCORE2()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="score2-result"></div>
     </div>
 
     <!-- 3. GFR -->
@@ -504,6 +576,52 @@
         <div class="result-box" id="age-result"></div>
     </div>
 
+    <!-- 11. Balthazard -->
+    <div class="calc-card" id="calc-balthazard">
+        <h2 data-tr="Balthazard Engellilik Hesaplama" data-en="Balthazard Disability Calculator">Balthazard Engellilik Hesaplama</h2>
+        <p class="subtitle" data-tr="Birden fazla kayip oranini birlestirir" data-en="Combines multiple impairment rates">Birden fazla kayip oranini birlestirir</p>
+        <div class="form-row">
+            <div class="form-group"><label data-tr="Kayip Orani 1 (%)" data-en="Impairment 1 (%)">Kayip Orani 1 (%)</label><input type="number" id="balth-1" placeholder="30" min="0" max="100"></div>
+            <div class="form-group"><label data-tr="Kayip Orani 2 (%)" data-en="Impairment 2 (%)">Kayip Orani 2 (%)</label><input type="number" id="balth-2" placeholder="20" min="0" max="100"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label data-tr="Kayip Orani 3 (%)" data-en="Impairment 3 (%)">Kayip Orani 3 (%)</label><input type="number" id="balth-3" placeholder="" min="0" max="100"></div>
+            <div class="form-group"><label data-tr="Kayip Orani 4 (%)" data-en="Impairment 4 (%)">Kayip Orani 4 (%)</label><input type="number" id="balth-4" placeholder="" min="0" max="100"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label data-tr="Kayip Orani 5 (%)" data-en="Impairment 5 (%)">Kayip Orani 5 (%)</label><input type="number" id="balth-5" placeholder="" min="0" max="100"></div>
+            <div class="form-group"><label data-tr="Kayip Orani 6 (%)" data-en="Impairment 6 (%)">Kayip Orani 6 (%)</label><input type="number" id="balth-6" placeholder="" min="0" max="100"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label data-tr="Kayip Orani 7 (%)" data-en="Impairment 7 (%)">Kayip Orani 7 (%)</label><input type="number" id="balth-7" placeholder="" min="0" max="100"></div>
+            <div class="form-group"><label data-tr="Kayip Orani 8 (%)" data-en="Impairment 8 (%)">Kayip Orani 8 (%)</label><input type="number" id="balth-8" placeholder="" min="0" max="100"></div>
+        </div>
+        <button class="btn" onclick="calcBalthazard()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="balth-result"></div>
+        <p class="info-note" data-tr="Formul: Toplam = 1 - (1-p1)(1-p2)...(1-pn). Sadece 0'dan buyuk degerler kullanilir." data-en="Formula: Total = 1 - (1-p1)(1-p2)...(1-pn). Only values greater than 0 are used.">Formul: Toplam = 1 - (1-p1)(1-p2)...(1-pn). Sadece 0'dan buyuk degerler kullanilir.</p>
+    </div>
+
+    <!-- 11. SYNTAX Score -->
+    <div class="calc-card" id="calc-syntax">
+        <h2 data-tr="SYNTAX Skoru" data-en="SYNTAX Score">SYNTAX Skoru</h2>
+        <p class="subtitle" data-tr="Koroner anatomik komplekslik — PCI/KABG karar desteği (SYNTAX Trial)" data-en="Coronary anatomical complexity — PCI/CABG decision support (SYNTAX Trial)">Koroner anatomik komplekslik — PCI/KABG karar desteği (SYNTAX Trial)</p>
+        <div class="form-group">
+            <label data-tr="Koroner Dominans" data-en="Coronary Dominance">Koroner Dominans</label>
+            <select id="syn-dom" onchange="onSynDomChange()">
+                <option value="r" data-tr="Sağ Dominant" data-en="Right Dominant">Sağ Dominant</option>
+                <option value="l" data-tr="Sol Dominant" data-en="Left Dominant">Sol Dominant</option>
+            </select>
+        </div>
+        <p class="info-note" style="margin-bottom:10px" data-tr="≥%50 darlık olan lezyonları işaretleyin (≥1.5mm damarlarda):" data-en="Mark lesions with ≥50% stenosis (in vessels ≥1.5mm):">≥%50 darlık olan lezyonları işaretleyin (≥1.5mm damarlarda):</p>
+        <div id="syn-segs" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+        <div class="result-box" id="syn-result">
+            <div class="result-title" data-tr="SYNTAX SKORU" data-en="SYNTAX SCORE">SYNTAX SKORU</div>
+            <div class="result-value" id="syn-value">—</div>
+            <div class="result-detail" id="syn-info"></div>
+            <div class="result-detail" id="syn-interp" style="margin-top:6px;font-weight:600;"></div>
+        </div>
+    </div>
+
     <!-- 10. Word & Character Counter -->
     <div class="calc-card" id="calc-wordcount">
         <h2 data-tr="Kelime ve Karakter Sayaci" data-en="Word & Character Counter">Kelime ve Karakter Sayaci</h2>
@@ -527,15 +645,18 @@ let currentLang = 'tr';
 
 const calcNames = {
     'bmi':        { tr: 'BMI', en: 'BMI' },
-    'framingham': { tr: 'KV Risk', en: 'CV Risk' },
+    'prevent':    { tr: 'PREVENT', en: 'PREVENT' },
+    'score2':     { tr: 'SCORE2', en: 'SCORE2' },
     'gfr':        { tr: 'eGFR', en: 'eGFR' },
     'ldl':        { tr: 'LDL', en: 'LDL' },
     'qtc':        { tr: 'QTc', en: 'QTc' },
     'chadsvasc':  { tr: 'CHA₂DS₂-VA', en: 'CHA₂DS₂-VA' },
     'hasbled':    { tr: 'HAS-BLED', en: 'HAS-BLED' },
+    'balthazard': { tr: 'Balthazard', en: 'Balthazard' },
     'datediff':   { tr: 'Tarih Farki', en: 'Date Diff' },
     'age':        { tr: 'Yas', en: 'Age' },
-    'wordcount':  { tr: 'Kelime Sayaci', en: 'Word Count' }
+    'wordcount':  { tr: 'Kelime Sayaci', en: 'Word Count' },
+    'syntax':     { tr: 'SYNTAX', en: 'SYNTAX' }
 };
 
 function toggleLang() {
@@ -581,6 +702,140 @@ function showCalc(key) {
     document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
     document.getElementById('calc-' + key).classList.add('active');
     document.querySelector(`.nav-pill[data-calc="${key}"]`).classList.add('active');
+    if (key === 'syntax') buildSyntaxRows();
+}
+
+// ============ SYNTAX SCORE ============
+const syntaxSegs = [
+    { id:'lm',   tr:'Sol Ana Koroner (LM)',     en:'Left Main (LM)',              wr:5.0, wl:6.0 },
+    { id:'lad1', tr:'LAD Proksimal',            en:'LAD Proximal',                wr:3.5, wl:3.5 },
+    { id:'lad2', tr:'LAD Orta',                 en:'LAD Mid',                     wr:2.5, wl:2.5 },
+    { id:'lad3', tr:'LAD Distal',               en:'LAD Distal',                  wr:1.0, wl:1.0 },
+    { id:'d1',   tr:'Diyagonal 1 (D1)',          en:'Diagonal 1 (D1)',             wr:1.0, wl:1.0 },
+    { id:'d2',   tr:'Diyagonal 2 (D2)',          en:'Diagonal 2 (D2)',             wr:0.5, wl:0.5 },
+    { id:'lcx1', tr:'LCX Proksimal',            en:'LCX Proximal',                wr:1.5, wl:2.5 },
+    { id:'om1',  tr:'Obtüz Marjinal 1 (OM1)',    en:'Obtuse Marginal 1 (OM1)',     wr:1.0, wl:1.0 },
+    { id:'lcx2', tr:'LCX Distal',               en:'LCX Distal',                  wr:0.5, wl:1.5 },
+    { id:'om2',  tr:'Obtüz Marjinal 2 (OM2)',    en:'Obtuse Marginal 2 (OM2)',     wr:0.5, wl:0.5 },
+    { id:'rca1', tr:'SAK Proksimal (RCA)',       en:'RCA Proximal',                wr:1.0, wl:0.5 },
+    { id:'rca2', tr:'SAK Orta (RCA)',            en:'RCA Mid',                     wr:1.0, wl:0.5 },
+    { id:'rca3', tr:'SAK Distal (RCA)',          en:'RCA Distal',                  wr:1.0, wl:0.5 },
+    { id:'pda',  tr:'Posterior Desendan (PDA)',  en:'Posterior Descending (PDA)',  wr:1.0, wl:1.0 },
+    { id:'pl',   tr:'Posterolateral (PL)',       en:'Posterolateral (PL)',         wr:0.5, wl:0.5 },
+];
+
+function buildSyntaxRows() {
+    const dom = document.getElementById('syn-dom').value;
+    const container = document.getElementById('syn-segs');
+    if (!container) return;
+    container.innerHTML = syntaxSegs.map(seg => {
+        const w = dom === 'r' ? seg.wr : seg.wl;
+        const name = currentLang === 'tr' ? seg.tr : seg.en;
+        const ctoLabel = currentLang === 'tr' ? 'Tam tıkanıklık (CTO) — ×5' : 'Total occlusion (CTO) — ×5';
+        return `<div style="background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="sc-${seg.id}" onchange="toggleSynSeg('${seg.id}')" style="width:16px;height:16px;accent-color:#3b82f6;cursor:pointer;flex-shrink:0;">
+                <span style="flex:1;color:#ccc;font-size:0.87rem;">${name}</span>
+                <span style="font-size:0.72rem;color:#555;">w=${w}</span>
+            </label>
+            <div id="so-${seg.id}" style="display:none;margin-top:8px;padding-left:24px;">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#f87171;font-size:0.82rem;margin-bottom:6px;">
+                    <input type="checkbox" id="sc-cto-${seg.id}" onchange="toggleCTO('${seg.id}')" style="width:13px;height:13px;accent-color:#ef4444;cursor:pointer;">
+                    ${ctoLabel}
+                </label>
+                <div id="so-cto-${seg.id}" style="display:none;padding-left:20px;margin-bottom:8px;display:flex;flex-direction:column;gap:3px;">
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-blunt-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Künt güdük (blunt stump) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-bridge-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Köprüleşme kollateraller +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-viseg-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO sonrası 1. segment bifürkasyon/trifürkasyon +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-sbr-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO bölgesinde yan dal +1</label>
+                </div>
+                <div id="so-noncto-${seg.id}" style="display:flex;flex-direction:column;gap:4px;">
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-bif-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon (Medina 1,1,1 / 1,0,1 / 0,1,1) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-bif70-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon açısı &lt;70° +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-ostial-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Aorto-ostial lezyon +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-tort-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır tortüöz (&gt;60° proksimal) +2</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-long-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Uzun lezyon (&gt;20mm) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-calc-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır kalsifikasyon +2</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-thro-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Trombüs +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;">Diffüz/küçük damar — uzunluk: <input type="number" id="sc-diff-${seg.id}" min="0" max="300" placeholder="mm" onchange="calcSYNTAX()" style="width:60px;padding:3px 6px;background:#0d1b2a;border:1px solid #2a2a2a;border-radius:4px;color:#e0e0e0;font-size:0.78rem;margin:0 4px;"> mm (+uzunluk/10)</label>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleSynSeg(id) {
+    const checked = document.getElementById('sc-' + id).checked;
+    const opts = document.getElementById('so-' + id);
+    if (opts) opts.style.display = checked ? 'block' : 'none';
+    calcSYNTAX();
+}
+
+function toggleCTO(id) {
+    const isCTO = document.getElementById('sc-cto-' + id).checked;
+    const ctoDiv = document.getElementById('so-cto-' + id);
+    const nonCTODiv = document.getElementById('so-noncto-' + id);
+    if (ctoDiv) ctoDiv.style.display = isCTO ? 'flex' : 'none';
+    if (nonCTODiv) nonCTODiv.style.display = isCTO ? 'none' : 'flex';
+    calcSYNTAX();
+}
+
+function onSynDomChange() { buildSyntaxRows(); }
+
+function calcSYNTAX() {
+    const dom = document.getElementById('syn-dom').value;
+    const result = document.getElementById('syn-result');
+    if (!result) return;
+    let total = 0, n = 0;
+    syntaxSegs.forEach(seg => {
+        const cb = document.getElementById('sc-' + seg.id);
+        if (!cb || !cb.checked) return;
+        n++;
+        const w = dom === 'r' ? seg.wr : seg.wl;
+        const isCTO = document.getElementById('sc-cto-' + seg.id)?.checked;
+        let score = isCTO ? w * 5 : w;
+        if (isCTO) {
+            if (document.getElementById('sc-blunt-' + seg.id)?.checked)  score += 1;
+            if (document.getElementById('sc-bridge-' + seg.id)?.checked) score += 1;
+            if (document.getElementById('sc-viseg-' + seg.id)?.checked)  score += 1;
+            if (document.getElementById('sc-sbr-' + seg.id)?.checked)    score += 1;
+        } else {
+            if (document.getElementById('sc-bif-' + seg.id)?.checked)    score += 1;
+            if (document.getElementById('sc-bif70-' + seg.id)?.checked)  score += 1;
+            if (document.getElementById('sc-ostial-' + seg.id)?.checked) score += 1;
+            if (document.getElementById('sc-tort-' + seg.id)?.checked)   score += 2;
+            if (document.getElementById('sc-long-' + seg.id)?.checked)   score += 1;
+            if (document.getElementById('sc-calc-' + seg.id)?.checked)   score += 2;
+            if (document.getElementById('sc-thro-' + seg.id)?.checked)   score += 1;
+            const dl = parseFloat(document.getElementById('sc-diff-' + seg.id)?.value) || 0;
+            if (dl > 0) score += dl / 10;
+        }
+        total += score;
+    });
+    if (n === 0) { result.classList.remove('show'); return; }
+    result.classList.add('show');
+    document.getElementById('syn-value').textContent = total.toFixed(1);
+    document.getElementById('syn-info').textContent = n + (currentLang === 'tr' ? ' lezyon' : ' lesion(s)');
+    let interp, cls;
+    if (total <= 22) {
+        interp = currentLang === 'tr'
+            ? '✓ Düşük SYNTAX (0–22): PCI ve KABG karşılaştırılabilir; PCI kabul edilebilir'
+            : '✓ Low SYNTAX (0–22): PCI and CABG comparable; PCI acceptable';
+        cls = 'success';
+    } else if (total <= 32) {
+        interp = currentLang === 'tr'
+            ? '⚠ Orta SYNTAX (23–32): Kalp Ekibi tartışması önerilir; KABG genellikle tercih edilir'
+            : '⚠ Intermediate SYNTAX (23–32): Heart Team discussion recommended; CABG often preferred';
+        cls = 'warning';
+    } else {
+        interp = currentLang === 'tr'
+            ? '✗ Yüksek SYNTAX (≥33): KABG tercih edilir; PCI yüksek MACE riski taşır'
+            : '✗ High SYNTAX (≥33): CABG preferred; PCI associated with significantly higher MACE';
+        cls = 'danger';
+    }
+    const interpEl = document.getElementById('syn-interp');
+    interpEl.textContent = interp;
+    interpEl.className = 'result-detail ' + cls;
 }
 
 // ============ HELPER ============
@@ -656,54 +911,178 @@ function calcBMI() {
     showResult('bmi-result', 'BMI', bmi.toFixed(1) + ' kg/m²', details, cls);
 }
 
-// ============ 2. Framingham ============
-function calcFramingham() {
-    const age = parseFloat(document.getElementById('fram-age').value);
-    const sex = document.getElementById('fram-sex').value;
-    const tc = parseFloat(document.getElementById('fram-tc').value);
-    const hdl = parseFloat(document.getElementById('fram-hdl').value);
-    const sbp = parseFloat(document.getElementById('fram-sbp').value);
-    const treat = parseInt(document.getElementById('fram-treat').value);
-    const smoke = parseInt(document.getElementById('fram-smoke').value);
-    const dm = parseInt(document.getElementById('fram-dm').value);
+// ============ 2. PREVENT (AHA 2023 / ACC 2026) ============
+// Coefficients: Khan SS et al. Circulation 2024;149:430-449
+// Full model, columns 2 (female) and 3 (male), 10-yr ASCVD
+function calcPREVENT() {
+    const age   = parseFloat(document.getElementById('prev-age').value);
+    const sex   = document.getElementById('prev-sex').value;
+    const tc    = parseFloat(document.getElementById('prev-tc').value);
+    const hdl   = parseFloat(document.getElementById('prev-hdl').value);
+    const sbp   = parseFloat(document.getElementById('prev-sbp').value);
+    const bmi   = parseFloat(document.getElementById('prev-bmi').value);
+    const egfr  = parseFloat(document.getElementById('prev-egfr').value);
+    const statin= parseInt(document.getElementById('prev-statin').value);
+    const bpmed = parseInt(document.getElementById('prev-bpmed').value);
+    const dm    = parseInt(document.getElementById('prev-dm').value);
+    const smoke = parseInt(document.getElementById('prev-smoke').value);
 
-    if (!age || !tc || !hdl || !sbp) return;
-
-    let risk;
-    if (sex === 'male') {
-        const lnAge = Math.log(age);
-        const lnTC = Math.log(tc);
-        const lnHDL = Math.log(hdl);
-        const lnSBP = Math.log(sbp);
-        const sbpCoef = treat ? 1.99881 : 1.93303;
-
-        const sum = 12.344 * lnAge + 11.853 * lnTC - 2.664 * lnAge * lnTC
-            - 7.990 * lnHDL + 1.769 * lnAge * lnHDL
-            + sbpCoef * lnSBP + 0.549 * smoke + 0.420 * dm;
-        const base = 1 - Math.pow(0.88936, Math.exp(sum - 23.9802));
-        risk = Math.max(0, Math.min(base * 100, 100));
-    } else {
-        const lnAge = Math.log(age);
-        const lnTC = Math.log(tc);
-        const lnHDL = Math.log(hdl);
-        const lnSBP = Math.log(sbp);
-        const sbpCoef = treat ? 2.019 : 1.957;
-
-        const sum = -29.799 * lnAge + 4.884 * lnAge * lnAge
-            + 13.540 * lnTC - 3.114 * lnAge * lnTC
-            - 13.578 * lnHDL + 3.149 * lnAge * lnHDL
-            + sbpCoef * lnSBP + 7.574 * smoke - 1.665 * lnAge * smoke + 0.661 * dm;
-        const base = 1 - Math.pow(0.95012, Math.exp(sum + 29.1817));
-        risk = Math.max(0, Math.min(base * 100, 100));
+    if (!age || !tc || !hdl || !sbp || !bmi || !egfr) return;
+    if (age < 30 || age > 79) {
+        showResult('prevent-result','PREVENT','-',t('Yas 30-79 araliginda olmali','Age must be 30-79'),'danger'); return;
     }
 
-    let cls, cat;
-    if (risk < 10) { cls = 'success'; cat = t('Dusuk risk', 'Low risk'); }
-    else if (risk < 20) { cls = 'warning'; cat = t('Orta risk', 'Moderate risk'); }
-    else { cls = 'danger'; cat = t('Yuksek risk', 'High risk'); }
+    const isFemale = sex === 'female';
+    const ageC     = (age - 55) / 10;
+    const ageSq    = ageC * ageC;
+    const nonHDLmm = (tc - hdl) * 0.02586;
+    const ldlP     = nonHDLmm - 3.5;
+    const hdlC     = (hdl * 0.02586 - 1.3) / 0.3;
+    const sbpLow   = (Math.min(sbp, 110) - 110) / 20;
+    const sbpHigh  = (Math.max(sbp, 110) - 130) / 20;
+    const bmiHigh  = (Math.max(bmi, 30) - 30) / 5;
+    const egfrLow  = (Math.min(egfr, 60) - 60) / -15;
+    const egfrHigh = (Math.max(egfr, 60) - 90) / -15;
 
-    showResult('fram-result', t('10 Yillik KV Risk', '10-Year CV Risk'),
-        '%' + risk.toFixed(1), `<strong>${cat}</strong>`, cls);
+    let RL;
+    if (isFemale) {
+        RL = 0.7023067 * ageC
+           + 0.0898765  * ldlP
+           - 0.1407316  * hdlC
+           - 0.0256648  * sbpLow
+           + 0.314511   * sbpHigh
+           + 0.4799217  * dm
+           + 0.4062049  * smoke
+           + 0.3847744  * egfrLow
+           + 0.0495174  * egfrHigh
+           + 0.2133861  * bpmed
+           - 0.0678552  * statin
+           - 0.0451416  * bpmed * sbpHigh
+           + 0.0788187  * statin * ldlP
+           - 0.0535985  * ageC * ldlP
+           + 0.0291762  * ageC * hdlC
+           - 0.0961839  * ageC * sbpHigh
+           - 0.2001466  * ageC * dm
+           - 0.0586472  * ageC * smoke
+           + 0.005866   * bmiHigh
+           - 0.1537791  * ageC * egfrLow
+           + 0.005866   // C30 HbA1c offset (no HbA1c)
+           + 0.123192   // C27 UACR offset (no UACR)
+           + 0.1588908  // C25 SDI offset (no ZIP)
+           - 4.291503;  // intercept
+    } else {
+        RL = 0.7128741 * ageC
+           + 0.1465201  * ldlP
+           - 0.1125794  * hdlC
+           - 0.3387216  * sbpLow
+           + 0.2980252  * sbpHigh
+           + 0.399583   * dm
+           + 0.3379111  * smoke
+           + 0.2582604  * egfrLow
+           + 0.0147769  * egfrHigh
+           + 0.1686621  * bpmed
+           - 0.1073619  * statin
+           - 0.0381038  * bpmed * sbpHigh
+           + 0.1034169  * statin * ldlP
+           - 0.0228755  * ageC * ldlP
+           + 0.0267453  * ageC * hdlC
+           - 0.0897449  * ageC * sbpHigh
+           - 0.1497464  * ageC * dm
+           - 0.077206   * ageC * smoke
+           - 0.0112852  * bmiHigh
+           - 0.1198368  * ageC * egfrLow
+           - 0.0112852  // C30 HbA1c offset (no HbA1c)
+           + 0.101282   // C27 UACR offset (no UACR)
+           + 0.1388492  // C25 SDI offset (no ZIP)
+           - 3.969788;  // intercept
+    }
+
+    const risk = Math.min(100 * Math.exp(RL) / (1 + Math.exp(RL)), 100);
+
+    // 2026 ACC risk thresholds
+    let cls, cat, rec;
+    if (risk < 3) {
+        cls = 'success'; cat = t('Dusuk Risk (<3%)', 'Low Risk (<3%)');
+        rec = t('Yasam tarzi mudahalesi. Statin genellikle onerilmez.', 'Lifestyle intervention. Statin generally not indicated.');
+    } else if (risk < 5) {
+        cls = 'warning'; cat = t('Sinirda Risk (3-<5%)', 'Borderline Risk (3-<5%)');
+        rec = t('Risk artirici faktor varsa statin makul. LDL hedefi <100 mg/dL.', 'Statin reasonable if risk-enhancing factors. LDL target <100 mg/dL.');
+    } else if (risk < 10) {
+        cls = 'warning'; cat = t('Orta Risk (5-<10%)', 'Intermediate Risk (5-<10%)');
+        rec = t('Statin onerilir. LDL hedefi <100 mg/dL.', 'Statin recommended. LDL target <100 mg/dL.');
+    } else {
+        cls = 'danger'; cat = t('Yuksek Risk (≥10%)', 'High Risk (≥10%)');
+        rec = t('Yuksek yogunluklu statin kesinlikle onerilir. LDL hedefi <70 mg/dL.', 'High-intensity statin strongly recommended. LDL target <70 mg/dL.');
+    }
+
+    const nonHDL = (tc - hdl).toFixed(0);
+    showResult('prevent-result', 'PREVENT 10Y ASCVD (ACC 2026)',
+        '%' + risk.toFixed(1),
+        `<strong>${cat}</strong><br>${rec}<br>Non-HDL: ${nonHDL} mg/dL`, cls);
+}
+
+// ============ 2b. SCORE2 (ESC 2021) ============
+// Coefficients: SCORE2 Working Group. Eur Heart J 2021;42:2439-2454
+function calcSCORE2() {
+    const age    = parseFloat(document.getElementById('s2-age').value);
+    const sex    = document.getElementById('s2-sex').value;
+    const tc     = parseFloat(document.getElementById('s2-tc').value);
+    const hdl    = parseFloat(document.getElementById('s2-hdl').value);
+    const sbp    = parseFloat(document.getElementById('s2-sbp').value);
+    const smoke  = parseInt(document.getElementById('s2-smoke').value);
+    const region = document.getElementById('s2-region').value;
+
+    if (!age || !tc || !hdl || !sbp) return;
+    if (age < 40 || age > 69) {
+        showResult('score2-result','SCORE2','-',t('Yas 40-69 araliginda olmali','Age must be 40-69'),'danger'); return;
+    }
+
+    const isFem  = sex === 'female';
+    const tcMm   = tc  * 0.02586;
+    const hdlMm  = hdl * 0.02586;
+    const ageC   = (age - 60) / 5;
+    const sbpC   = (sbp - 120) / 20;
+    const tcC    = tcMm  - 6;
+    const hdlC   = (hdlMm - 1.3) / 0.5;
+
+    let S0, bA, bSm, bSB, bTC, bHDL, bASm, bASB, bATC, bAHDL;
+    if (!isFem) {
+        S0=0.9605; bA=0.3742; bSm=0.6012; bSB=0.2777; bTC=0.1458; bHDL=-0.2698;
+        bASm=-0.0755; bASB=-0.0255; bATC=-0.0281; bAHDL=0.0426;
+    } else {
+        S0=0.9776; bA=0.4648; bSm=0.7744; bSB=0.3131; bTC=0.1002; bHDL=-0.2606;
+        bASm=-0.1088; bASB=-0.0277; bATC=-0.0226; bAHDL=0.0613;
+    }
+
+    const LP = bA*ageC + bSm*smoke + bSB*sbpC + bTC*tcC + bHDL*hdlC
+             + bASm*(ageC*smoke) + bASB*(ageC*sbpC) + bATC*(ageC*tcC) + bAHDL*(ageC*hdlC);
+    const uncalib = 1 - Math.pow(S0, Math.exp(LP));
+
+    // Regional calibration [a, b] — ESC 2021 Supplementary Table
+    const calM = { low:[-0.5699,0.7476], moderate:[-0.1565,0.8009], high:[0.3207,0.9360], veryhigh:[0.5836,0.8294] };
+    const calF = { low:[-0.7380,0.7019], moderate:[-0.3143,0.7701], high:[0.5710,0.9369], veryhigh:[0.9412,0.8329] };
+    const [a, b] = (isFem ? calF : calM)[region];
+    const calibRisk = 1 - Math.exp(-Math.exp(a + b * Math.log(-Math.log(1 - Math.max(uncalib, 1e-10)))));
+    const risk = Math.min(calibRisk * 100, 100);
+
+    // ESC 2021 age-dependent thresholds
+    const highThr = age < 50 ? 2.5 : 5;
+    const vhThr   = age < 50 ? 7.5 : 10;
+    let cls, cat, rec;
+    if (risk < highThr) {
+        cls='success'; cat=t('Dusuk-Orta Risk','Low-Moderate Risk');
+        rec=t('Yasam tarzi mudahalesi onerilir.','Lifestyle intervention recommended.');
+    } else if (risk < vhThr) {
+        cls='warning'; cat=t('Yuksek Risk','High Risk');
+        rec=t('LDL hedefi <70 mg/dL, statin dusunulebilir.','LDL target <70 mg/dL, statin to be considered.');
+    } else {
+        cls='danger'; cat=t('Cok Yuksek Risk','Very High Risk');
+        rec=t('LDL hedefi <55 mg/dL, statin kesinlikle onerilir.','LDL target <55 mg/dL, statin strongly recommended.');
+    }
+
+    showResult('score2-result', 'SCORE2 10Y CVD (ESC 2021)',
+        '%' + risk.toFixed(1),
+        `<strong>${cat}</strong><br>${rec}`, cls);
 }
 
 // ============ 3. eGFR (CKD-EPI 2021) ============
@@ -953,6 +1332,31 @@ function calcWordCount() {
         `<br><strong>${t('Cumle', 'Sentences')}:</strong> ${sentences}` +
         ` &nbsp;|&nbsp; <strong>${t('Paragraf', 'Paragraphs')}:</strong> ${paragraphs}` +
         ` &nbsp;|&nbsp; <strong>${t('Satir', 'Lines')}:</strong> ${lines}`;
+}
+
+// ============ 11. Balthazard ============
+function calcBalthazard() {
+    const vals = [];
+    for (let i = 1; i <= 8; i++) {
+        const v = parseFloat(document.getElementById('balth-' + i).value);
+        if (!isNaN(v) && v > 0 && v <= 100) vals.push(v / 100);
+    }
+    if (vals.length === 0) return;
+
+    let product = 1;
+    vals.forEach(v => { product *= (1 - v); });
+    const total = (1 - product) * 100;
+
+    let cls, cat;
+    if (total < 20)       { cls = 'success'; cat = t('Hafif Engellilik', 'Mild Disability'); }
+    else if (total < 40)  { cls = 'warning'; cat = t('Orta Engellilik', 'Moderate Disability'); }
+    else if (total < 60)  { cls = 'warning'; cat = t('Agir Engellilik', 'Severe Disability'); }
+    else                  { cls = 'danger';  cat = t('Tam / Cok Agir Engellilik', 'Complete / Very Severe Disability'); }
+
+    const breakdown = vals.map((v, i) => `${t('Kayip', 'Loss')} ${i+1}: %${(v*100).toFixed(0)}`).join(' | ');
+    showResult('balth-result', t('Toplam Engellilik Orani (Balthazard)', 'Total Disability Rate (Balthazard)'),
+        '%' + total.toFixed(2),
+        `<strong>${cat}</strong><br>${breakdown}`, cls);
 }
 
 // ============ INIT ============

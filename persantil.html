@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persantil Hesaplama - drtr.uk</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f; color: #e0e0e0; min-height: 100vh;
+        }
+        .top-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; background: #1a1a1a; border-bottom: 1px solid #2a2a2a;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .top-bar a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+        .top-bar a:hover { color: #fff; }
+        .top-bar h1 { font-size: 1.1rem; color: #fff; font-weight: 600; }
+        .lang-btn {
+            background: #2a2a2a; border: 1px solid #444; color: #ccc;
+            padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+        }
+        .page-wrap { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+        .nav-pills {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+            padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;
+        }
+        .nav-pill {
+            background: #1a1a1a; border: 1px solid #2a2a2a; color: #aaa;
+            padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+            white-space: nowrap; transition: all 0.2s;
+        }
+        .nav-pill:hover { border-color: #555; color: #fff; }
+        .nav-pill.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+        .calc-card {
+            background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 24px; margin-bottom: 20px; display: none;
+        }
+        .calc-card.active { display: block; }
+        .calc-card h2 { font-size: 1.2rem; color: #fff; margin-bottom: 6px; }
+        .subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 4px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px 12px; background: #111;
+            border: 1px solid #333; border-radius: 8px; color: #e0e0e0;
+            font-size: 0.95rem; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: #3b82f6; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .btn {
+            background: #3b82f6; color: #fff; border: none; padding: 10px 24px;
+            border-radius: 8px; cursor: pointer; font-size: 0.95rem; margin-top: 8px;
+        }
+        .btn:hover { background: #2563eb; }
+        .result-box {
+            margin-top: 16px; padding: 16px; background: #0d1b2a;
+            border: 1px solid #1e3a5f; border-radius: 8px; display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title { font-size: 0.8rem; color: #5b9bd5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .result-value { font-size: 1.4rem; font-weight: 700; color: #fff; }
+        .result-detail { font-size: 0.85rem; color: #aaa; margin-top: 6px; line-height: 1.5; }
+        .result-detail.warning { color: #f59e0b; }
+        .result-detail.danger { color: #ef4444; }
+        .result-detail.success { color: #22c55e; }
+
+        /* Percentile bar */
+        .pct-bar-wrap { margin-top: 14px; }
+        .pct-bar-labels {
+            display: flex; justify-content: space-between;
+            font-size: 0.72rem; color: #555; margin-bottom: 4px;
+        }
+        .pct-bar-track {
+            height: 12px; border-radius: 6px; position: relative;
+            background: linear-gradient(to right, #ef4444 5%, #f59e0b 15%, #22c55e 35%, #22c55e 65%, #f59e0b 85%, #ef4444 95%);
+        }
+        .pct-bar-marker {
+            position: absolute; top: -4px; width: 4px; height: 20px;
+            background: #fff; border-radius: 2px; transform: translateX(-50%);
+            box-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+        .pct-table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 0.8rem; }
+        .pct-table th, .pct-table td { padding: 5px 8px; border: 1px solid #2a2a2a; text-align: center; }
+        .pct-table th { background: #222; color: #888; }
+        .pct-table td.highlight { background: #1e3a5f; color: #93c5fd; font-weight: 600; }
+
+        .info-note { font-size: 0.78rem; color: #666; margin-top: 12px; font-style: italic; line-height: 1.4; }
+        footer { text-align: center; padding: 30px 20px; color: #444; font-size: 0.8rem; }
+        @media (max-width: 600px) {
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .top-bar { padding: 12px 16px; }
+            .calc-card { padding: 18px 14px; }
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="hesaplamalar.html">← Hesaplamalar</a>
+    <h1 id="pageTitle">Persantil Hesaplama</h1>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+</div>
+
+<div class="page-wrap">
+    <div class="nav-pills" id="navPills"></div>
+
+    <!-- 1. Weight/Height Percentile -->
+    <div class="calc-card" id="calc-boykilopct">
+        <h2 data-tr="Boy / Kilo Persantili" data-en="Height / Weight Percentile">Boy / Kilo Persantili</h2>
+        <p class="subtitle" data-tr="Neyzi ve ark. 2008 Turk referans degerleri (0-18 yas)" data-en="Neyzi et al. 2008 Turkish reference values (0-18 years)">Neyzi ve ark. 2008 Turk referans degerleri (0-18 yas)</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="pct-sex">
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                    <option value="female" data-tr="Kiz" data-en="Female">Kiz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-tr="Olcum Tipi" data-en="Measurement Type">Olcum Tipi</label>
+                <select id="pct-type" onchange="updatePctLabel()">
+                    <option value="weight" data-tr="Kilo (kg)" data-en="Weight (kg)">Kilo (kg)</option>
+                    <option value="height" data-tr="Boy (cm)" data-en="Height (cm)">Boy (cm)</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Yas (Yil)" data-en="Age (Years)">Yas (Yil)</label>
+                <input type="number" id="pct-agey" placeholder="5" value="5" min="0" max="18" oninput="syncAge()">
+            </div>
+            <div class="form-group">
+                <label data-tr="Yas (Ay - opsiyonel)" data-en="Age (Months - optional)">Yas (Ay - opsiyonel, 0-11)</label>
+                <input type="number" id="pct-agem" placeholder="0" value="0" min="0" max="11" oninput="syncAge()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label id="pct-val-label" data-tr="Deger (kg)" data-en="Value (kg)">Deger (kg)</label>
+            <input type="number" step="0.01" id="pct-val" placeholder="18.5" value="18.5">
+        </div>
+        <button class="btn" onclick="calcPercentile()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="pct-result"></div>
+        <p class="info-note" data-tr="Kaynak: Neyzi O ve ark. Turk cocuklarinda vucut agirligi, boy uzunlugu, bas cevresi ve VKI referans degerleri. Cocuk Sagligi ve Hastaliklari Dergisi 2008;51:1-14." data-en="Source: Neyzi O et al. Weight, height, head circumference and BMI references for Turkish children. CSHD 2008;51:1-14.">Kaynak: Neyzi O ve ark. CSHD 2008;51:1-14.</p>
+    </div>
+
+    <!-- 2. BMI Percentile -->
+    <div class="calc-card" id="calc-bmipct">
+        <h2 data-tr="VKI Persantili" data-en="BMI Percentile">VKI Persantili</h2>
+        <p class="subtitle" data-tr="Neyzi ve ark. 2008 - 2-18 yas, VKI referans degerleri" data-en="Neyzi et al. 2008 - ages 2-18, BMI reference values">Neyzi ve ark. 2008 - 2-18 yas, VKI referans degerleri</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="bpct-sex">
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                    <option value="female" data-tr="Kiz" data-en="Female">Kiz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-tr="Yas (Yil, 2-18)" data-en="Age (Years, 2-18)">Yas (Yil, 2-18)</label>
+                <input type="number" id="bpct-age" placeholder="10" min="2" max="18">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Boy (cm)" data-en="Height (cm)">Boy (cm)</label>
+                <input type="number" id="bpct-h" placeholder="140" oninput="calcBMIauto()">
+            </div>
+            <div class="form-group">
+                <label data-tr="Kilo (kg)" data-en="Weight (kg)">Kilo (kg)</label>
+                <input type="number" id="bpct-w" placeholder="35" oninput="calcBMIauto()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="VKI (kg/m²) - otomatik hesaplanir" data-en="BMI (kg/m²) - auto calculated">VKI (kg/m²) - otomatik hesaplanir</label>
+            <input type="number" step="0.01" id="bpct-bmi" placeholder="-" readonly style="color:#888">
+        </div>
+        <button class="btn" onclick="calcBMIPercentile()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="bpct-result"></div>
+    </div>
+
+    <!-- 3. Head Circumference (0-3y) -->
+    <div class="calc-card" id="calc-hcpct">
+        <h2 data-tr="Bas Cevresi Persantili" data-en="Head Circumference Percentile">Bas Cevresi Persantili</h2>
+        <p class="subtitle" data-tr="Neyzi ve ark. 2008 - 0-36 ay" data-en="Neyzi et al. 2008 - 0-36 months">Neyzi ve ark. 2008 - 0-36 ay</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
+                <select id="hc-sex">
+                    <option value="male" data-tr="Erkek" data-en="Male">Erkek</option>
+                    <option value="female" data-tr="Kiz" data-en="Female">Kiz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-tr="Yas (Ay, 0-36)" data-en="Age (Months, 0-36)">Yas (Ay, 0-36)</label>
+                <input type="number" id="hc-age" placeholder="12" min="0" max="36">
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="Bas Cevresi (cm)" data-en="Head Circumference (cm)">Bas Cevresi (cm)</label>
+            <input type="number" step="0.1" id="hc-val" placeholder="47">
+        </div>
+        <button class="btn" onclick="calcHCPercentile()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
+        <div class="result-box" id="hc-result"></div>
+    </div>
+</div>
+
+<footer>&copy; 2026 drtr.uk</footer>
+
+<script>
+// ============ LANGUAGE ============
+let currentLang = 'tr';
+function toggleLang() {
+    currentLang = currentLang === 'tr' ? 'en' : 'tr';
+    document.getElementById('langBtn').textContent = currentLang === 'tr' ? 'EN' : 'TR';
+    document.getElementById('pageTitle').textContent = currentLang === 'tr' ? 'Persantil Hesaplama' : 'Percentile Calculator';
+    document.querySelectorAll('[data-tr]').forEach(el => { el.textContent = el.getAttribute('data-' + currentLang); });
+    document.querySelectorAll('select option[data-tr]').forEach(opt => { opt.textContent = opt.getAttribute('data-' + currentLang); });
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+        const map = { boykilopct:{tr:'Boy/Kilo',en:'Height/Weight'}, bmipct:{tr:'VKI',en:'BMI'}, hcpct:{tr:'Bas Cevresi',en:'Head Circ.'} };
+        if (map[pill.dataset.calc]) pill.textContent = map[pill.dataset.calc][currentLang];
+    });
+    updatePctLabel();
+}
+
+// ============ NAV ============
+const navDefs = [
+    { key:'boykilopct', tr:'Boy/Kilo', en:'Height/Weight' },
+    { key:'bmipct',     tr:'VKI',      en:'BMI' },
+    { key:'hcpct',      tr:'Bas Cevresi', en:'Head Circ.' }
+];
+function initNav() {
+    const nav = document.getElementById('navPills');
+    navDefs.forEach((d, i) => {
+        const pill = document.createElement('span');
+        pill.className = 'nav-pill' + (i === 0 ? ' active' : '');
+        pill.textContent = d[currentLang];
+        pill.dataset.calc = d.key;
+        pill.onclick = () => {
+            document.querySelectorAll('.calc-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+            document.getElementById('calc-' + d.key).classList.add('active');
+            pill.classList.add('active');
+        };
+        nav.appendChild(pill);
+    });
+    document.getElementById('calc-boykilopct').classList.add('active');
+}
+
+function t(tr, en) { return currentLang === 'tr' ? tr : en; }
+
+function showResult(id, title, value, details, cls) {
+    const box = document.getElementById(id);
+    box.innerHTML = `<div class="result-title">${title}</div><div class="result-value">${value}</div>` +
+        (details ? `<div class="result-detail ${cls || ''}">${details}</div>` : '');
+    box.classList.add('show');
+}
+
+function updatePctLabel() {
+    const type = document.getElementById('pct-type').value;
+    const lbl = document.getElementById('pct-val-label');
+    lbl.textContent = type === 'weight'
+        ? t('Kilo (kg)', 'Weight (kg)')
+        : t('Boy (cm)', 'Height (cm)');
+}
+
+function syncAge() { /* age is read directly */ }
+
+// ============ NEYZI 2008 DATA ============
+// Source: Neyzi O et al. CSHD 2008;51:1-14
+// Format: [ageMonths, P3, P10, P25, P50, P75, P90, P97]
+
+const WEIGHT_BOYS = [
+    [0,   2.58, 2.85, 3.13, 3.43, 3.73, 4.00, 4.27],
+    [3,   4.75, 5.26, 5.79, 6.38, 6.99, 7.54, 8.10],
+    [6,   6.21, 6.79, 7.41, 8.12, 8.85, 9.54, 10.25],
+    [9,   7.27, 7.87, 8.51, 9.26, 10.06,10.81,11.58],
+    [12,  7.96, 8.61, 9.32, 10.16,11.05,11.92,12.82],
+    [15,  8.61, 9.28, 10.01,10.89,11.83,12.75,13.72],
+    [18,  9.13, 9.82, 10.58,11.49,12.48,13.46,14.49],
+    [24,  10.12,10.85,11.66,12.66,13.76,14.86,16.05],
+    [30,  11.06,11.84,12.71,13.80,15.04,16.29,17.69],
+    [36,  11.81,12.65,13.61,14.83,16.24,17.71,19.39],
+    [42,  12.6, 13.5, 14.6, 15.9, 17.4, 18.9, 20.6],
+    [48,  13.3, 14.3, 15.4, 16.8, 18.5, 20.1, 22.0],
+    [54,  14.0, 15.0, 16.2, 17.7, 19.5, 21.3, 23.4],
+    [60,  14.7, 15.8, 17.0, 18.6, 20.5, 22.4, 24.6],
+    [66,  15.4, 16.5, 17.9, 19.6, 21.6, 23.6, 26.0],
+    [72,  16.2, 17.4, 18.9, 20.7, 22.8, 25.0, 27.5],
+    [84,  18.1, 19.5, 21.1, 23.2, 25.8, 28.5, 31.6],
+    [96,  19.9, 21.5, 23.4, 25.8, 28.9, 32.0, 36.1],
+    [108, 21.7, 23.6, 25.8, 28.5, 32.4, 36.4, 41.3],
+    [120, 23.6, 25.9, 28.6, 32.2, 36.7, 41.6, 47.8],
+    [132, 26.0, 29.6, 33.1, 37.8, 43.6, 49.3, 57.8],
+    [144, 29.9, 33.8, 38.4, 44.3, 51.3, 58.7, 67.1],
+    [156, 33.4, 38.0, 43.6, 49.8, 57.6, 64.9, 73.3],
+    [168, 39.1, 44.0, 49.4, 56.2, 63.9, 71.6, 80.1],
+    [180, 45.3, 50.1, 54.7, 62.1, 69.7, 76.8, 85.9],
+    [192, 49.9, 54.5, 59.7, 66.2, 73.6, 81.2, 89.6],
+    [204, 52.2, 57.8, 62.8, 69.4, 76.5, 83.0, 92.1],
+    [216, 56.1, 60.5, 65.5, 71.8, 79.0, 86.4, 94.7]
+];
+
+const WEIGHT_GIRLS = [
+    [0,   2.52, 2.76, 3.01, 3.29, 3.58, 3.84, 4.10],
+    [3,   4.48, 4.90, 5.33, 5.82, 6.32, 6.78, 7.24],
+    [6,   5.94, 6.38, 6.85, 7.43, 8.06, 8.68, 9.34],
+    [9,   6.88, 7.34, 7.89, 8.55, 9.29, 9.89, 10.67],
+    [12,  7.52, 8.06, 8.66, 9.39, 10.20,10.96,11.87],
+    [15,  8.09, 8.67, 9.31, 10.10,10.96,11.81,12.73],
+    [18,  8.57, 9.19, 9.87, 10.71,11.63,12.55,13.54],
+    [24,  9.49, 10.20,10.99,11.91,12.99,14.03,15.15],
+    [30,  10.35,11.17,12.06,13.12,14.25,15.33,16.47],
+    [36,  11.19,12.09,13.05,14.18,15.37,16.51,17.68],
+    [42,  11.9, 12.8, 13.9, 15.1, 16.5, 17.8, 19.3],
+    [48,  12.7, 13.5, 14.8, 16.3, 17.9, 19.5, 21.3],
+    [54,  13.5, 14.5, 15.8, 17.3, 19.0, 20.7, 22.5],
+    [60,  14.2, 15.3, 16.6, 18.2, 20.1, 22.1, 24.3],
+    [66,  14.9, 16.2, 17.7, 19.5, 21.6, 23.7, 26.1],
+    [72,  15.7, 17.0, 18.6, 20.6, 22.9, 25.6, 27.9],
+    [84,  17.2, 18.7, 20.6, 22.9, 25.7, 28.6, 31.9],
+    [96,  18.9, 20.9, 22.9, 25.6, 28.9, 32.4, 36.5],
+    [108, 20.9, 23.1, 25.6, 28.9, 32.6, 37.0, 41.8],
+    [120, 23.0, 25.6, 28.7, 32.6, 37.3, 42.3, 48.0],
+    [132, 26.4, 29.4, 33.4, 38.0, 43.5, 49.3, 55.9],
+    [144, 32.0, 35.8, 39.9, 45.1, 50.9, 56.8, 63.1],
+    [156, 36.3, 40.6, 45.0, 50.5, 56.3, 62.0, 68.0],
+    [168, 40.1, 44.5, 49.0, 54.2, 59.8, 65.3, 71.2],
+    [180, 43.3, 47.8, 52.0, 55.3, 61.1, 66.5, 72.8],
+    [192, 45.2, 49.5, 53.5, 57.2, 63.0, 68.1, 74.2],
+    [204, 46.5, 50.5, 54.5, 57.8, 63.4, 68.5, 74.5],
+    [216, 47.3, 50.5, 54.9, 58.1, 63.9, 67.3, 72.2]
+];
+
+const HEIGHT_BOYS = [
+    [0,   45.9, 47.2, 48.5, 50.0, 51.5, 52.9, 54.2],
+    [3,   56.2, 57.8, 59.5, 61.3, 63.2, 64.8, 66.4],
+    [6,   62.8, 64.5, 66.2, 68.0, 69.7, 71.3, 73.2],
+    [9,   67.4, 69.1, 70.9, 72.8, 74.7, 76.4, 78.1],
+    [12,  70.8, 72.7, 74.5, 76.5, 78.5, 80.2, 82.3],
+    [15,  73.8, 75.8, 77.8, 79.8, 82.0, 83.6, 86.2],
+    [18,  76.4, 78.5, 80.7, 83.1, 85.4, 87.7, 90.1],
+    [24,  81.0, 83.3, 85.6, 88.2, 90.9, 93.2, 95.5],
+    [30,  85.3, 87.6, 90.0, 92.6, 95.3, 97.7, 100.2],
+    [36,  89.3, 91.7, 94.1, 96.8, 99.4, 101.8,104.2],
+    [42,  92.8, 95.2, 97.7, 100.4,103.2,105.7,108.3],
+    [48,  96.0, 98.6, 101.1,104.0,106.9,109.5,112.0],
+    [54,  99.1, 101.7,104.4,107.5,110.6,113.3,116.0],
+    [60,  102.0,104.8,107.7,111.0,114.4,117.3,120.4],
+    [66,  104.8,107.7,110.7,114.1,117.5,120.7,123.9],
+    [72,  107.7,110.7,113.8,116.2,120.7,124.1,127.4],
+    [84,  112.1,115.1,118.2,121.5,125.0,128.2,131.7],
+    [96,  116.9,119.9,123.0,126.4,130.0,133.2,136.5],
+    [108, 121.7,124.9,128.1,131.7,135.6,139.1,142.4],
+    [120, 126.4,129.9,133.3,137.2,141.2,145.1,148.6],
+    [132, 130.5,134.3,138.1,142.3,146.7,151.2,155.7],
+    [144, 134.8,139.1,143.3,148.0,152.9,158.1,162.8],
+    [156, 140.3,145.3,149.8,155.4,160.4,165.4,170.3],
+    [168, 147.6,153.0,158.0,163.4,168.3,172.8,177.3],
+    [180, 156.9,161.2,165.6,170.3,174.7,178.6,183.7],
+    [192, 160.6,164.6,168.7,173.7,177.7,181.4,185.7],
+    [204, 163.0,166.8,170.7,175.0,179.3,182.4,187.1],
+    [216, 164.5,168.2,172.0,176.2,180.4,184.2,187.9]
+];
+
+const HEIGHT_GIRLS = [
+    [0,   45.3, 46.8, 47.9, 49.4, 50.8, 52.1, 53.4],
+    [3,   55.3, 56.8, 58.2, 59.6, 61.5, 63.0, 64.5],
+    [6,   61.6, 63.0, 64.7, 66.4, 68.2, 69.7, 71.3],
+    [9,   65.7, 67.3, 69.0, 71.2, 73.0, 74.6, 76.3],
+    [12,  69.1, 70.9, 72.8, 75.1, 77.2, 79.2, 81.0],
+    [15,  72.3, 74.2, 76.2, 78.7, 81.0, 83.1, 85.0],
+    [18,  75.0, 77.0, 79.2, 81.7, 84.3, 86.5, 88.6],
+    [24,  79.3, 81.6, 83.8, 86.5, 89.1, 91.6, 94.0],
+    [30,  83.6, 85.9, 88.2, 91.0, 93.9, 96.5, 99.0],
+    [36,  87.4, 89.8, 92.4, 95.4, 98.2, 101.0,103.7],
+    [42,  91.0, 93.5, 96.1, 99.2, 102.1,104.9,107.7],
+    [48,  94.3, 96.9, 99.8, 103.0,106.1,109.0,111.8],
+    [54,  97.4, 100.1,103.0,106.4,109.6,112.5,115.5],
+    [60,  100.4,103.2,106.1,109.8,113.1,116.2,119.2],
+    [66,  103.3,106.1,109.2,113.0,116.4,119.5,122.7],
+    [72,  106.0,109.0,112.2,116.0,119.5,122.8,126.1],
+    [84,  111.6,114.6,117.9,121.7,125.4,128.8,132.2],
+    [96,  116.9,120.0,123.3,127.2,131.2,134.8,138.3],
+    [108, 121.9,125.3,128.7,132.9,137.2,141.0,144.8],
+    [120, 126.8,130.4,134.1,138.5,143.2,147.2,151.3],
+    [132, 131.4,135.4,139.5,144.3,149.3,153.7,158.1],
+    [144, 136.6,141.0,145.4,150.4,155.8,160.5,165.2],
+    [156, 141.1,145.7,150.3,155.4,161.0,165.7,170.4],
+    [168, 146.6,150.3,154.2,158.4,163.1,167.0,171.1],
+    [180, 149.7,152.8,156.2,159.5,163.8,167.6,171.4],
+    [192, 150.3,153.5,157.1,160.4,164.7,168.4,172.1],
+    [204, 150.8,154.0,157.4,160.9,165.0,168.6,172.1],
+    [216, 151.7,155.2,158.8,163.1,167.1,170.7,173.8]
+];
+
+// BMI reference (Neyzi 2008, Tablo III) - ages 2-18y
+// [ageMonths, P5, P15, P25, P50, P75, P85, P95]
+const BMI_BOYS = [
+    [24,  14.4,15.3,15.8,16.9,18.0,18.6,19.7],
+    [30,  14.5,15.3,15.9,16.9,18.0,18.6,19.7],
+    [36,  14.3,15.0,15.5,16.5,17.5,18.3,19.4],
+    [42,  13.9,14.7,15.2,16.2,17.4,18.0,19.2],
+    [48,  13.7,14.5,15.0,16.0,17.2,17.8,19.0],
+    [54,  13.5,14.2,14.8,15.8,17.0,17.6,18.9],
+    [60,  13.4,14.1,14.6,15.6,16.8,17.5,18.7],
+    [66,  13.3,14.0,14.6,15.6,16.9,17.6,19.0],
+    [72,  13.4,14.1,14.7,15.7,17.0,17.8,19.1],
+    [84,  13.5,14.3,14.9,16.0,17.4,18.2,19.9],
+    [96,  13.6,14.4,15.1,16.1,17.6,18.6,20.5],
+    [108, 13.8,14.6,15.3,16.5,18.0,19.1,21.2],
+    [120, 14.0,14.9,15.6,17.0,18.8,20.0,22.5],
+    [132, 14.3,15.3,16.1,17.5,19.5,20.9,23.8],
+    [144, 14.8,15.8,16.7,18.2,20.4,21.8,25.0],
+    [156, 15.3,16.5,17.4,19.0,21.3,22.9,26.1],
+    [168, 16.4,17.5,18.5,20.1,22.7,24.4,27.8],
+    [180, 17.2,18.5,19.5,21.2,23.7,25.6,29.3],
+    [192, 18.0,19.3,20.3,22.0,24.7,26.3,30.0],
+    [204, 18.5,19.9,20.7,22.5,25.2,26.8,29.8],
+    [216, 19.2,20.5,21.3,23.1,25.2,26.6,29.4]
+];
+
+const BMI_GIRLS = [
+    [24,  14.0,14.8,15.3,16.2,17.5,18.3,19.7],
+    [30,  13.9,14.8,15.3,16.2,17.5,18.3,19.7],
+    [36,  13.6,14.4,15.0,15.9,17.0,17.8,19.0],
+    [42,  13.5,14.2,14.7,15.6,16.8,17.6,18.9],
+    [48,  13.4,14.0,14.6,15.5,16.6,17.4,18.6],
+    [54,  13.5,14.1,14.6,15.5,16.6,17.3,18.5],
+    [60,  13.5,14.1,14.6,15.5,16.6,17.3,18.5],
+    [66,  13.5,14.1,14.6,15.6,16.7,17.5,18.8],
+    [72,  13.4,14.1,14.6,15.6,16.8,17.6,19.0],
+    [84,  13.3,14.0,14.5,15.6,16.9,17.8,19.7],
+    [96,  13.4,14.1,14.7,15.7,17.1,18.1,20.2],
+    [108, 13.5,14.3,14.8,16.0,17.5,18.6,20.8],
+    [120, 13.8,14.6,15.2,16.3,18.0,19.2,21.6],
+    [132, 14.1,15.0,15.7,17.0,18.9,20.2,23.0],
+    [144, 14.5,15.5,16.3,17.6,19.7,21.1,24.0],
+    [156, 15.2,16.1,16.9,18.3,20.6,22.1,25.0],
+    [168, 16.0,17.0,17.9,19.4,21.7,23.2,26.0],
+    [180, 16.8,17.9,18.8,20.3,22.7,24.2,27.0],
+    [192, 17.4,18.5,19.4,21.0,23.4,24.9,27.8],
+    [204, 17.9,19.0,19.9,21.6,24.0,25.5,28.5],
+    [216, 18.1,19.2,20.3,21.8,23.9,25.4,26.6]
+];
+
+// Head circumference (Tablo IV) - [ageMonths, P3, P10, P25, P50, P75, P90, P97]
+const HC_BOYS = [
+    [0,  32.3,33.2,34.0,34.9,35.9,36.7,37.5],
+    [1,  35.3,36.1,37.0,37.9,38.9,39.7,40.5],
+    [2,  37.1,37.9,38.8,39.7,40.7,41.5,42.3],
+    [3,  38.5,39.3,40.2,41.1,45.0,45.8,46.7],
+    [6,  41.3,42.2,43.1,44.0,45.0,45.8,46.7],
+    [9,  43.1,44.0,44.9,45.8,46.7,47.6,48.4],
+    [12, 44.3,45.2,46.1,47.1,48.0,48.9,49.8],
+    [15, 44.9,45.9,46.8,47.8,48.8,49.7,50.6],
+    [18, 45.6,46.5,47.5,48.5,49.4,50.3,51.3],
+    [21, 45.9,46.9,47.8,48.8,49.8,50.7,51.6],
+    [24, 46.1,47.0,48.0,49.0,50.0,50.9,51.9],
+    [27, 46.5,47.4,48.4,49.3,50.3,51.1,52.0],
+    [30, 46.7,47.6,48.6,49.6,50.5,51.4,52.2],
+    [33, 47.1,48.0,48.9,49.9,50.8,51.7,52.5],
+    [36, 47.1,48.0,49.0,50.0,51.1,52.0,52.9]
+];
+
+const HC_GIRLS = [
+    [0,  31.9,32.7,33.4,34.5,35.5,36.3,37.1],
+    [1,  34.8,35.5,36.3,37.1,38.0,38.7,39.5],
+    [2,  36.3,37.1,37.9,38.8,39.6,40.4,41.2],
+    [3,  37.7,38.4,39.1,40.0,40.8,41.6,42.3],
+    [6,  40.4,41.2,42.0,42.9,43.8,44.6,45.3],
+    [9,  42.1,42.9,43.7,44.6,45.4,46.2,47.1],
+    [12, 43.4,44.1,44.9,45.8,46.7,47.5,48.3],
+    [15, 44.1,44.9,45.7,46.7,47.6,48.4,49.2],
+    [18, 44.8,45.6,46.4,47.4,48.2,49.0,49.9],
+    [21, 45.0,45.8,46.7,47.6,48.5,49.4,50.2],
+    [24, 45.4,46.2,47.0,47.9,48.8,49.7,50.5],
+    [27, 45.6,46.4,47.3,48.2,49.1,49.9,50.7],
+    [30, 45.8,46.6,47.5,48.4,49.3,50.1,51.0],
+    [33, 46.0,46.8,47.7,48.6,49.6,50.4,51.2],
+    [36, 46.2,47.0,47.9,48.8,49.8,50.7,51.5]
+];
+
+// ============ INTERPOLATION ============
+function interpolateTable(table, ageMonths) {
+    if (ageMonths <= table[0][0]) return table[0].slice(1);
+    if (ageMonths >= table[table.length-1][0]) return table[table.length-1].slice(1);
+    for (let i = 0; i < table.length - 1; i++) {
+        const a0 = table[i][0], a1 = table[i+1][0];
+        if (ageMonths >= a0 && ageMonths <= a1) {
+            const f = (ageMonths - a0) / (a1 - a0);
+            return table[i].slice(1).map((v, j) => v + f * (table[i+1][j+1] - v));
+        }
+    }
+    return table[table.length-1].slice(1);
+}
+
+const PCT_LABELS  = [3, 10, 25, 50, 75, 90, 97];
+const PCT_NAMES   = ['P3','P10','P25','P50','P75','P90','P97'];
+// Approximate z-scores: P3≈-1.88, P10≈-1.28, P25≈-0.67, P50=0, P75=0.67, P90=1.28, P97=1.88
+const PCT_Z       = [-1.88, -1.28, -0.67, 0, 0.67, 1.28, 1.88];
+
+function valueToPercentile(val, refs) {
+    // refs = [P3, P10, P25, P50, P75, P90, P97]
+    if (val <= refs[0]) return { pct: '< 3', z: (PCT_Z[0]).toFixed(1), band: 0 };
+    if (val >= refs[6]) return { pct: '> 97', z: '>' + PCT_Z[6].toFixed(1), band: 8 };
+    for (let i = 0; i < 6; i++) {
+        if (val >= refs[i] && val <= refs[i+1]) {
+            const f = (val - refs[i]) / (refs[i+1] - refs[i]);
+            const pct = PCT_LABELS[i] + f * (PCT_LABELS[i+1] - PCT_LABELS[i]);
+            const z   = PCT_Z[i]     + f * (PCT_Z[i+1]      - PCT_Z[i]);
+            return { pct: pct.toFixed(0), z: z.toFixed(2), band: i + 1 };
+        }
+    }
+    return { pct: '?', z: '?', band: 0 };
+}
+
+function interpretBand(band) {
+    if (band === 0) return { tr: 'P3 alti - Olasi malnütrisyon / boy kisaligi', en: 'Below P3 - Possible malnutrition / stunting', cls: 'danger' };
+    if (band === 1) return { tr: 'P3-P10 - Dusuk normal sinir', en: 'P3-P10 - Low-normal range', cls: 'warning' };
+    if (band <= 5)  return { tr: 'P10-P90 - Normal', en: 'P10-P90 - Normal range', cls: 'success' };
+    if (band === 6) return { tr: 'P90-P97 - Yuksek normal sinir', en: 'P90-P97 - High-normal range', cls: 'warning' };
+    return { tr: 'P97 ustu - Fazla kilolu / uzun', en: 'Above P97 - Overweight / tall', cls: 'danger' };
+}
+
+function buildPctBar(pctNum) {
+    // pctNum is 0-100
+    const pos = Math.min(Math.max(pctNum, 0), 100);
+    return `<div class="pct-bar-wrap">
+      <div class="pct-bar-labels"><span>P3</span><span>P10</span><span>P25</span><span>P50</span><span>P75</span><span>P90</span><span>P97</span></div>
+      <div class="pct-bar-track">
+        <div class="pct-bar-marker" style="left:${pos}%"></div>
+      </div>
+    </div>`;
+}
+
+function buildRefTable(refs, val, labels) {
+    const names = labels || PCT_NAMES;
+    let html = '<table class="pct-table"><tr><th>' + names.join('</th><th>') + '</th></tr><tr>';
+    refs.forEach((r, i) => {
+        const hi = val >= (refs[i-1]||0) && val <= r ? 'class="highlight"' : '';
+        html += `<td ${hi}>${r.toFixed(1)}</td>`;
+    });
+    html += '</tr></table>';
+    return html;
+}
+
+// ============ CALCULATORS ============
+function calcPercentile() {
+    const sex  = document.getElementById('pct-sex').value;
+    const type = document.getElementById('pct-type').value;
+    const agey = parseInt(document.getElementById('pct-agey').value) || 0;
+    const agem = parseInt(document.getElementById('pct-agem').value) || 0;
+    const val  = parseFloat(document.getElementById('pct-val').value);
+
+    if (isNaN(val)) return;
+    const totalMonths = agey * 12 + agem;
+    if (totalMonths < 0 || totalMonths > 216) {
+        showResult('pct-result', t('Hata','Error'), '-', t('Yas 0-18 yil araliginda olmali.','Age must be 0-18 years.'), 'danger'); return;
+    }
+
+    const table = type === 'weight'
+        ? (sex === 'male' ? WEIGHT_BOYS : WEIGHT_GIRLS)
+        : (sex === 'male' ? HEIGHT_BOYS : HEIGHT_GIRLS);
+
+    const refs = interpolateTable(table, totalMonths);
+    const result = valueToPercentile(val, refs);
+    const interp = interpretBand(result.band);
+    const unit = type === 'weight' ? 'kg' : 'cm';
+    const typeLbl = type === 'weight' ? t('Kilo','Weight') : t('Boy','Height');
+    const pctDisplay = result.pct.startsWith('<') || result.pct.startsWith('>') ? result.pct : 'P' + result.pct;
+
+    const details =
+        `<strong>${interp[currentLang]}</strong><br>` +
+        `Z-skor: ${result.z}<br>` +
+        `${t('Yas','Age')}: ${agey > 0 ? agey + t(' yas','y ') : ''}${agem > 0 ? agem + t(' ay','m') : ''}` +
+        `${agey === 0 && agem === 0 ? t('Doğum','Birth') : ''}<br>` +
+        buildPctBar(parseFloat(result.pct) || (result.pct.startsWith('<') ? 1 : 99)) +
+        buildRefTable(refs, val);
+
+    showResult('pct-result', typeLbl + ' ' + t('Persantili','Percentile'),
+        pctDisplay + ' (' + val + ' ' + unit + ')',
+        details, interp.cls);
+}
+
+function calcBMIauto() {
+    const h = parseFloat(document.getElementById('bpct-h').value);
+    const w = parseFloat(document.getElementById('bpct-w').value);
+    if (h > 0 && w > 0) {
+        document.getElementById('bpct-bmi').value = (w / ((h/100)**2)).toFixed(1);
+    }
+}
+
+function calcBMIPercentile() {
+    const sex = document.getElementById('bpct-sex').value;
+    const age = parseFloat(document.getElementById('bpct-age').value);
+    const bmi = parseFloat(document.getElementById('bpct-bmi').value);
+
+    if (!age || !bmi) return;
+    if (age < 2 || age > 18) {
+        showResult('bpct-result','VKI Persantili','-',t('Yas 2-18 araliginda olmali.','Age must be 2-18 years.'),'danger'); return;
+    }
+
+    const ageMonths = age * 12;
+    const table = sex === 'male' ? BMI_BOYS : BMI_GIRLS;
+    const refs = interpolateTable(table, ageMonths);
+    // BMI table uses P5,P15,P25,P50,P75,P85,P95 labels
+    const bmiLabels = ['P5','P15','P25','P50','P75','P85','P95'];
+    const bmiPcts   = [5, 15, 25, 50, 75, 85, 95];
+    const bmiZ      = [-1.65, -1.04, -0.67, 0, 0.67, 1.04, 1.65];
+
+    let pctEst = '?', zEst = '?', band = 4;
+    if (bmi <= refs[0]) { pctEst = '< 5'; zEst = '< -1.65'; band = 0; }
+    else if (bmi >= refs[6]) { pctEst = '> 95'; zEst = '> 1.65'; band = 7; }
+    else {
+        for (let i = 0; i < 6; i++) {
+            if (bmi >= refs[i] && bmi <= refs[i+1]) {
+                const f = (bmi - refs[i]) / (refs[i+1] - refs[i]);
+                pctEst = (bmiPcts[i] + f * (bmiPcts[i+1] - bmiPcts[i])).toFixed(0);
+                zEst   = (bmiZ[i]    + f * (bmiZ[i+1]    - bmiZ[i])).toFixed(2);
+                band = i + 1;
+            }
+        }
+    }
+
+    let cat, cls;
+    if (band === 0) { cat = t('Zayif (P5 alti)', 'Underweight (<P5)'); cls = 'warning'; }
+    else if (band <= 2) { cat = t('Normal alt sinir (P5-P15)', 'Low normal (P5-P15)'); cls = 'success'; }
+    else if (band <= 4) { cat = t('Normal (P15-P75)', 'Normal (P15-P75)'); cls = 'success'; }
+    else if (band === 5) { cat = t('Kilolu riski (P75-P85)', 'Overweight risk (P75-P85)'); cls = 'warning'; }
+    else if (band === 6) { cat = t('Kilolu (P85-P95)', 'Overweight (P85-P95)'); cls = 'warning'; }
+    else { cat = t('Obez (P95 ustu)', 'Obese (>P95)'); cls = 'danger'; }
+
+    const pctDisplay = pctEst.startsWith('<') || pctEst.startsWith('>') ? pctEst : 'P' + pctEst;
+    const details =
+        `<strong>${cat}</strong><br>Z-skor: ${zEst}<br>` +
+        buildRefTable(refs, bmi, bmiLabels);
+
+    showResult('bpct-result', 'VKI ' + t('Persantili','Percentile'),
+        pctDisplay + ' (VKI ' + bmi + ' kg/m²)', details, cls);
+}
+
+function calcHCPercentile() {
+    const sex = document.getElementById('hc-sex').value;
+    const age = parseFloat(document.getElementById('hc-age').value);
+    const val = parseFloat(document.getElementById('hc-val').value);
+
+    if (isNaN(age) || isNaN(val)) return;
+    if (age < 0 || age > 36) {
+        showResult('hc-result','Bas Cevresi','-',t('Yas 0-36 ay araliginda olmali.','Age must be 0-36 months.'),'danger'); return;
+    }
+
+    const table = sex === 'male' ? HC_BOYS : HC_GIRLS;
+    const refs = interpolateTable(table, age);
+    const result = valueToPercentile(val, refs);
+    const interp = interpretBand(result.band);
+    const pctDisplay = result.pct.startsWith('<') || result.pct.startsWith('>') ? result.pct : 'P' + result.pct;
+
+    const details =
+        `<strong>${interp[currentLang]}</strong><br>Z-skor: ${result.z}<br>` +
+        buildPctBar(parseFloat(result.pct) || (result.pct.startsWith('<') ? 1 : 99)) +
+        buildRefTable(refs, val);
+
+    showResult('hc-result', t('Bas Cevresi Persantili','Head Circumference Percentile'),
+        pctDisplay + ' (' + val + ' cm)', details, interp.cls);
+}
+
+// ============ INIT ============
+initNav();
+</script>
+</body>
+</html>

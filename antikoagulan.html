@@ -8,6 +8,7 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://drtr.uk/antikoagulan.html">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
     <style>
         :root {
             --bg: #F8FAFC; --surface: #FFFFFF;
@@ -27,11 +28,13 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text-secondary); min-height: 100vh; }
 
         .topbar { background: var(--surface); border-bottom: 1px solid var(--border); }
-        .topbar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+        .topbar-inner { max-width: 960px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px; justify-content: space-between; }
         .back { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-muted); font-size: 0.84rem; }
         .back:hover { color: var(--teal); }
         .topbar h1 { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
         .topbar span { font-size: 0.72rem; color: var(--teal); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .lang-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+        .lang-toggle:hover { border-color: var(--teal); color: var(--teal); }
 
         .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
 
@@ -122,11 +125,12 @@
 <body>
     <div class="topbar">
         <div class="topbar-inner">
-            <a href="/" class="back">&larr; Ana Sayfa</a>
+            <a href="/" class="back">&larr; <span data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</span></a>
             <div>
                 <h1>DrTR Tools</h1>
-                <span>Antikoagülan Rehberi</span>
+                <span data-tr="Antikoagülan Rehberi" data-en="Anticoagulant Guide">Antikoagülan Rehberi</span>
             </div>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
         </div>
     </div>
 
@@ -600,6 +604,16 @@
         document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
         document.getElementById('tab-' + id).classList.add('active');
         btn.classList.add('active');
+    }
+
+    var _lang = 'tr';
+    function toggleLang() {
+        _lang = _lang === 'tr' ? 'en' : 'tr';
+        document.getElementById('langBtn').textContent = _lang === 'tr' ? 'EN' : 'TR';
+        document.documentElement.lang = _lang;
+        document.querySelectorAll('[data-tr]').forEach(function(el) {
+            el.textContent = el.getAttribute('data-' + _lang);
+        });
     }
     </script>
 </body>
