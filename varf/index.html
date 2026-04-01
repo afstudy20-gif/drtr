@@ -37,15 +37,9 @@
       <!-- ─── Hero ───────────────────────────────────────────────── -->
       <header class="hero">
         <p class="eyebrow">Klinik Karar Desteği</p>
-        <h1>Varfarin doz<br />ayarlama asistanı</h1>
-        <p class="hero-copy">
-          Ayaktan, kanamasız varfarin bakım tedavisinde mevcut kullanım, o günün INR değeri
-          ve istenirse önceki INR ile ara dönem gerçek kullanım bilgisine göre haftalık doz
-          önerisi ve bir sonraki INR zamanı üretir.
-        </p>
+        <h1>Varfarin doz ayarlama</h1>
         <div class="alert-strip" role="alert">
-          ⚠ Bu araç kanama, INR ≥ 5, gebelik, yeni major ilaç etkileşimi, hospitalizasyon
-          veya başlangıç varfarin titrasyonu için değil; ayaktan bakım dozu karar desteği içindir.
+          ⚠ Ayaktan, kanamasız bakım hastası için. Kanama, INR ≥ 5, acil durum veya başlangıç titrasyonunda kullanmayın.
         </div>
       </header>
 
@@ -81,16 +75,6 @@
               <label class="field">
                 <span>Bugünkü INR tarihi <span class="required">*</span></span>
                 <input id="current-date" type="date" />
-              </label>
-
-              <label class="field">
-                <span>Önceki INR (opsiyonel)</span>
-                <input id="previous-inr" type="number" min="0.8" max="12" step="0.1" />
-              </label>
-
-              <label class="field">
-                <span>Önceki INR tarihi (opsiyonel)</span>
-                <input id="previous-date" type="date" />
               </label>
             </div>
 
@@ -131,39 +115,49 @@
               <div class="week-grid" id="week-grid" role="grid" aria-label="Haftalık doz tablosu"></div>
             </div>
 
-            <label class="field">
-              <span>Önceki INR'den bugüne gerçek kullanım (opsiyonel)</span>
-              <textarea
-                id="interval-pattern"
-                rows="3"
-                placeholder="Ara dönemi daha iyi yansıtmak için girin. Örnek: her gün 1 adet | 1 gün 1 adet 1 gün yarım | 1,1,0.5,1,1,0.5…"
-              ></textarea>
-              <small>
-                Önceki INR tarihi de varsa, uygulama bu kullanımdan haftalık eşdeğer
-                dozu hesaplar ve ana karar mantığında onu kullanır.
-              </small>
-            </label>
+            <details class="optional-section">
+              <summary>Gelişmiş seçenekler</summary>
+              <div class="optional-body">
+                <div class="field-grid">
+                  <label class="field">
+                    <span>Önceki INR (opsiyonel)</span>
+                    <input id="previous-inr" type="number" min="0.8" max="12" step="0.1" />
+                  </label>
 
-            <label class="field">
-              <span>Geçici açıklayıcı faktör</span>
-              <select id="transient-factor">
-                <option value="none">Yok / bilinmiyor</option>
-                <option value="low">Düşük INR'yi açıklayabilecek geçici neden var (atlanan doz, K vitamini artışı)</option>
-                <option value="high">Yüksek INR'yi açıklayabilecek geçici neden var (antibiyotik, alkol, ishal, azalan alım)</option>
-              </select>
-            </label>
+                  <label class="field">
+                    <span>Önceki INR tarihi (opsiyonel)</span>
+                    <input id="previous-date" type="date" />
+                  </label>
+                </div>
 
-            <label class="field">
-              <span>Eşlik eden ilaçlar (opsiyonel)</span>
-              <input
-                id="drug-input"
-                type="text"
-                placeholder="Örnek: flukonazol, amiodaron, rifampisin…"
-              />
-              <small>
-                Varfarin ile etkileşimi bilinen ilaçları virgül ile ayırarak girin.
-              </small>
-            </label>
+                <label class="field">
+                  <span>Ara dönem gerçek kullanım (opsiyonel)</span>
+                  <textarea
+                    id="interval-pattern"
+                    rows="2"
+                    placeholder="Örnek: her gün 1 adet | 1,1,0.5,1,1,0.5…"
+                  ></textarea>
+                </label>
+
+                <label class="field">
+                  <span>Geçici açıklayıcı faktör</span>
+                  <select id="transient-factor">
+                    <option value="none">Yok / bilinmiyor</option>
+                    <option value="low">Düşük INR — atlanan doz, K vitamini artışı</option>
+                    <option value="high">Yüksek INR — antibiyotik, alkol, ishal</option>
+                  </select>
+                </label>
+
+                <label class="field">
+                  <span>Eşlik eden ilaçlar (opsiyonel)</span>
+                  <input
+                    id="drug-input"
+                    type="text"
+                    placeholder="Örnek: flukonazol, amiodaron, rifampisin…"
+                  />
+                </label>
+              </div>
+            </details>
 
             <label class="checkbox-field">
               <input id="active-bleeding" type="checkbox" />

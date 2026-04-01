@@ -15,7 +15,7 @@
   --shadow: 0 24px 60px rgba(32, 49, 58, 0.12);
   --radius-lg: 28px;
   --radius-md: 18px;
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
@@ -141,7 +141,7 @@ body {
 }
 
 .hero {
-  padding: 12px 4px 30px;
+  padding: 8px 4px 18px;
 }
 
 .hero-top {
@@ -210,9 +210,9 @@ body {
 }
 
 .hero h1 {
-  font-size: clamp(2.3rem, 4vw, 4.5rem);
-  line-height: 0.95;
-  max-width: 10ch;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  line-height: 1.05;
+  max-width: 22ch;
 }
 
 .hero-copy {
@@ -224,14 +224,17 @@ body {
 }
 
 .alert-strip {
-  display: inline-flex;
+  display: block;
   max-width: 78ch;
-  padding: 14px 18px;
-  border-radius: 999px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
   background: var(--alert-soft);
   color: var(--alert);
   border: 1px solid rgba(139, 63, 40, 0.16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin-top: 10px;
 }
 
 [data-theme="dark"] .alert-strip {
@@ -471,6 +474,50 @@ button:hover {
 .checkbox-field input {
   width: auto;
   margin: 0;
+}
+
+/* ─── Optional / Advanced section ─────────────────────────────── */
+.optional-section {
+  margin: 4px 0 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.4);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .optional-section {
+  background: rgba(30,42,50,0.3);
+}
+
+.optional-section summary {
+  padding: 13px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.optional-section summary::-webkit-details-marker { display: none; }
+
+.optional-section summary::before {
+  content: '›';
+  font-size: 1.1rem;
+  transition: transform 180ms ease;
+  display: inline-block;
+}
+
+.optional-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.optional-body {
+  padding: 0 18px 16px;
+  border-top: 1px solid var(--line);
 }
 
 .result-root {
@@ -744,20 +791,33 @@ button:hover {
   }
 
   .week-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
   }
 
-  .alert-strip {
-    border-radius: var(--radius-md);
+  .dose-cell {
+    padding: 8px 4px;
+    border-radius: 12px;
+  }
+
+  .dose-day {
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .dose-cell input {
+    padding: 8px 4px;
+    text-align: center;
+    border-radius: 10px;
   }
 }
 
 @media (max-width: 400px) {
   .week-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
   .hero h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
 }
