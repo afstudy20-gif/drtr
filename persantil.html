@@ -8,47 +8,49 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f0f; color: #e0e0e0; min-height: 100vh;
+            background: #F8FAFC; color: #334155; min-height: 100vh;
         }
         .top-bar {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 24px; background: #1a1a1a; border-bottom: 1px solid #2a2a2a;
+            padding: 16px 24px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0;
             position: sticky; top: 0; z-index: 100;
         }
-        .top-bar a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
-        .top-bar a:hover { color: #fff; }
-        .top-bar h1 { font-size: 1.1rem; color: #fff; font-weight: 600; }
+        .top-bar a { color: #64748B; text-decoration: none; font-size: 0.9rem; }
+        .top-bar a:hover { color: #0F172A; }
+        .top-bar h1 { font-size: 1.1rem; color: #0F172A; font-weight: 600; }
         .lang-btn {
-            background: #2a2a2a; border: 1px solid #444; color: #ccc;
+            background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569;
             padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
         }
+        .lang-btn:hover { background: #E2E8F0; }
         .page-wrap { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
         .nav-pills {
             display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
-            padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 16px; border-bottom: 1px solid #E2E8F0;
         }
         .nav-pill {
-            background: #1a1a1a; border: 1px solid #2a2a2a; color: #aaa;
+            background: #FFFFFF; border: 1px solid #E2E8F0; color: #64748B;
             padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;
             white-space: nowrap; transition: all 0.2s;
         }
-        .nav-pill:hover { border-color: #555; color: #fff; }
+        .nav-pill:hover { border-color: #94A3B8; color: #334155; }
         .nav-pill.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
         .calc-card {
-            background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
+            background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px;
             padding: 24px; margin-bottom: 20px; display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
         .calc-card.active { display: block; }
-        .calc-card h2 { font-size: 1.2rem; color: #fff; margin-bottom: 6px; }
-        .subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
+        .calc-card h2 { font-size: 1.2rem; color: #0F172A; margin-bottom: 6px; }
+        .subtitle { font-size: 0.85rem; color: #94A3B8; margin-bottom: 20px; }
         .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 4px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #64748B; margin-bottom: 4px; }
         .form-group input, .form-group select {
-            width: 100%; padding: 10px 12px; background: #111;
-            border: 1px solid #333; border-radius: 8px; color: #e0e0e0;
+            width: 100%; padding: 10px 12px; background: #F8FAFC;
+            border: 1px solid #CBD5E1; border-radius: 8px; color: #0F172A;
             font-size: 0.95rem; outline: none;
         }
-        .form-group input:focus, .form-group select:focus { border-color: #3b82f6; }
+        .form-group input:focus, .form-group select:focus { border-color: #3b82f6; background: #fff; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .btn {
@@ -57,22 +59,22 @@
         }
         .btn:hover { background: #2563eb; }
         .result-box {
-            margin-top: 16px; padding: 16px; background: #0d1b2a;
-            border: 1px solid #1e3a5f; border-radius: 8px; display: none;
+            margin-top: 16px; padding: 16px; background: #EFF6FF;
+            border: 1px solid #BFDBFE; border-radius: 8px; display: none;
         }
         .result-box.show { display: block; }
-        .result-title { font-size: 0.8rem; color: #5b9bd5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .result-value { font-size: 1.4rem; font-weight: 700; color: #fff; }
-        .result-detail { font-size: 0.85rem; color: #aaa; margin-top: 6px; line-height: 1.5; }
-        .result-detail.warning { color: #f59e0b; }
-        .result-detail.danger { color: #ef4444; }
-        .result-detail.success { color: #22c55e; }
+        .result-title { font-size: 0.8rem; color: #2563EB; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .result-value { font-size: 1.4rem; font-weight: 700; color: #0F172A; }
+        .result-detail { font-size: 0.85rem; color: #475569; margin-top: 6px; line-height: 1.5; }
+        .result-detail.warning { color: #B45309; }
+        .result-detail.danger { color: #B91C1C; }
+        .result-detail.success { color: #15803D; }
 
         /* Percentile bar */
         .pct-bar-wrap { margin-top: 14px; }
         .pct-bar-labels {
             display: flex; justify-content: space-between;
-            font-size: 0.72rem; color: #555; margin-bottom: 4px;
+            font-size: 0.72rem; color: #94A3B8; margin-bottom: 4px;
         }
         .pct-bar-track {
             height: 12px; border-radius: 6px; position: relative;
@@ -80,16 +82,16 @@
         }
         .pct-bar-marker {
             position: absolute; top: -4px; width: 4px; height: 20px;
-            background: #fff; border-radius: 2px; transform: translateX(-50%);
-            box-shadow: 0 0 4px rgba(0,0,0,0.8);
+            background: #0F172A; border-radius: 2px; transform: translateX(-50%);
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
         .pct-table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 0.8rem; }
-        .pct-table th, .pct-table td { padding: 5px 8px; border: 1px solid #2a2a2a; text-align: center; }
-        .pct-table th { background: #222; color: #888; }
-        .pct-table td.highlight { background: #1e3a5f; color: #93c5fd; font-weight: 600; }
+        .pct-table th, .pct-table td { padding: 5px 8px; border: 1px solid #E2E8F0; text-align: center; }
+        .pct-table th { background: #F1F5F9; color: #64748B; }
+        .pct-table td.highlight { background: #DBEAFE; color: #1D4ED8; font-weight: 600; }
 
-        .info-note { font-size: 0.78rem; color: #666; margin-top: 12px; font-style: italic; line-height: 1.4; }
-        footer { text-align: center; padding: 30px 20px; color: #444; font-size: 0.8rem; }
+        .info-note { font-size: 0.78rem; color: #94A3B8; margin-top: 12px; font-style: italic; line-height: 1.4; }
+        footer { text-align: center; padding: 30px 20px; color: #94A3B8; font-size: 0.8rem; }
         @media (max-width: 600px) {
             .form-row, .form-row-3 { grid-template-columns: 1fr; }
             .top-bar { padding: 12px 16px; }
@@ -129,6 +131,10 @@
                 </select>
             </div>
         </div>
+        <div class="form-group" style="grid-column:1/-1">
+            <label data-tr="Dogum Tarihi (opsiyonel)" data-en="Date of Birth (optional)">Dogum Tarihi (opsiyonel)</label>
+            <input type="date" id="pct-dob" onchange="dobToPctAge()">
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label data-tr="Yas (Yil)" data-en="Age (Years)">Yas (Yil)</label>
@@ -152,6 +158,10 @@
     <div class="calc-card" id="calc-bmipct">
         <h2 data-tr="VKI Persantili" data-en="BMI Percentile">VKI Persantili</h2>
         <p class="subtitle" data-tr="Neyzi ve ark. 2008 - 2-18 yas, VKI referans degerleri" data-en="Neyzi et al. 2008 - ages 2-18, BMI reference values">Neyzi ve ark. 2008 - 2-18 yas, VKI referans degerleri</p>
+        <div class="form-group" style="grid-column:1/-1">
+            <label data-tr="Dogum Tarihi (opsiyonel)" data-en="Date of Birth (optional)">Dogum Tarihi (opsiyonel)</label>
+            <input type="date" id="bpct-dob" onchange="dobToBpctAge()">
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
@@ -187,6 +197,10 @@
     <div class="calc-card" id="calc-hcpct">
         <h2 data-tr="Bas Cevresi Persantili" data-en="Head Circumference Percentile">Bas Cevresi Persantili</h2>
         <p class="subtitle" data-tr="Neyzi ve ark. 2008 - 0-36 ay" data-en="Neyzi et al. 2008 - 0-36 months">Neyzi ve ark. 2008 - 0-36 ay</p>
+        <div class="form-group" style="grid-column:1/-1">
+            <label data-tr="Dogum Tarihi (opsiyonel)" data-en="Date of Birth (optional)">Dogum Tarihi (opsiyonel)</label>
+            <input type="date" id="hc-dob" onchange="dobToHcAge()">
+        </div>
         <div class="form-row">
             <div class="form-group">
                 <label data-tr="Cinsiyet" data-en="Sex">Cinsiyet</label>
@@ -269,6 +283,37 @@ function updatePctLabel() {
 }
 
 function syncAge() { /* age is read directly */ }
+
+// ── Date of birth → age helpers ──────────────────────────────────
+function _ageFromDob(dobVal) {
+    const dob = new Date(dobVal);
+    if (isNaN(dob)) return null;
+    const now = new Date();
+    let y = now.getFullYear() - dob.getFullYear();
+    let m = now.getMonth() - dob.getMonth();
+    if (now.getDate() < dob.getDate()) m--;
+    if (m < 0) { y--; m += 12; }
+    return { years: y, months: m, totalMonths: y * 12 + m };
+}
+
+function dobToPctAge() {
+    const age = _ageFromDob(document.getElementById('pct-dob').value);
+    if (!age) return;
+    document.getElementById('pct-agey').value = Math.min(18, Math.max(0, age.years));
+    document.getElementById('pct-agem').value = Math.min(11, Math.max(0, age.months));
+}
+
+function dobToBpctAge() {
+    const age = _ageFromDob(document.getElementById('bpct-dob').value);
+    if (!age) return;
+    document.getElementById('bpct-age').value = Math.min(18, Math.max(2, age.years));
+}
+
+function dobToHcAge() {
+    const age = _ageFromDob(document.getElementById('hc-dob').value);
+    if (!age) return;
+    document.getElementById('hc-age').value = Math.min(36, Math.max(0, age.totalMonths));
+}
 
 // ============ NEYZI 2008 DATA ============
 // Source: Neyzi O et al. CSHD 2008;51:1-14
@@ -671,6 +716,16 @@ function calcHCPercentile() {
 
 // ============ INIT ============
 initNav();
+
+// Set max date on all DOB inputs to today
+(function() {
+    const today = new Date().toISOString().split('T')[0];
+    ['pct-dob','bpct-dob','hc-dob'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.max = today;
+    });
+})();
 </script>
+    <script src="/ads.js"></script>
 </body>
 </html>

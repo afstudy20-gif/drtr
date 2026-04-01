@@ -324,8 +324,8 @@ function initTheme() {
   const stored = localStorage.getItem("varfarin_theme");
   if (stored) {
     document.documentElement.setAttribute("data-theme", stored);
-  } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.documentElement.setAttribute("data-theme", "light");
   }
 }
 

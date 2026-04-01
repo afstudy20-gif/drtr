@@ -10,8 +10,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f0f;
-            color: #e0e0e0;
+            background: #F8FAFC;
+            color: #334155;
             min-height: 100vh;
         }
 
@@ -20,31 +20,31 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 24px;
-            background: #1a1a1a;
-            border-bottom: 1px solid #2a2a2a;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .top-bar a {
-            color: #aaa;
+            color: #64748B;
             text-decoration: none;
             font-size: 0.9rem;
         }
 
-        .top-bar a:hover { color: #fff; }
+        .top-bar a:hover { color: #0F172A; }
 
         .top-bar h1 {
             font-size: 1.1rem;
-            color: #fff;
+            color: #0F172A;
             font-weight: 600;
         }
 
         .lang-btn {
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #ccc;
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #475569;
             padding: 6px 14px;
             border-radius: 6px;
             cursor: pointer;
@@ -52,7 +52,7 @@
             transition: all 0.2s;
         }
 
-        .lang-btn:hover { background: #333; color: #fff; }
+        .lang-btn:hover { background: #E2E8F0; color: #0F172A; }
 
         .page-wrap {
             max-width: 800px;
@@ -60,20 +60,19 @@
             padding: 24px 16px 60px;
         }
 
-        /* Sidebar Navigation */
         .nav-pills {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 28px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid #E2E8F0;
         }
 
         .nav-pill {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            color: #aaa;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            color: #64748B;
             padding: 6px 14px;
             border-radius: 20px;
             cursor: pointer;
@@ -82,30 +81,30 @@
             white-space: nowrap;
         }
 
-        .nav-pill:hover { border-color: #555; color: #fff; }
+        .nav-pill:hover { border-color: #94A3B8; color: #334155; }
         .nav-pill.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
 
-        /* Calculator Cards */
         .calc-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 20px;
             display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .calc-card.active { display: block; }
 
         .calc-card h2 {
             font-size: 1.2rem;
-            color: #fff;
+            color: #0F172A;
             margin-bottom: 6px;
         }
 
         .calc-card .subtitle {
             font-size: 0.85rem;
-            color: #888;
+            color: #94A3B8;
             margin-bottom: 20px;
         }
 
@@ -116,7 +115,7 @@
         .form-group label {
             display: block;
             font-size: 0.85rem;
-            color: #aaa;
+            color: #64748B;
             margin-bottom: 4px;
         }
 
@@ -125,10 +124,10 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            background: #111;
-            border: 1px solid #333;
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
             border-radius: 8px;
-            color: #e0e0e0;
+            color: #0F172A;
             font-size: 0.95rem;
             outline: none;
             transition: border-color 0.2s;
@@ -138,6 +137,7 @@
         .form-group select:focus,
         .form-group textarea:focus {
             border-color: #3b82f6;
+            background: #fff;
         }
 
         .form-group textarea {
@@ -175,8 +175,8 @@
         .result-box {
             margin-top: 16px;
             padding: 16px;
-            background: #0d1b2a;
-            border: 1px solid #1e3a5f;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
             border-radius: 8px;
             display: none;
         }
@@ -185,7 +185,7 @@
 
         .result-box .result-title {
             font-size: 0.8rem;
-            color: #5b9bd5;
+            color: #2563EB;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
@@ -194,19 +194,19 @@
         .result-box .result-value {
             font-size: 1.4rem;
             font-weight: 700;
-            color: #fff;
+            color: #0F172A;
         }
 
         .result-box .result-detail {
             font-size: 0.85rem;
-            color: #aaa;
+            color: #475569;
             margin-top: 6px;
             line-height: 1.5;
         }
 
-        .result-box .result-detail.warning { color: #f59e0b; }
-        .result-box .result-detail.danger { color: #ef4444; }
-        .result-box .result-detail.success { color: #22c55e; }
+        .result-box .result-detail.warning { color: #B45309; }
+        .result-box .result-detail.danger { color: #B91C1C; }
+        .result-box .result-detail.success { color: #15803D; }
 
         .checkbox-group {
             display: flex;
@@ -220,7 +220,7 @@
             gap: 10px;
             cursor: pointer;
             font-size: 0.9rem;
-            color: #ccc;
+            color: #334155;
         }
 
         .checkbox-group input[type="checkbox"] {
@@ -232,7 +232,7 @@
 
         .info-note {
             font-size: 0.78rem;
-            color: #666;
+            color: #94A3B8;
             margin-top: 12px;
             line-height: 1.4;
             font-style: italic;
@@ -241,7 +241,7 @@
         footer {
             text-align: center;
             padding: 30px 20px;
-            color: #444;
+            color: #94A3B8;
             font-size: 0.8rem;
         }
 
@@ -732,32 +732,32 @@ function buildSyntaxRows() {
         const w = dom === 'r' ? seg.wr : seg.wl;
         const name = currentLang === 'tr' ? seg.tr : seg.en;
         const ctoLabel = currentLang === 'tr' ? 'Tam tıkanıklık (CTO) — ×5' : 'Total occlusion (CTO) — ×5';
-        return `<div style="background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;">
+        return `<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
                 <input type="checkbox" id="sc-${seg.id}" onchange="toggleSynSeg('${seg.id}')" style="width:16px;height:16px;accent-color:#3b82f6;cursor:pointer;flex-shrink:0;">
-                <span style="flex:1;color:#ccc;font-size:0.87rem;">${name}</span>
-                <span style="font-size:0.72rem;color:#555;">w=${w}</span>
+                <span style="flex:1;color:#334155;font-size:0.87rem;">${name}</span>
+                <span style="font-size:0.72rem;color:#94A3B8;">w=${w}</span>
             </label>
             <div id="so-${seg.id}" style="display:none;margin-top:8px;padding-left:24px;">
-                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#f87171;font-size:0.82rem;margin-bottom:6px;">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#DC2626;font-size:0.82rem;margin-bottom:6px;">
                     <input type="checkbox" id="sc-cto-${seg.id}" onchange="toggleCTO('${seg.id}')" style="width:13px;height:13px;accent-color:#ef4444;cursor:pointer;">
                     ${ctoLabel}
                 </label>
                 <div id="so-cto-${seg.id}" style="display:none;padding-left:20px;margin-bottom:8px;display:flex;flex-direction:column;gap:3px;">
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-blunt-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Künt güdük (blunt stump) +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-bridge-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Köprüleşme kollateraller +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-viseg-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO sonrası 1. segment bifürkasyon/trifürkasyon +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#888;font-size:0.78rem;"><input type="checkbox" id="sc-sbr-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO bölgesinde yan dal +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.78rem;"><input type="checkbox" id="sc-blunt-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Künt güdük (blunt stump) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.78rem;"><input type="checkbox" id="sc-bridge-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Köprüleşme kollateraller +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.78rem;"><input type="checkbox" id="sc-viseg-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO sonrası 1. segment bifürkasyon/trifürkasyon +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.78rem;"><input type="checkbox" id="sc-sbr-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> CTO bölgesinde yan dal +1</label>
                 </div>
                 <div id="so-noncto-${seg.id}" style="display:flex;flex-direction:column;gap:4px;">
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-bif-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon (Medina 1,1,1 / 1,0,1 / 0,1,1) +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-bif70-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon açısı &lt;70° +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-ostial-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Aorto-ostial lezyon +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-tort-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır tortüöz (&gt;60° proksimal) +2</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-long-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Uzun lezyon (&gt;20mm) +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-calc-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır kalsifikasyon +2</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;"><input type="checkbox" id="sc-thro-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Trombüs +1</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:0.82rem;">Diffüz/küçük damar — uzunluk: <input type="number" id="sc-diff-${seg.id}" min="0" max="300" placeholder="mm" onchange="calcSYNTAX()" style="width:60px;padding:3px 6px;background:#0d1b2a;border:1px solid #2a2a2a;border-radius:4px;color:#e0e0e0;font-size:0.78rem;margin:0 4px;"> mm (+uzunluk/10)</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-bif-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon (Medina 1,1,1 / 1,0,1 / 0,1,1) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-bif70-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Bifürkasyon açısı &lt;70° +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-ostial-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Aorto-ostial lezyon +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-tort-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır tortüöz (&gt;60° proksimal) +2</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-long-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Uzun lezyon (&gt;20mm) +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-calc-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Ağır kalsifikasyon +2</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;"><input type="checkbox" id="sc-thro-${seg.id}" onchange="calcSYNTAX()" style="cursor:pointer;"> Trombüs +1</label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#475569;font-size:0.82rem;">Diffüz/küçük damar — uzunluk: <input type="number" id="sc-diff-${seg.id}" min="0" max="300" placeholder="mm" onchange="calcSYNTAX()" style="width:60px;padding:3px 6px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#0F172A;font-size:0.78rem;margin:0 4px;"> mm (+uzunluk/10)</label>
                 </div>
             </div>
         </div>`;
@@ -1363,5 +1363,6 @@ function calcBalthazard() {
 initNav();
 </script>
 
+    <script src="/ads.js"></script>
 </body>
 </html>
