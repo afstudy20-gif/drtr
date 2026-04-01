@@ -91,6 +91,66 @@
         .featured { background: linear-gradient(135deg, #F0FDFA, #EFF6FF); border-color: #99F6E4; }
         .featured h4 { color: var(--teal); }
 
+        /* DOI Arama */
+        .doi-section {
+            background: linear-gradient(135deg, #F0FDFA, #EFF6FF);
+            border: 1px solid #99F6E4;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .doi-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0F766E, #3B82F6);
+        }
+        .doi-section h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .doi-section p { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px; }
+        .doi-input-row { display: flex; gap: 8px; }
+        .doi-input-row input {
+            flex: 1; padding: 10px 16px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.88rem; color: var(--text-primary);
+            background: #fff; outline: none; font-family: 'SF Mono', 'Fira Mono', monospace;
+        }
+        .doi-input-row input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,0.1); }
+        .doi-input-row button {
+            padding: 10px 22px; background: var(--teal); color: #fff; border: none;
+            border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+            white-space: nowrap; transition: background 0.2s;
+        }
+        .doi-input-row button:hover { background: #0d6460; }
+        .doi-input-row button:disabled { background: #94A3B8; cursor: not-allowed; }
+        #doi-result {
+            margin-top: 16px; display: none;
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 10px; padding: 18px;
+        }
+        #doi-result.show { display: block; }
+        .doi-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; line-height: 1.4; }
+        .doi-authors { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; }
+        .doi-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .doi-badge {
+            font-size: 0.72rem; font-weight: 600; padding: 3px 10px;
+            border-radius: 20px; background: var(--teal-bg); color: var(--teal);
+        }
+        .doi-abstract { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.7; }
+        .doi-abstract-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 4px; }
+        .doi-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+        .doi-link {
+            padding: 7px 16px; border-radius: 7px; font-size: 0.8rem; font-weight: 600;
+            text-decoration: none; cursor: pointer; transition: opacity 0.2s; border: none; font-family: inherit;
+        }
+        .doi-link-primary { background: var(--teal); color: #fff; }
+        .doi-link-secondary { background: var(--blue-bg); color: var(--blue); }
+        .doi-link-scholar { background: #EFF6FF; color: #1D4ED8; }
+        .doi-link:hover { opacity: 0.82; }
+        .doi-error { color: #B91C1C; font-size: 0.84rem; background: #FEF2F2; padding: 10px 14px; border-radius: 8px; }
+
         footer { text-align: center; padding: 24px; color: var(--text-faint); font-size: 0.76rem; border-top: 1px solid var(--border); max-width: 960px; margin: 20px auto 0; }
         footer a { color: var(--text-muted); text-decoration: none; margin: 0 5px; }
         footer a:hover { color: var(--teal); }
@@ -114,6 +174,17 @@
         <div class="page-header">
             <h2>Akademik Kaynaklar & Profesyonel Veritabanları</h2>
             <p>Sağlık bilimleri araştırmacıları ve klinisyenler için özenle derlenmiş uluslararası ve ulusal akademik veritabanları, kılavuzlar ve referans kaynakları.</p>
+        </div>
+
+        <!-- DOI Arama -->
+        <div class="doi-section">
+            <h3>🔍 DOI ile Makale Sorgula</h3>
+            <p>Bir DOI numarası girin — başlık, yazarlar, dergi, yıl ve özet otomatik yüklenir.</p>
+            <div class="doi-input-row">
+                <input type="text" id="doiInput" placeholder="Örnek: 10.1016/j.jacc.2023.01.001" />
+                <button id="doiBtn" onclick="searchDoi()">Sorgula</button>
+            </div>
+            <div id="doi-result"></div>
         </div>
 
         <div class="search-bar">
@@ -273,10 +344,10 @@
                     <p>Amerikan Kardiyoloji Koleji ve Amerikan Kalp Derneği kardiyoloji kılavuzları.</p>
                     <span class="resource-tag">acc.org/guidelines</span>
                 </a>
-                <a href="https://www.turkishheart.org/" class="resource-card" target="_blank" rel="noopener">
-                    <div class="resource-header"><span class="resource-badge badge-tr">TR</span><h4>Türk Kardiyoloji Derneği</h4></div>
+                <a href="https://tkd.org.tr/" class="resource-card" target="_blank" rel="noopener">
+                    <div class="resource-header"><span class="resource-badge badge-tr">TKD</span><h4>Türk Kardiyoloji Derneği</h4></div>
                     <p>Türk kardiyoloji uzmanlarının kılavuzları, kongreler ve eğitim kaynakları.</p>
-                    <span class="resource-tag">turkishheart.org</span>
+                    <span class="resource-tag">tkd.org.tr</span>
                 </a>
             </div>
         </section>
@@ -330,6 +401,7 @@
     </footer>
 
     <script>
+    /* ── Kaynak filtreleme ────────────────────────────────────── */
     function filterCards() {
         var q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.resource-card').forEach(function(card) {
@@ -337,6 +409,107 @@
             card.style.display = text.includes(q) ? '' : 'none';
         });
     }
+
+    /* ── Favicon logoları otomatik ekle ──────────────────────── */
+    function addLogos() {
+        document.querySelectorAll('.resource-card').forEach(function(card) {
+            var tag = card.querySelector('.resource-tag');
+            if (!tag) return;
+            var domain = tag.textContent.trim().split('/')[0];
+            if (!domain) return;
+            var header = card.querySelector('.resource-header');
+            if (!header) return;
+            var img = document.createElement('img');
+            img.src = 'https://www.google.com/s2/favicons?sz=32&domain=' + domain;
+            img.alt = '';
+            img.width = 18;
+            img.height = 18;
+            img.style.cssText = 'border-radius:4px;flex-shrink:0;margin-left:auto;opacity:0.8';
+            img.onerror = function() { this.style.display = 'none'; };
+            header.appendChild(img);
+        });
+    }
+
+    /* ── DOI Sorgulama (Crossref API) ────────────────────────── */
+    async function searchDoi() {
+        var input = document.getElementById('doiInput');
+        var result = document.getElementById('doi-result');
+        var btn = document.getElementById('doiBtn');
+        var doi = input.value.trim().replace(/^https?:\/\/doi\.org\//i, '');
+        if (!doi) { input.focus(); return; }
+
+        btn.disabled = true;
+        btn.textContent = 'Yükleniyor…';
+        result.className = 'show';
+        result.innerHTML = '<div style="color:var(--text-muted);font-size:0.84rem">Sorgulanıyor…</div>';
+
+        try {
+            var res = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi));
+            if (!res.ok) throw new Error('Bulunamadı');
+            var data = (await res.json()).message;
+
+            var title = (data.title && data.title[0]) || '(Başlık yok)';
+            var authors = (data.author || []).slice(0, 5).map(function(a) {
+                return (a.family || '') + (a.given ? ', ' + a.given : '');
+            }).join(' · ') + ((data.author || []).length > 5 ? ' ve diğerleri' : '');
+            var journal = (data['container-title'] && data['container-title'][0]) || '';
+            var year = data.issued && data.issued['date-parts'] && data.issued['date-parts'][0][0];
+            var volume = data.volume ? 'Cilt ' + data.volume : '';
+            var issue = data.issue ? 'Sayı ' + data.issue : '';
+            var pages = data.page ? 's.' + data.page : '';
+            var publisher = data.publisher || '';
+            var abstract = data.abstract || '';
+            // Remove JATS XML tags from abstract
+            abstract = abstract.replace(/<[^>]+>/g, '').trim();
+
+            var doiUrl = 'https://doi.org/' + doi;
+            var scholarUrl = 'https://scholar.google.com/scholar?q=' + encodeURIComponent(title);
+            var pubmedUrl = 'https://pubmed.ncbi.nlm.nih.gov/?term=' + encodeURIComponent(doi);
+
+            result.innerHTML =
+                '<div class="doi-title">' + escHtml(title) + '</div>' +
+                (authors ? '<div class="doi-authors">' + escHtml(authors) + '</div>' : '') +
+                '<div class="doi-meta">' +
+                (journal ? '<span class="doi-badge">' + escHtml(journal) + '</span>' : '') +
+                (year ? '<span class="doi-badge" style="background:#EFF6FF;color:#1D4ED8">' + year + '</span>' : '') +
+                (volume ? '<span class="doi-badge" style="background:#F5F3FF;color:#6D28D9">' + escHtml(volume) : '') +
+                (issue ? ' / ' + escHtml(issue) : '') +
+                (volume ? '</span>' : '') +
+                (pages ? '<span class="doi-badge" style="background:#F0FDF4;color:#15803D">' + escHtml(pages) + '</span>' : '') +
+                (publisher ? '<span class="doi-badge" style="background:#FFFBEB;color:#D97706">' + escHtml(publisher) + '</span>' : '') +
+                '</div>' +
+                (abstract ? '<div class="doi-abstract-label">Özet</div><div class="doi-abstract">' + escHtml(abstract) + '</div>' : '<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic">Bu makale için açık özet mevcut değil.</div>') +
+                '<div class="doi-actions">' +
+                '<a href="' + doiUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-primary">DOI bağlantısı →</a>' +
+                '<a href="' + pubmedUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-secondary">PubMed'de ara</a>' +
+                '<a href="' + scholarUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-scholar">Google Scholar</a>' +
+                '<button class="doi-link" style="background:#F1F5F9;color:#334155" onclick="copyDoi(\'' + escHtml(doi) + '\',\'' + escHtml(title) + '\',\'' + (year||'') + '\')">Atıf kopyala</button>' +
+                '</div>';
+        } catch(e) {
+            result.innerHTML = '<div class="doi-error">DOI bulunamadı veya Crossref'te kayıtlı değil. DOI'yi kontrol edin: <strong>' + escHtml(doi) + '</strong></div>';
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'Sorgula';
+    }
+
+    function copyDoi(doi, title, year) {
+        var text = (title) + ' (' + year + '). https://doi.org/' + doi;
+        navigator.clipboard.writeText(text).then(function() {
+            var btns = document.querySelectorAll('.doi-actions button');
+            btns.forEach(function(b) { if (b.textContent.includes('Atıf')) { b.textContent = 'Kopyalandı!'; setTimeout(function(){ b.textContent='Atıf kopyala'; }, 1800); } });
+        });
+    }
+
+    function escHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    document.getElementById('doiInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') searchDoi();
+    });
+
+    document.addEventListener('DOMContentLoaded', addLogos);
     </script>
 </body>
 </html>
