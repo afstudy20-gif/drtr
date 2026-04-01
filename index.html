@@ -137,6 +137,12 @@
 
         .clock-date { font-weight: 600; color: var(--text-secondary); }
 
+        .weather-strip { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-muted); }
+        .weather-slot { display: flex; flex-direction: column; align-items: center; gap: 1px; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 7px; padding: 4px 7px; min-width: 38px; }
+        .weather-slot .ws-icon { font-size: 1rem; line-height: 1; }
+        .weather-slot .ws-temp { font-size: 0.72rem; font-weight: 600; color: var(--text-secondary); }
+        .weather-slot .ws-hour { font-size: 0.65rem; color: var(--text-faint); }
+
         .lang-switcher { display: flex; gap: 3px; flex-wrap: wrap; }
 
         .lang-btn {
@@ -269,6 +275,7 @@
         .cat-clinical .category-header { border-bottom-color: #99F6E4; }
         .cat-academic .category-header { border-bottom-color: #BFDBFE; }
         .cat-productivity .category-header { border-bottom-color: #DDD6FE; }
+        .cat-general .category-header { border-bottom-color: #FDE68A; }
 
         .category-icon {
             width: 32px; height: 32px;
@@ -280,6 +287,7 @@
         .cat-clinical .category-icon { background: linear-gradient(135deg, #CCFBF1, #99F6E4); color: #0F766E; }
         .cat-academic .category-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
         .cat-productivity .category-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
+        .cat-general .category-icon { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #B45309; }
 
         .category-header h3 {
             font-size: 0.85rem; font-weight: 700;
@@ -290,6 +298,7 @@
         .cat-clinical .category-header h3 { color: #0F766E; }
         .cat-academic .category-header h3 { color: #2563EB; }
         .cat-productivity .category-header h3 { color: #6D28D9; }
+        .cat-general .category-header h3 { color: #B45309; }
 
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -421,6 +430,7 @@
             </a>
             <div class="topbar-right">
                 <div class="clock" id="clock"></div>
+                <div class="weather-strip" id="weather-strip"></div>
                 <nav class="lang-switcher" aria-label="Language selector">
                     <button class="lang-btn active" data-lang="tr">TR</button>
                     <button class="lang-btn" data-lang="az">AZ</button>
@@ -471,7 +481,7 @@
                     <div class="tool-icon">Fx</div>
                     <div class="tool-info">
                         <h4 data-i18n="t7_title">Tıbbi Hesaplamalar</h4>
-                        <p data-i18n="t7_desc">BMI, eGFR, QTc, CHA₂DS₂-VASc ve daha fazlası</p>
+                        <p data-i18n="t7_desc">eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve daha fazlası</p>
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
@@ -532,14 +542,6 @@
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
-                <a href="/hesaplamalar.html#wordcount" class="tool-card">
-                    <div class="tool-icon">Wc</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t11_title">Kelime Sayacı</h4>
-                        <p data-i18n="t11_desc">Kelime, karakter, cümle ve paragraf sayımı</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
                 <a href="https://notebooklm.google.com/" class="tool-card" target="_blank" rel="noopener">
                     <div class="tool-icon">NL</div>
                     <div class="tool-info">
@@ -594,6 +596,55 @@
                     <div class="tool-info">
                         <h4 data-i18n="t10_title">Nöbet Çizelgesi</h4>
                         <p data-i18n="t10_desc">Aylık nöbet ve vardiya planlaması, otomatik çizelge üretimi ve Excel/PDF çıktısı</p>
+                    </div>
+                    <span class="tool-arrow">&rsaquo;</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="category cat-general">
+            <div class="category-header">
+                <div class="category-icon">≡</div>
+                <h3>Genel Hesaplama Araçları</h3>
+            </div>
+            <div class="tools-grid">
+                <a href="/hesaplamalar.html#bmi" class="tool-card">
+                    <div class="tool-icon">Bm</div>
+                    <div class="tool-info">
+                        <h4>BMI / Vücut Kitle İndeksi</h4>
+                        <p>Boy, kilo, bel ve kalça ölçülerine göre detaylı değerlendirme</p>
+                    </div>
+                    <span class="tool-arrow">&rsaquo;</span>
+                </a>
+                <a href="/hesaplamalar.html#datediff" class="tool-card">
+                    <div class="tool-icon">📅</div>
+                    <div class="tool-info">
+                        <h4>Tarih Farkı</h4>
+                        <p>İki tarih arasındaki gün, hafta, ay ve yıl farkı</p>
+                    </div>
+                    <span class="tool-arrow">&rsaquo;</span>
+                </a>
+                <a href="/hesaplamalar.html#age" class="tool-card">
+                    <div class="tool-icon">🎂</div>
+                    <div class="tool-info">
+                        <h4>Yaş Hesaplama</h4>
+                        <p>Doğum tarihinden yaş, ay ve gün hesabı</p>
+                    </div>
+                    <span class="tool-arrow">&rsaquo;</span>
+                </a>
+                <a href="/hesaplamalar.html#wordcount" class="tool-card">
+                    <div class="tool-icon">Wc</div>
+                    <div class="tool-info">
+                        <h4>Kelime Sayacı</h4>
+                        <p>Kelime, karakter, cümle ve paragraf sayımı</p>
+                    </div>
+                    <span class="tool-arrow">&rsaquo;</span>
+                </a>
+                <a href="/hesaplamalar.html#balthazard" class="tool-card">
+                    <div class="tool-icon">🦴</div>
+                    <div class="tool-info">
+                        <h4>Balthazard Formülü</h4>
+                        <p>Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji</p>
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
@@ -938,6 +989,47 @@
             .catch(function() { setLang('tr'); });
     }
 
+    /* Weather */
+    function wxIcon(code) {
+        if (code === 0) return '☀';
+        if (code <= 2) return '🌤';
+        if (code === 3) return '☁';
+        if (code <= 48) return '🌫';
+        if (code <= 67) return '🌧';
+        if (code <= 77) return '🌨';
+        if (code <= 82) return '🌦';
+        return '⛈';
+    }
+
+    function loadWeather() {
+        if (!navigator.geolocation) return;
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            var lat = pos.coords.latitude.toFixed(4);
+            var lon = pos.coords.longitude.toFixed(4);
+            var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+                '&hourly=temperature_2m,weathercode&timezone=auto&forecast_days=1';
+            fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                var now = new Date();
+                var curHour = now.getHours();
+                var times = data.hourly.time;
+                var temps = data.hourly.temperature_2m;
+                var codes = data.hourly.weathercode;
+                var strip = document.getElementById('weather-strip');
+                var html = '';
+                var shown = 0;
+                for (var i = 0; i < times.length && shown < 6; i++) {
+                    var h = parseInt(times[i].slice(11, 13));
+                    if (h < curHour) continue;
+                    html += '<div class="weather-slot"><span class="ws-icon">' + wxIcon(codes[i]) + '</span>' +
+                        '<span class="ws-temp">' + Math.round(temps[i]) + '°</span>' +
+                        '<span class="ws-hour">' + String(h).padStart(2,'0') + ':00</span></div>';
+                    shown++;
+                }
+                if (html) strip.innerHTML = html;
+            }).catch(function() {});
+        }, function() {}, { timeout: 8000 });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.lang-btn').forEach(function(btn) {
             btn.addEventListener('click', function() { setLang(this.getAttribute('data-lang')); });
@@ -946,6 +1038,7 @@
         showRandomTip();
         updateClock();
         setInterval(updateClock, 1000);
+        loadWeather();
         if (!localStorage.getItem('drtr_cookies')) {
             document.getElementById('cookieBanner').style.display = 'flex';
         }
