@@ -694,6 +694,12 @@ function initNav() {
         nav.appendChild(pill);
     });
     document.getElementById('calc-bmi').classList.add('active');
+
+    // Hash-based navigation: e.g. hesaplamalar.html#wordcount
+    if (window.location.hash) {
+        const key = window.location.hash.slice(1);
+        if (document.getElementById('calc-' + key)) showCalc(key);
+    }
 }
 
 function showCalc(key) {
@@ -1141,9 +1147,15 @@ function calcLDL() {
     else { cls = 'danger'; cat = t('Cok yuksek', 'Very high'); }
 
     const nonHDL = tc - hdl;
-    const details = `<strong>${cat}</strong><br>Non-HDL ${t('Kolesterol', 'Cholesterol')}: ${nonHDL.toFixed(0)} mg/dL<br>TC/HDL ${t('Orani', 'Ratio')}: ${(tc/hdl).toFixed(1)}`;
 
-    showResult('ldl-result', 'LDL (Friedewald)', ldl.toFixed(0) + ' mg/dL', details, cls);
+    const box = document.getElementById('ldl-result');
+    box.innerHTML =
+        `<div class="result-title">LDL (Friedewald)</div>` +
+        `<div class="result-value">${ldl.toFixed(0)} mg/dL</div>` +
+        `<div class="result-title" style="margin-top:12px;font-size:0.75rem">Non-HDL ${t('Kolesterol', 'Cholesterol')}</div>` +
+        `<div class="result-value" style="font-size:1.15rem">${nonHDL.toFixed(0)} mg/dL</div>` +
+        `<div class="result-detail ${cls}"><strong>${cat}</strong><br>TC/HDL ${t('Orani', 'Ratio')}: ${(tc/hdl).toFixed(1)}</div>`;
+    box.classList.add('show');
 }
 
 // ============ 5. QTc ============
@@ -1239,7 +1251,11 @@ function calcHASBLED() {
 function calcDateDiff() {
     const start = document.getElementById('date-start').value;
     const end = document.getElementById('date-end').value;
-    if (!start || !end) return;
+    if (!start || !end) {
+        showResult('datediff-result', t('Hata', 'Error'), '-',
+            t('Her iki tarihi de girin.', 'Please enter both dates.'), 'danger');
+        return;
+    }
 
     const d1 = new Date(start);
     const d2 = new Date(end);

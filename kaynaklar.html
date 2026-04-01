@@ -458,7 +458,7 @@
         result.innerHTML = '<div style="color:var(--text-muted);font-size:0.84rem">Sorgulanıyor…</div>';
 
         try {
-            var res = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi));
+            var res = await fetch('https://api.crossref.org/works/' + doi);
             if (!res.ok) throw new Error('Bulunamadı');
             var data = (await res.json()).message;
 
@@ -495,12 +495,12 @@
                 (abstract ? '<div class="doi-abstract-label">Özet</div><div class="doi-abstract">' + escHtml(abstract) + '</div>' : '<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic">Bu makale için açık özet mevcut değil.</div>') +
                 '<div class="doi-actions">' +
                 '<a href="' + doiUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-primary">DOI bağlantısı →</a>' +
-                '<a href="' + pubmedUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-secondary">PubMed'de ara</a>' +
+                '<a href="' + pubmedUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-secondary">PubMed\'de ara</a>' +
                 '<a href="' + scholarUrl + '" target="_blank" rel="noopener" class="doi-link doi-link-scholar">Google Scholar</a>' +
                 '<button class="doi-link" style="background:#F1F5F9;color:#334155" onclick="copyDoi(\'' + escHtml(doi) + '\',\'' + escHtml(title) + '\',\'' + (year||'') + '\')">Atıf kopyala</button>' +
                 '</div>';
         } catch(e) {
-            result.innerHTML = '<div class="doi-error">DOI bulunamadı veya Crossref'te kayıtlı değil. DOI'yi kontrol edin: <strong>' + escHtml(doi) + '</strong></div>';
+            result.innerHTML = '<div class="doi-error">DOI bulunamadı veya Crossref\'te kayıtlı değil. DOI\'yi kontrol edin: <strong>' + escHtml(doi) + '</strong></div>';
         }
 
         btn.disabled = false;
