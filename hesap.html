@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hesap Makinesi & Mini Formüller — DrTR Tools</title>
+  <meta name="description" content="Bilimsel hesap makinesi ve mini Excel formül aracı. SUM, AVERAGE, MIN, MAX, IF ve daha fazlası. Veriler yalnızca tarayıcınızda.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/hesap.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg:#F8FAFC; --surface:#FFFFFF;
+      --text-primary:#0F172A; --text-secondary:#334155; --text-muted:#64748B; --text-faint:#94A3B8;
+      --border:#E2E8F0; --teal:#0F766E; --teal-bg:#F0FDFA;
+      --blue:#1D4ED8; --blue-bg:#EFF6FF;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:860px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:860px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{margin-bottom:28px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:10px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.7;max-width:580px}
+
+    .tabs{display:flex;gap:4px;background:#F1F5F9;padding:4px;border-radius:10px;width:fit-content;margin-bottom:24px}
+    .tab-btn{padding:7px 20px;border-radius:7px;border:none;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);background:transparent;transition:all .2s}
+    .tab-btn.active{background:#fff;color:var(--text-primary);box-shadow:var(--shadow)}
+
+    .tab-panel{display:none}.tab-panel.active{display:block}
+
+    /* ── Calculator ── */
+    .calc-wrap{max-width:300px;margin:0 auto}
+    .calc-display{background:#111827;border-radius:16px;padding:16px;margin-bottom:12px;min-height:80px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:4px}
+    .calc-expr{color:#94A3B8;font-size:.85rem;font-family:monospace;word-break:break-all;text-align:right;min-height:1.2em}
+    .calc-result{color:#fff;font-size:2rem;font-weight:300;line-height:1}
+    .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .calc-btn{height:56px;border-radius:12px;border:none;font:inherit;font-size:1rem;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+    .calc-btn:active{transform:scale(.93)}
+    .calc-btn.wide{grid-column:span 2;justify-content:flex-start;padding-left:20px}
+    .btn-op{background:#F97316;color:#fff}.btn-op:hover{background:#EA580C}
+    .btn-op-eq{background:#F97316;color:#fff}.btn-op-eq:hover{background:#EA580C}
+    .btn-fn{background:#E2E8F0;color:#374151}.btn-fn:hover{background:#CBD5E1}
+    .btn-num{background:#F1F5F9;color:#0F172A}.btn-num:hover{background:#E2E8F0}
+
+    /* ── Spreadsheet ── */
+    .formula-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .cell-ref-box{font-size:.75rem;font-family:monospace;background:#F8FAFC;border:1px solid var(--border);padding:5px 10px;border-radius:6px;min-width:3rem;text-align:center;color:var(--text-secondary)}
+    .fx-label{font-size:.82rem;color:var(--text-faint);font-style:italic;user-select:none}
+    #formula-input{flex:1;min-width:180px;border:1px solid var(--border);border-radius:7px;padding:6px 10px;font:inherit;font-size:.85rem;font-family:monospace;color:var(--text-primary);background:#fff;outline:none}
+    #formula-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    #formula-input:disabled{background:#F8FAFC;color:var(--text-faint)}
+    .clear-btn{font-size:.78rem;padding:6px 12px;border-radius:6px;border:1px solid #FECACA;color:#DC2626;background:#fff;cursor:pointer;white-space:nowrap}
+    .clear-btn:hover{background:#FEF2F2}
+
+    .grid-wrap{overflow:auto;border:1px solid var(--border);border-radius:10px;max-height:55vh}
+    .grid-wrap table{border-collapse:collapse;table-layout:fixed;min-width:100%}
+    .grid-wrap thead{position:sticky;top:0;z-index:10}
+    .col-header{background:#F1F5F9;border:1px solid var(--border);width:80px;text-align:center;font-size:.72rem;font-weight:600;color:var(--text-muted);padding:4px 2px}
+    .row-header{background:#F8FAFC;border:1px solid var(--border);width:28px;text-align:center;font-size:.72rem;color:var(--text-faint);font-weight:500;user-select:none;position:sticky;left:0;z-index:5}
+    .row-num-col{position:sticky;left:0;z-index:5;background:#F8FAFC}
+    .grid-cell{border:1px solid var(--border);height:24px;cursor:default;padding:0;overflow:hidden;min-width:80px}
+    .grid-cell:hover{background:#F8FAFC}
+    .grid-cell.selected{outline:2px solid #0F766E;outline-offset:-1px;background:#F0FDFA;position:relative;z-index:1}
+    .cell-inner{padding:0 4px;white-space:nowrap;overflow:hidden;font-size:.75rem;line-height:24px;color:var(--text-primary)}
+    .cell-inner.is-formula{color:#1E40AF}
+    .cell-inner.is-error{color:#DC2626}
+
+    .hints{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .hint-chip{font-size:.72rem;font-family:monospace;background:#F1F5F9;color:var(--text-muted);padding:3px 8px;border-radius:5px}
+
+    @media(max-width:600px){.hero h1{font-size:1.3rem}.calc-btn{height:48px}.calc-result{font-size:1.6rem}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-badge">Hesap Araçları</div>
+    <h1>Hesap Makinesi & Mini Formüller</h1>
+    <p>Bilimsel hesap makinesi ve mini Excel formül tablosu. SUM, AVERAGE, IF, ROUND ve daha fazlası. Tüm veriler yalnızca tarayıcınızda tutulur.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('calc',this)">Hesap Makinesi</button>
+    <button class="tab-btn" onclick="switchTab('sheet',this)">Mini Formüller</button>
+  </div>
+
+  <!-- Calculator -->
+  <div class="tab-panel active" id="tab-calc">
+    <div class="calc-wrap" id="calc-container" tabindex="0">
+      <div class="calc-display">
+        <div class="calc-expr" id="calc-expr">0</div>
+        <div class="calc-result" id="calc-result" style="display:none"></div>
+      </div>
+      <div class="calc-grid">
+        <button class="calc-btn btn-fn" onclick="cp('C')">C</button>
+        <button class="calc-btn btn-fn" onclick="cp('±')">±</button>
+        <button class="calc-btn btn-fn" onclick="cp('%')">%</button>
+        <button class="calc-btn btn-op" onclick="cp('/')">÷</button>
+
+        <button class="calc-btn btn-num" onclick="cp('7')">7</button>
+        <button class="calc-btn btn-num" onclick="cp('8')">8</button>
+        <button class="calc-btn btn-num" onclick="cp('9')">9</button>
+        <button class="calc-btn btn-op" onclick="cp('*')">×</button>
+
+        <button class="calc-btn btn-num" onclick="cp('4')">4</button>
+        <button class="calc-btn btn-num" onclick="cp('5')">5</button>
+        <button class="calc-btn btn-num" onclick="cp('6')">6</button>
+        <button class="calc-btn btn-op" onclick="cp('-')">−</button>
+
+        <button class="calc-btn btn-num" onclick="cp('1')">1</button>
+        <button class="calc-btn btn-num" onclick="cp('2')">2</button>
+        <button class="calc-btn btn-num" onclick="cp('3')">3</button>
+        <button class="calc-btn btn-op" onclick="cp('+')">+</button>
+
+        <button class="calc-btn btn-num wide" onclick="cp('0')">0</button>
+        <button class="calc-btn btn-num" onclick="cp('.')">.</button>
+        <button class="calc-btn btn-op-eq" onclick="cp('=')">=</button>
+
+        <button class="calc-btn btn-fn" onclick="cp('(')">(</button>
+        <button class="calc-btn btn-fn" onclick="cp(')')">)</button>
+        <button class="calc-btn btn-fn" onclick="cp('^')">xʸ</button>
+        <button class="calc-btn btn-fn" onclick="cp('⌫')">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spreadsheet -->
+  <div class="tab-panel" id="tab-sheet">
+    <div class="formula-bar">
+      <span class="cell-ref-box" id="cell-ref">—</span>
+      <span class="fx-label">fx</span>
+      <input id="formula-input" placeholder="Hücre seçin, ardından değer veya =FORMÜL girin" disabled>
+      <button class="clear-btn" onclick="clearAll()">Temizle</button>
+    </div>
+    <div class="grid-wrap">
+      <table id="grid"></table>
+    </div>
+    <div class="hints" id="hints"></div>
+  </div>
+</div>
+
+<script>
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Formula Engine ────────────────────────────────────────────────────────────
+const COLS = 8, ROWS = 20;
+const COL_LABELS = Array.from({length:COLS},(_,i)=>String.fromCharCode(65+i));
+
+function expandRange(a, b) {
+  const c1=a.charCodeAt(0)-65, r1=+a.slice(1)-1;
+  const c2=b.charCodeAt(0)-65, r2=+b.slice(1)-1;
+  const out=[];
+  for(let c=Math.min(c1,c2);c<=Math.max(c1,c2);c++)
+    for(let r=Math.min(r1,r2);r<=Math.max(r1,r2);r++)
+      out.push(String.fromCharCode(65+c)+(r+1));
+  return out;
+}
+
+function cellNum(id, cells, vis) {
+  if(vis.has(id)) throw new Error('#REF');
+  const raw=(cells[id]||'').trim();
+  if(!raw) return 0;
+  if(raw.startsWith('=')) return compute(raw.slice(1),cells,new Set([...vis,id]));
+  const n=Number(raw); return isNaN(n)?0:n;
+}
+
+function compute(src, cells, vis) {
+  let i=0;
+  const ws=()=>{while(i<src.length&&src[i]<=' ')i++};
+  const rid=()=>{let s='';while(i<src.length&&/[A-Z0-9]/i.test(src[i]))s+=src[i++].toUpperCase();return s};
+
+  function pargs(){
+    const list=[];ws();if(src[i]===')')return list;
+    for(;;){
+      ws();const p=i;
+      if(i<src.length&&/[A-Za-z]/.test(src[i])){
+        const id=rid();ws();
+        if(/^[A-H][1-9][0-9]*$/.test(id)&&src[i]===':'){
+          i++;ws();const id2=rid();
+          list.push(expandRange(id,id2));ws();
+          if(src[i]!==',')break;i++;continue;
+        }
+        i=p;
+      }
+      list.push(expr());ws();if(src[i]!==',')break;i++;
+    }
+    return list;
+  }
+
+  function efn(name,a){
+    const ns=[];
+    for(const x of a)Array.isArray(x)?ns.push(...x.map(id=>cellNum(id,cells,vis))):ns.push(x);
+    switch(name){
+      case'SUM':return ns.reduce((a,b)=>a+b,0);
+      case'AVERAGE':case'AVG':return ns.length?ns.reduce((a,b)=>a+b,0)/ns.length:0;
+      case'MIN':return ns.length?Math.min(...ns):0;
+      case'MAX':return ns.length?Math.max(...ns):0;
+      case'COUNT':return ns.length;
+      case'ABS':return Math.abs(ns[0]||0);
+      case'SQRT':return Math.sqrt(Math.abs(ns[0]||0));
+      case'ROUND':return +((ns[0]||0).toFixed(Math.max(0,ns[1]||0)));
+      case'INT':case'FLOOR':return Math.floor(ns[0]||0);
+      case'CEIL':return Math.ceil(ns[0]||0);
+      case'POWER':case'POW':return (ns[0]||0)**(ns[1]||2);
+      case'MOD':return (ns[0]||0)%(ns[1]||1);
+      case'IF':return (ns[0]||0)?(ns[1]||1):(ns[2]||0);
+      case'LOG':return ns[1]?Math.log(ns[0]||1)/Math.log(ns[1]):Math.log10(ns[0]||1);
+      case'LN':return Math.log(ns[0]||1);
+      case'EXP':return Math.exp(ns[0]||0);
+      case'PRODUCT':return ns.reduce((a,b)=>a*b,1);
+      case'PI':return Math.PI;
+      default:throw new Error('#NAME');
+    }
+  }
+
+  function primary(){
+    ws();
+    if(src[i]==='('){i++;const v=expr();ws();if(src[i]===')')i++;return v}
+    if(/\d/.test(src[i]||'')||(src[i]==='.'&&/\d/.test(src[i+1]||''))){
+      let s='';while(i<src.length&&/[\d.]/.test(src[i]))s+=src[i++];return+s;
+    }
+    if(/[A-Za-z]/.test(src[i]||'')){
+      const id=rid();ws();
+      if(src[i]==='('){i++;const a=pargs();ws();if(src[i]===')')i++;return efn(id,a)}
+      if(/^[A-H][1-9][0-9]*$/.test(id)&&src[i]===':'){
+        i++;ws();const id2=rid();
+        return expandRange(id,id2).reduce((s,x)=>s+cellNum(x,cells,vis),0);
+      }
+      if(/^[A-H][1-9][0-9]*$/.test(id))return cellNum(id,cells,vis);
+      if(id==='PI')return Math.PI;if(id==='E')return Math.E;
+      throw new Error('#NAME');
+    }
+    throw new Error('#PARSE');
+  }
+
+  function unary(){ws();if(src[i]==='-'){i++;return-unary()}if(src[i]==='+'){i++;return unary()}return primary()}
+  function pow(){let l=unary();ws();while(src[i]==='^'){i++;ws();l=l**unary();ws()}return l}
+  function mul(){
+    let l=pow();ws();
+    while(src[i]==='*'||src[i]==='/'){
+      const op=src[i++];ws();const r=pow();
+      l=op==='*'?l*r:(r===0?(l>=0?Infinity:-Infinity):l/r);ws();
+    }
+    return l;
+  }
+  function add(){
+    let l=mul();ws();
+    while(src[i]==='+'||src[i]==='-'){const op=src[i++];ws();const r=mul();l=op==='+'?l+r:l-r;ws()}
+    return l;
+  }
+  function cmp(){
+    let l=add();ws();
+    for(;;){
+      const t=src.slice(i,i+2);let op='';
+      if(['>=','<=','<>'].includes(t)){op=t;i+=2}
+      else if(i<src.length&&'><'.includes(src[i])){op=src[i++]}
+      else break;
+      ws();const r=add();ws();
+      l=op==='>'?+(l>r):op==='<'?+(l<r):op==='>='?+(l>=r):op==='<='?+(l<=r):+(l!==r);
+    }
+    return l;
+  }
+  function expr(){return cmp()}
+
+  ws();return expr();
+}
+
+function renderVal(raw, cells, id) {
+  if(!raw.trim())return'';
+  if(!raw.trim().startsWith('='))return raw.trim();
+  try{
+    const r=compute(raw.trim().slice(1),cells,new Set([id]));
+    if(!isFinite(r))return r>0?'∞':'-∞';
+    return String(+r.toPrecision(12));
+  }catch(e){
+    const m=e.message;return m.startsWith('#')?m:'#ERR';
+  }
+}
+
+// ── Calculator state ──────────────────────────────────────────────────────────
+let cExpr='', cResult=null, cFresh=false;
+
+function cp(v){
+  const exprEl=document.getElementById('calc-expr');
+  const resEl=document.getElementById('calc-result');
+
+  if(v==='C'){cExpr='';cResult=null;cFresh=false}
+  else if(v==='⌫'){if(cFresh){cExpr='';cResult=null;cFresh=false}else cExpr=cExpr.slice(0,-1)}
+  else if(v==='='){
+    if(!cExpr)return;
+    try{
+      const r=compute(cExpr,{},new Set());
+      cResult=isFinite(r)?String(+r.toPrecision(12)):(r>0?'∞':'-∞');
+      cFresh=true;
+    }catch{cResult='Hata';cFresh=false}
+  }
+  else if(cFresh){
+    if(/[\d.(]/.test(v)){cExpr=v;cResult=null;cFresh=false}
+    else if(/[+\-*/^]/.test(v)){cExpr=(cResult||'')+v;cResult=null;cFresh=false}
+  }
+  else if(v==='±'){cExpr=cExpr.startsWith('-')?cExpr.slice(1):(cExpr?'-'+cExpr:'')}
+  else if(v==='%'){
+    try{cExpr=String(+(compute(cExpr,{},new Set())/100).toPrecision(12));cResult=null}catch{}
+  }
+  else{cExpr+=v;cResult=null;cFresh=false}
+
+  exprEl.textContent=cExpr||'0';
+  if(cResult!==null){resEl.textContent=cResult;resEl.style.display='block'}
+  else{resEl.style.display='none'}
+}
+
+// Keyboard on calc container
+document.getElementById('calc-container').addEventListener('keydown',function(e){
+  const k=e.key;
+  if(/^\d$/.test(k)||'+-*/^().'.includes(k)){e.preventDefault();cp(k)}
+  else if(k==='Enter'||k==='='){e.preventDefault();cp('=')}
+  else if(k==='Backspace'){e.preventDefault();cp('⌫')}
+  else if(k==='Escape'){e.preventDefault();cp('C')}
+});
+
+// ── Spreadsheet state ─────────────────────────────────────────────────────────
+const sheetCells={};
+let selId=null;
+const formulaInput=document.getElementById('formula-input');
+const cellRefEl=document.getElementById('cell-ref');
+
+function selectCell(id){
+  if(selId&&selId!==id)commitCell(selId,formulaInput.value);
+  selId=id;
+  cellRefEl.textContent=id;
+  formulaInput.disabled=false;
+  formulaInput.value=sheetCells[id]||'';
+  formulaInput.focus();
+  document.querySelectorAll('.grid-cell.selected').forEach(el=>el.classList.remove('selected'));
+  const el=document.getElementById('gc-'+id);
+  if(el)el.classList.add('selected');
+}
+
+function commitCell(id,val){
+  if(!val.trim())delete sheetCells[id];else sheetCells[id]=val;
+  renderCell(id);
+  // re-render all (formulas may reference this cell)
+  for(let c=0;c<COLS;c++)
+    for(let r=0;r<ROWS;r++){
+      const cid=COL_LABELS[c]+(r+1);
+      if(cid!==id)renderCell(cid);
+    }
+}
+
+function renderCell(id){
+  const el=document.getElementById('gc-'+id);
+  if(!el)return;
+  const raw=sheetCells[id]||'';
+  const val=renderVal(raw,sheetCells,id);
+  const inner=el.querySelector('.cell-inner');
+  inner.textContent=val;
+  inner.className='cell-inner'+(val.startsWith('#')?' is-error':raw.startsWith('=')?' is-formula':'');
+}
+
+function navCell(id,dr,dc){
+  commitCell(id,formulaInput.value);
+  const c=id.charCodeAt(0)-65,r=+id.slice(1)-1;
+  const nc=Math.max(0,Math.min(COLS-1,c+dc));
+  const nr=Math.max(0,Math.min(ROWS-1,r+dr));
+  selectCell(COL_LABELS[nc]+(nr+1));
+}
+
+formulaInput.addEventListener('keydown',function(e){
+  if(!selId)return;
+  if(e.key==='Enter'){e.preventDefault();navCell(selId,1,0)}
+  else if(e.key==='Tab'){e.preventDefault();navCell(selId,0,e.shiftKey?-1:1)}
+  else if(e.key==='ArrowDown'){e.preventDefault();navCell(selId,1,0)}
+  else if(e.key==='ArrowUp'){e.preventDefault();navCell(selId,-1,0)}
+  else if(e.key==='Escape'){formulaInput.value=sheetCells[selId]||'';formulaInput.blur()}
+});
+
+formulaInput.addEventListener('blur',function(){
+  if(selId)commitCell(selId,formulaInput.value);
+});
+
+function clearAll(){
+  if(!confirm('Tüm verileri temizle?'))return;
+  for(const k in sheetCells)delete sheetCells[k];
+  for(let c=0;c<COLS;c++)for(let r=0;r<ROWS;r++)renderCell(COL_LABELS[c]+(r+1));
+  selId=null;formulaInput.value='';formulaInput.disabled=true;cellRefEl.textContent='—';
+  document.querySelectorAll('.grid-cell.selected').forEach(el=>el.classList.remove('selected'));
+}
+
+// ── Build grid ─────────────────────────────────────────────────────────────────
+(function buildGrid(){
+  const table=document.getElementById('grid');
+  // Header row
+  const thead=document.createElement('thead');
+  const hr=document.createElement('tr');
+  const th0=document.createElement('th');th0.className='row-header';hr.appendChild(th0);
+  COL_LABELS.forEach(c=>{const th=document.createElement('th');th.className='col-header';th.textContent=c;hr.appendChild(th)});
+  thead.appendChild(hr);table.appendChild(thead);
+  // Body
+  const tbody=document.createElement('tbody');
+  for(let r=0;r<ROWS;r++){
+    const tr=document.createElement('tr');
+    const rh=document.createElement('td');rh.className='row-num-col row-header';rh.textContent=r+1;tr.appendChild(rh);
+    COL_LABELS.forEach(c=>{
+      const id=c+(r+1);
+      const td=document.createElement('td');td.className='grid-cell';td.id='gc-'+id;
+      td.onclick=()=>selectCell(id);
+      const inner=document.createElement('div');inner.className='cell-inner';
+      td.appendChild(inner);tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  // Hints
+  const hints=['=SUM(A1:A5)','=AVERAGE(A1:A5)','=MIN(A1:A5)','=MAX(A1:A5)','=A1+B1*C1','=IF(A1>0,B1,C1)','=ROUND(A1,2)','=SQRT(A1)','=POWER(A1,2)','=COUNT(A1:A5)','=MOD(A1,B1)'];
+  const hEl=document.getElementById('hints');
+  hints.forEach(h=>{const s=document.createElement('span');s.className='hint-chip';s.textContent=h;hEl.appendChild(s)});
+})();
+</script>
+</body>
+</html>
