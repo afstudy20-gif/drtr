@@ -387,10 +387,28 @@
         </section>
     </div>
 
-    <footer>
-        <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
-        <p style="margin-top:6px">
-            <a href="/">Ana Sayfa</a> | <a href="sozluk.html">Tıp Sözlüğü</a> | <a href="antikoagulan.html">Antikoagülan Rehberi</a> | <a href="about.html">Hakkımızda</a>
+    <style>
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748B;
+            font-size: 0.8rem;
+            border-top: 1px solid #E2E8F0;
+            background: #fff;
+            margin-top: 40px;
+        }
+        footer a { color: #3b82f6; text-decoration: none; margin: 0 8px; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+
+    <footer id="footer">
+        <p>&copy; 2026 DrTR Tools &mdash; <span id="footer-text">Tüm hakları saklıdır.</span></p>
+        <p style="margin-top:10px">
+            <a href="/">Home / Ana Sayfa</a> |
+            <a href="privacy.html" id="link-privacy">Privacy</a> |
+            <a href="terms.html" id="link-terms">Terms</a> |
+            <a href="about.html" id="link-about">About</a> |
+            <a href="disclaimer.html" id="link-disclaimer">Disclaimer</a>
         </p>
     </footer>
 
@@ -513,6 +531,19 @@
         document.querySelectorAll('[data-tr]').forEach(function(el) {
             el.textContent = el.getAttribute('data-' + _lang);
         });
+
+        // Footer update
+        const ft = document.getElementById('footer-text');
+        if (ft) ft.textContent = _lang === 'en' ? 'All rights reserved.' : 'Tüm hakları saklıdır.';
+        const labels = {
+            en: { privacy: 'Privacy', terms: 'Terms', about: 'About', disclaimer: 'Disclaimer' },
+            tr: { privacy: 'Gizlilik', terms: 'Şartlar', about: 'Hakkımızda', disclaimer: 'Sorumluluk Reddi' }
+        };
+        const l = labels[_lang];
+        document.getElementById('link-privacy').textContent = l.privacy;
+        document.getElementById('link-terms').textContent = l.terms;
+        document.getElementById('link-about').textContent = l.about;
+        document.getElementById('link-disclaimer').textContent = l.disclaimer;
     }
     </script>
     <script src="/ads.js"></script>

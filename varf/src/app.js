@@ -308,7 +308,7 @@ const clearHistoryButton = document.querySelector("#clear-history");
 // ─── Language Toggle ─────────────────────────────────────────────────
 
 let _appLang = 'tr';
-function toggleLang() {
+window.toggleLang = function() {
   _appLang = _appLang === 'tr' ? 'en' : 'tr';
   const btn = document.getElementById('langBtn');
   if (btn) btn.textContent = _appLang === 'tr' ? 'EN' : 'TR';
@@ -316,6 +316,21 @@ function toggleLang() {
   document.querySelectorAll('[data-tr]').forEach(el => {
     el.textContent = el.getAttribute('data-' + _appLang);
   });
+
+  // Footer update
+  const ft = document.getElementById('footer-text');
+  if (ft) ft.textContent = _appLang === 'en' ? 'All rights reserved.' : 'Tüm hakları saklıdır.';
+  const labels = {
+    en: { privacy: 'Privacy', terms: 'Terms', about: 'About', disclaimer: 'Disclaimer' },
+    tr: { privacy: 'Gizlilik', terms: 'Şartlar', about: 'Hakkımızda', disclaimer: 'Sorumluluk Reddi' }
+  };
+  const l = labels[_appLang];
+  if (document.getElementById('link-privacy')) {
+    document.getElementById('link-privacy').textContent = l.privacy;
+    document.getElementById('link-terms').textContent = l.terms;
+    document.getElementById('link-about').textContent = l.about;
+    document.getElementById('link-disclaimer').textContent = l.disclaimer;
+  }
 }
 
 // ─── Theme ──────────────────────────────────────────────────────────

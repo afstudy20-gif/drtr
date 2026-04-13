@@ -3,101 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hakkimizda - DrTR Tools</title>
-    <meta name="description" content="DrTR Tools hakkinda bilgi. Saglik profesyonelleri ve arastirmacilar icin ucretsiz klinik, akademik ve verimlilik araclari.">
+    <title>About Us / Hakkımızda - DrTR Tools</title>
+    <meta name="description" content="Learn about DrTR Tools: Our mission, clinical standards, and commitment to providing free evidence-based tools for healthcare professionals.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://drtr.uk/about.html">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
-        :root { --navy: #F8FAFC; --teal: #0F766E; --teal-light: #0F766E; --gray-100: #0F172A; --gray-200: #1E293B; --gray-400: #475569; --gray-500: #64748B; --gray-700: #94A3B8; --surface: #FFFFFF; --border: #E2E8F0; }
+        :root { --navy: #F8FAFC; --teal: #0F766E; --blue-accent: #3B82F6; --gray-100: #0F172A; --gray-200: #1E293B; --gray-400: #475569; --gray-500: #64748B; --gray-700: #94A3B8; --surface: #FFFFFF; --border: #E2E8F0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--navy); color: var(--gray-200); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        .container { max-width: 720px; width: 100%; padding: 40px 20px; }
+        .container { max-width: 800px; width: 100%; padding: 40px 20px; background: var(--surface); margin-top: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         h1 { font-size: 1.6rem; color: var(--gray-100); margin-bottom: 24px; text-align: center; }
-        h2 { font-size: 1.1rem; color: var(--gray-100); margin: 24px 0 10px; }
-        p { font-size: 0.9rem; line-height: 1.7; color: var(--gray-400); margin-bottom: 12px; }
-        a { color: var(--teal-light); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .back { display: inline-flex; align-items: center; gap: 6px; color: var(--gray-500); font-size: 0.85rem; }
-        .lang-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; font-weight: 600; color: var(--gray-400); cursor: pointer; letter-spacing: 0.5px; }
-        .lang-btn:hover { color: var(--teal-light); border-color: var(--teal-light); }
-        .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-        .tool-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-        .tool-item h3 { font-size: 0.88rem; color: var(--gray-100); margin-bottom: 4px; }
-        .tool-item p { font-size: 0.8rem; margin-bottom: 0; }
-        footer { text-align: center; padding: 32px 20px; color: var(--gray-700); font-size: 0.78rem; }
-        @media (max-width: 480px) { .tools-grid { grid-template-columns: 1fr; } }
+        h2 { font-size: 1.15rem; color: var(--gray-100); margin: 30px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        p { font-size: 0.95rem; line-height: 1.7; color: var(--gray-400); margin-bottom: 15px; }
+        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; width: 100%; max-width: 800px; padding: 0 10px; }
+        .back { display: inline-flex; align-items: center; gap: 6px; color: var(--gray-500); font-size: 0.85rem; text-decoration: none; }
+        .lang-btn { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: var(--gray-400); cursor: pointer; }
+        .lang-btn:hover { border-color: var(--teal); color: var(--teal); }
+        .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .tool-item { background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+        .tool-item h3 { font-size: 0.95rem; color: var(--teal); margin-bottom: 8px; }
+        .tool-item p { font-size: 0.85rem; margin-bottom: 0; line-height: 1.5; }
+        footer { text-align: center; padding: 40px 20px; color: var(--gray-700); font-size: 0.78rem; width: 100%; }
+        .highlight-card { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 25px; margin: 30px 0; }
+        .highlight-card h3 { font-size: 1.1rem; color: #1E40AF; margin-bottom: 12px; }
+        @media (max-width: 600px) { .tools-grid { grid-template-columns: 1fr; } }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="nav-row">
-            <a href="/" class="back">&larr; Ana Sayfa</a>
-            <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
-        </div>
-        <h1>DrTR Tools Hakkinda</h1>
-
-        <h2>Misyonumuz</h2>
-        <p>DrTR Tools, saglik profesyonelleri, akademisyenler ve arastirmacilar icin gelistirilmis ucretsiz online araclar sunan bir platformdur. Amacimiz, gunluk klinik pratik ve akademik calismalari kolaylastiran, guvenilir ve kullanici dostu dijital araclar sunmaktir.</p>
-        <p>Platformumuz uc temel kategoride hizmet verir: klinik karar destek araclari, akademik yonetim araclari ve verimlilik araclari. Tum araclarimiz kayit gerektirmeden, ucretsiz olarak kullanilabilir.</p>
-
-        <h2>Klinik Araclar</h2>
-        <div class="tools-grid">
-            <div class="tool-item">
-                <h3>Varfarin Doz Asistani</h3>
-                <p>INR degerine gore haftalik varfarin doz onerisi sunan klinik karar destek araci. CHEST 2012 ve UW Medicine kilavuzlarina dayali nomogramlar kullanir.</p>
-            </div>
-            <div class="tool-item">
-                <h3>Tibbi Hesaplamalar</h3>
-                <p>BMI, eGFR (CKD-EPI), QTc (Bazett/Fridericia), CHA2DS2-VASc, HAS-BLED, Framingham risk skoru ve daha fazla klinik hesaplayici.</p>
-            </div>
-        </div>
-
-        <h2>Akademik Araclar</h2>
-        <div class="tools-grid">
-            <div class="tool-item">
-                <h3>Docentlik Atif Sistemi</h3>
-                <p>UAK (Universitelerarasi Kurul) standartlarinda akademik atif yonetimi, siniflandirma ve PDF rapor olusturma araci.</p>
-            </div>
-            <div class="tool-item">
-                <h3>Docpuan</h3>
-                <p>Docentlik basvurusu icin puan hesaplama, yayin degerlendirme ve basvuru hazirlik araci.</p>
-            </div>
-        </div>
-
-        <h2>Verimlilik Araclari</h2>
-        <div class="tools-grid">
-            <div class="tool-item">
-                <h3>PDF Translator</h3>
-                <p>PDF, DOCX, XLSX, PPTX ve TXT dosyalarini Ingilizce ve Turkce arasinda ceviren belge ceviri araci. Google Translate ve Bing Translate destegi.</p>
-            </div>
-            <div class="tool-item">
-                <h3>Excel Veri Eslestirici</h3>
-                <p>Iki Excel dosyasi arasinda anahtar sutuna gore veri eslestirme ve aktarimi yapan veri isleme araci.</p>
-            </div>
-        </div>
-
-        <h2>Saglik Bilgileri</h2>
-        <p>Ana sayfamizda yer alan saglik bilgileri, guvenilir uluslararasi tibbi kaynaklardan (WHO, American Heart Association, The Lancet, NEJM, CDC, Harvard Medical School gibi) derlenmistir. Bu bilgiler yalnizca genel bilgilendirme amaciyla sunulmaktadir ve tibbi tani veya tedavi yerine gecmez. Detaylar icin <a href="disclaimer.html">Tibbi Sorumluluk Reddi</a> sayfamizi inceleyin.</p>
-
-        <h2>Cok Dilli Destek</h2>
-        <p>Platformumuz Turkce, Ingilizce, Arapca, Cince ve Hintce dillerinde hizmet vermektedir. Amacimiz araclarimizi dunya genelinde erisilebilir kilmaktir.</p>
-
-        <h2>Iletisim</h2>
-        <p>Sorulariniz, onerileriniz veya geri bildirimleriniz icin bize ulasabilirsiniz:</p>
-        <p><strong>E-posta:</strong> <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a></p>
+    <div class="nav-row" style="margin-top: 30px;">
+        <a href="/" class="back" id="backLink">← Ana Sayfa / Home</a>
+        <button class="lang-btn" onclick="toggleLang()" id="langBtn">English (EN)</button>
     </div>
-    <footer><p>&copy; 2026 DrTR Tools</p></footer>
+
+    <div class="container">
+        <h1 id="title">Hakkımızda</h1>
+        
+        <div id="content">
+            <!-- Content injected by script -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 DrTR Tools &mdash; <a href="index.html">drtr.uk</a></p>
+    </footer>
+
     <script>
-    var _lang = 'tr';
-    function toggleLang() {
-        _lang = _lang === 'tr' ? 'en' : 'tr';
-        document.getElementById('langBtn').textContent = _lang === 'tr' ? 'EN' : 'TR';
-        document.documentElement.lang = _lang;
+    var currentLang = 'tr';
+    var data = {
+        tr: {
+            title: "Hakkımızda",
+            back: "← Ana Sayfa",
+            btn: "English (EN)",
+            sections: [
+                {
+                    h2: "Vizyonumuz ve Misyonumuz",
+                    p: "drtr.uk (DrTR Tools), sağlık profesyonelleri, araştırmacılar ve tıp öğrencileri için tasarlanmış bağımsız bir dijital araçlar platformudur. Misyonumuz, karmaşık klinik hesaplamaları ve akademik iş akışlarını basitleştiren, kanıta dayalı ve ücretsiz araçlar sunmaktır."
+                },
+                {
+                    h2: "Bilimsel Standartlarımız",
+                    p: "Platformumuzda yer alan tüm araçlar, uluslararası kabul görmüş tıbbi rehberleri (WHO, ESC, AHA, ACC) temel alır. Her hesaplayıcı, en güncel literatür verileri ve hakemli dergilerde yayınlanmış formüller kullanılarak geliştirilmiştir."
+                }
+            ],
+            highlightTitle: "Neden Bize Güvenebilirsiniz?",
+            highlightP: "DrTR Tools, 'Tasarım gereği Gizlilik (Privacy by Design)' ilkesini benimser. Klinik araçlarımıza girdiğiniz hiçbir veri (BMI, eGFR, Warfarin dozları vb.) sunucularımıza iletilmez. Tüm işlemler doğrudan kullanıcının kendi tarayıcısında gerçekleşir.",
+            categories: [
+                {
+                    h2: "Araç Kategorilerimiz",
+                    items: [
+                        { h3: "Klinik Karar Destek", p: "Varfarin Doz Asistanı, Kardiyovasküler Risk Skorları (SCORE2, PREVENT) ve Nefroloji hesaplayıcıları." },
+                        { h3: "Akademik Üretkenlik", p: "Doçentlik Atıf Sistemi, Docpuan hesaplama ve yayın takip modülleri." },
+                        { h3: "Verimlilik Araçları", p: "Çok dilli PDF çeviri, Excel veri eşleştirme ve nöbet çizelgesi hazırlama modülleri." }
+                    ]
+                }
+            ],
+            contactTitle: "İletişim",
+            contactP: "Görüş ve önerileriniz için: <a href='mailto:adycovs@gmail.com'>adycovs@gmail.com</a>"
+        },
+        en: {
+            title: "About Us",
+            back: "← Home Page",
+            btn: "Türkçe (TR)",
+            sections: [
+                {
+                    h2: "Our Vision & Mission",
+                    p: "drtr.uk (DrTR Tools) is an independent digital tools platform designed for healthcare professionals, researchers, and medical students. Our mission is to provide evidence-based, free tools that simplify complex clinical calculations and academic workflows."
+                },
+                {
+                    h2: "Scientific Standards",
+                    p: "All tools featured on our platform are based on internationally recognized medical guidelines (WHO, ESC, AHA, ACC). Each calculator is developed using the latest literature data and formulas published in peer-reviewed journals."
+                }
+            ],
+            highlightTitle: "Why You Can Trust Us",
+            highlightP: "DrTR Tools adopts the 'Privacy by Design' principle. No data you enter into our clinical tools (BMI, eGFR, Warfarin doses, etc.) is transmitted to our servers. All operations happen directly in the user's own browser.",
+            categories: [
+                {
+                    h2: "Our Tool Categories",
+                    items: [
+                        { h3: "Clinical Decision Support", p: "Warfarin Dose Assistant, Cardiovascular Risk Scores (SCORE2, PREVENT), and Nephrology calculators." },
+                        { h3: "Academic Productivity", p: "Associate Professorship Citation System, Docpuan scoring, and publication tracking modules." },
+                        { h3: "Productivity Tools", p: "Multilingual PDF translation, Excel data matching, and duty schedule generation modules." }
+                    ]
+                }
+            ],
+            contactTitle: "Contact",
+            contactP: "For feedback and inquiries: <a href='mailto:adycovs@gmail.com'>adycovs@gmail.com</a>"
+        }
+    };
+
+    function render() {
+        var lang = currentLang;
+        document.getElementById('title').textContent = data[lang].title;
+        document.getElementById('backLink').textContent = data[lang].back;
+        document.getElementById('langBtn').textContent = data[lang].btn;
+        document.documentElement.lang = lang;
+
+        var html = '';
+        data[lang].sections.forEach(s => {
+            html += '<h2>' + s.h2 + '</h2>';
+            html += '<p>' + s.p + '</p>';
+        });
+
+        html += '<div class="highlight-card"><h3>' + data[lang].highlightTitle + '</h3><p>' + data[lang].highlightP + '</p></div>';
+
+        data[lang].categories.forEach(cat => {
+            html += '<h2>' + cat.h2 + '</h2>';
+            html += '<div class="tools-grid">';
+            cat.items.forEach(item => {
+                html += '<div class="tool-item"><h3>' + item.h3 + '</h3><p>' + item.p + '</p></div>';
+            });
+            html += '</div>';
+        });
+
+        html += '<h2>' + data[lang].contactTitle + '</h2>';
+        html += '<p>' + data[lang].contactP + '</p>';
+
+        document.getElementById('content').innerHTML = html;
+        localStorage.setItem('drtr_lang', lang);
     }
+
+    function toggleLang() {
+        currentLang = currentLang === 'tr' ? 'en' : 'tr';
+        render();
+    }
+
+    var savedLang = localStorage.getItem('drtr_lang');
+    if (savedLang === 'en' || savedLang === 'tr') { currentLang = savedLang; }
+    render();
     </script>
     <script src="/ads.js"></script>
 </body>
 </html>
+

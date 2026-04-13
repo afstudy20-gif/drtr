@@ -141,9 +141,20 @@
         </div>
 
         <div class="page-header">
-            <h2>Oral Antikoagülan Rehberi</h2>
-            <p>Varfarin ve DOAC'ların doz ayarı, böbrek/karaciğer yetmezliğinde kullanım, ilaç etkileşimleri ile cerrahi, diş çekimi, endoskopi ve invazif girişimler öncesi yönetim protokolleri.</p>
+            <h2 data-tr="Oral Antikoagülan Rehberi" data-en="Oral Anticoagulant Guide">Oral Antikoagülan Rehberi</h2>
+            <p data-tr="Varfarin ve DOAC'ların doz ayarı, böbrek/karaciğer yetmezliğinde kullanım, ilaç etkileşimleri ile cerrahi, diş çekimi, endoskopi ve invazif girişimler öncesi yönetim protokolleri." 
+               data-en="Guide for dosage adjustment of Warfarin and DOACs, usage in renal/hepatic impairment, drug interactions, and management protocols before surgery, dental extraction, endoscopy, and invasive procedures.">
+                Varfarin ve DOAC'ların doz ayarı, böbrek/karaciğer yetmezliğinde kullanım, ilaç etkileşimleri ile cerrahi, diş çekimi, endoskopi ve invazif girişimler öncesi yönetim protokolleri.
+            </p>
         </div>
+
+        <!-- Scientific Background Section -->
+        <section class="scientific-context" style="margin-bottom: 30px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 25px;">
+            <h3 data-tr="Klinik Bağlam ve Farmakolojik Temeller" data-en="Clinical Context & Pharmacological Foundations" style="margin-bottom: 15px; color: var(--teal);">Klinik Bağlam ve Farmakolojik Temeller</h3>
+            <p data-tr="Doğrudan Oral Antikoagülanlar (DOAC), pıhtılaşma şelalesindeki spesifik faktörleri (Faktör Xa veya Trombin) doğrudan hedefleyerek etki gösterirler. Varfarin gibi K-vitamini antagonistlerinden farklı olarak, DOAC'lar öngörülebilir bir farmakokinetik profile sahiptir ve rutin INR takibi gerektirmezler. Ancak, perioperatif dönemde yarı ömürlerinin ve renal klirensin doğru hesaplanması, hem tromboembolik riskin hem de kanama riskinin minimize edilmesi açısından kritiktir."
+               data-en="Direct Oral Anticoagulants (DOACs) exert their effect by directly targeting specific factors in the coagulation cascade (Factor Xa or Thrombin). Unlike Vitamin K antagonists like Warfarin, DOACs have a predictable pharmacokinetic profile and do not require routine INR monitoring. However, accurate calculation of their half-life and renal clearance in the perioperative period is critical for minimizing both thromboembolic and bleeding risks."
+               style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary);"></p>
+        </section>
 
         <nav class="tab-nav">
             <button class="tab-btn active" onclick="showTab('doac', this)">DOAC Doz Rehberi</button>
@@ -612,7 +623,25 @@
         document.getElementById('langBtn').textContent = _lang === 'tr' ? 'EN' : 'TR';
         document.documentElement.lang = _lang;
         document.querySelectorAll('[data-tr]').forEach(function(el) {
-            el.textContent = el.getAttribute('data-' + _lang);
+            const val = el.getAttribute('data-' + _lang);
+            if (val) el.innerHTML = val;
+        });
+
+        // Translate Tab Buttons
+        const tabMap = {
+            'doac': { tr: 'DOAC Doz Rehberi', en: 'DOAC Dose Guide' },
+            'cerrahi': { tr: 'Cerrahi & Girişim Öncesi', en: 'Surgery & Pre-Procedure' },
+            'dis': { tr: 'Diş Çekimi', en: 'Dental Extraction' },
+            'endoskopi': { tr: 'Endoskopi', en: 'Endoscopy' },
+            'warfarin': { tr: 'Varfarin', en: 'Warfarin' },
+            'karsilastirma': { tr: 'Karşılaştırma', en: 'Comparison' }
+        };
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            const onclick = btn.getAttribute('onclick');
+            const match = onclick.match(/'([^']+)'/);
+            if (match && tabMap[match[1]]) {
+                btn.textContent = tabMap[match[1]][_lang];
+            }
         });
     }
     </script>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nöbetçi Eczane Bul — DrTR Tools</title>
+  <meta name="description" content="Konumunuza en yakın nöbetçi eczaneleri bulun. Güncel nöbetçi eczane listesi ve harita görünümü.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/eczane.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root{
+      --bg:#F8FAFC;--surface:#FFFFFF;
+      --text-primary:#0F172A;--text-secondary:#334155;--text-muted:#64748B;--text-faint:#94A3B8;
+      --border:#E2E8F0;--teal:#0F766E;--teal-bg:#F0FDFA;--teal-dark:#0D5F59;
+      --green:#15803D;--green-bg:#F0FDF4;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);--shadow-md:0 4px 12px rgba(0,0,0,0.09);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+    .topbar-inner{max-width:900px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+
+    .container{max-width:900px;margin:0 auto;padding:28px 24px 60px}
+
+    .hero{margin-bottom:24px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.9rem;color:var(--text-muted);line-height:1.65;max-width:600px}
+
+    /* Location card */
+    .loc-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+    .loc-btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;border:none;padding:12px 24px;border-radius:10px;font:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s}
+    .loc-btn:hover{background:var(--teal-dark)}
+    .loc-btn:disabled{background:#94A3B8;cursor:not-allowed}
+    .loc-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+    .loc-status{margin-top:14px;font-size:.85rem;color:var(--text-muted);display:none}
+    .loc-status.visible{display:flex;align-items:center;gap:8px}
+    .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Detected city */
+    .city-result{background:var(--green-bg);border:1px solid #BBF7D0;border-radius:10px;padding:14px 16px;margin-top:14px;display:none}
+    .city-result.visible{display:flex;align-items:center;gap:10px}
+    .city-icon{font-size:1.4rem}
+    .city-name{font-weight:700;color:var(--green);font-size:.95rem}
+    .city-sub{font-size:.78rem;color:#16A34A;margin-top:1px}
+
+    /* Nöbetçi links */
+    .nobetci-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;display:none}
+    .nobetci-links.visible{display:flex}
+    .ext-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;border:1.5px solid}
+    .ext-btn-primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .ext-btn-primary:hover{background:var(--teal-dark)}
+    .ext-btn-outline{background:#fff;color:var(--text-secondary);border-color:var(--border)}
+    .ext-btn-outline:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+    .ext-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+    /* Map */
+    .map-section{display:none}
+    .map-section.visible{display:block}
+    .section-title{font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .section-badge{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:#FEF9C3;color:#A16207;border:1px solid #FDE68A;padding:2px 7px;border-radius:10px}
+    #map{height:360px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);z-index:1}
+
+    /* Pharmacy list */
+    .pharm-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+    .pharm-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:flex-start;gap:12px;transition:all .2s;cursor:pointer}
+    .pharm-card:hover{border-color:#0D9488;box-shadow:var(--shadow-md)}
+    .pharm-num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .pharm-info{flex:1;min-width:0}
+    .pharm-name{font-weight:700;color:var(--text-primary);font-size:.9rem;margin-bottom:2px}
+    .pharm-addr{font-size:.78rem;color:var(--text-muted);line-height:1.4;margin-bottom:4px}
+    .pharm-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+    .pharm-dist{font-size:.72rem;font-weight:600;color:var(--teal);background:var(--teal-bg);padding:2px 7px;border-radius:10px}
+    .pharm-phone{font-size:.72rem;color:var(--text-muted)}
+    .pharm-hours{font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:10px}
+    .hours-24{background:#F0FDF4;color:#15803D}
+    .hours-other{background:#F1F5F9;color:#64748B}
+
+    .empty-state{text-align:center;padding:36px;color:var(--text-muted);font-size:.88rem}
+
+    .notice{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 14px;font-size:.78rem;color:#92400E;margin-top:12px;line-height:1.5}
+    .notice strong{color:#78350F}
+
+    .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;font-size:.85rem;color:#B91C1C;margin-top:14px;display:none}
+    .error-box.visible{display:block}
+
+    @media(max-width:600px){.hero h1{font-size:1.35rem}#map{height:280px}.nobetci-links{flex-direction:column}.ext-btn{justify-content:center}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-badge">Eczane</div>
+    <h1>Nöbetçi Eczane Bul</h1>
+    <p>Konumunuzu paylaşın, ilinize ait nöbetçi eczane listesine doğrudan ulaşın ve haritada yakın eczaneleri görüntüleyin.</p>
+  </div>
+
+  <!-- Location card -->
+  <div class="loc-card">
+    <button class="loc-btn" id="locBtn" onclick="findLocation()">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7" stroke-dasharray="1 0"/></svg>
+      Konumumu Bul
+    </button>
+
+    <div class="loc-status" id="locStatus">
+      <div class="spinner" id="spinner"></div>
+      <span id="locMsg">Konum alınıyor...</span>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="city-result" id="cityResult">
+      <div class="city-icon">📍</div>
+      <div>
+        <div class="city-name" id="cityName"></div>
+        <div class="city-sub" id="cityCoords"></div>
+      </div>
+    </div>
+
+    <div class="nobetci-links" id="nobetciLinks">
+      <a id="tebLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-primary">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Nöbetçi Eczane Listesi
+      </a>
+      <a id="mapsLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-outline">
+        <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+        Google Haritalar'da Göster
+      </a>
+      <a id="yandexLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-outline">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 14 8 14s8-8.75 8-14a8 8 0 0 0-8-8z"/></svg>
+        Yandex Haritalar
+      </a>
+    </div>
+  </div>
+
+  <!-- Map + pharmacy list -->
+  <div class="map-section" id="mapSection">
+    <div class="section-title">
+      Yakın Eczaneler
+      <span class="section-badge">OSM Verisi</span>
+    </div>
+    <div id="map"></div>
+    <div class="notice">
+      <strong>Not:</strong> Haritadaki eczaneler OpenStreetMap verisiyle oluşturulmaktadır ve her gün değişen <strong>nöbetçi</strong> eczaneleri yansıtmayabilir. Güncel nöbetçi listesi için yukarıdaki bağlantıyı kullanın.
+    </div>
+    <div class="pharm-list" id="pharmList"></div>
+  </div>
+
+  <section class="e-e-a-t-info" style="background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 32px; font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+      <h3 style="color: var(--teal); margin-bottom: 8px; font-size: 1rem;">Veri Kaynakları ve Sorumluluk Reddi</h3>
+      <p>Bu uygulama, konum verilerinizi kullanarak size en yakın nöbetçi eczaneleri bulmanıza yardımcı olur. Nöbetçi eczane listeleri, Türk Eczacıları Birliği (TEB) ve yerel eczacı odaları tarafından paylaşılan resmi veriler temel alınarak dış bağlantılar (eczaneler.gen.tr) üzerinden sunulmaktadır. Harita üzerindeki konumlar OpenStreetMap (OSM) verileridir. Nöbetçi eczaneler günlük olarak değişebileceğinden, gitmeden önce telefonla teyit etmeniz önerilir.</p>
+  </section>
+</div>
+
+<style>
+    footer {
+        text-align: center;
+        padding: 40px 20px;
+        color: #64748B;
+        font-size: 0.8rem;
+        border-top: 1px solid #E2E8F0;
+        background: #fff;
+        margin-top: 40px;
+    }
+    footer a { color: #3b82f6; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
+</style>
+
+<footer id="footer">
+    <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
+    <p style="margin-top:10px">
+        <a href="/">Home / Ana Sayfa</a> |
+        <a href="privacy.html">Privacy</a> |
+        <a href="terms.html">Terms</a> |
+        <a href="about.html">About</a> |
+        <a href="disclaimer.html">Disclaimer</a>
+    </p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var map, userMarker, pharmMarkers = [];
+var userLat, userLng, detectedCity, detectedSlug;
+
+function cityToSlug(name) {
+  return (name || '').toLowerCase()
+    .replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s')
+    .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ç/g,'c')
+    .replace(/İ/g,'i').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+
+function haversine(lat1, lon1, lat2, lon2) {
+  var R = 6371000;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLon = (lon2 - lon1) * Math.PI / 180;
+  var a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+function fmtDist(m) {
+  return m < 1000 ? m + ' m' : (m/1000).toFixed(1) + ' km';
+}
+
+function setStatus(msg, spin) {
+  var s = document.getElementById('locStatus');
+  s.classList.add('visible');
+  document.getElementById('locMsg').textContent = msg;
+  document.getElementById('spinner').style.display = spin ? '' : 'none';
+}
+
+function setError(msg) {
+  var b = document.getElementById('errorBox');
+  b.textContent = msg;
+  b.classList.add('visible');
+  document.getElementById('locStatus').classList.remove('visible');
+}
+
+async function findLocation() {
+  var btn = document.getElementById('locBtn');
+  btn.disabled = true;
+  document.getElementById('errorBox').classList.remove('visible');
+  document.getElementById('cityResult').classList.remove('visible');
+  document.getElementById('nobetciLinks').classList.remove('visible');
+  document.getElementById('mapSection').classList.remove('visible');
+  document.getElementById('pharmList').innerHTML = '';
+
+  setStatus('Konum alınıyor...', true);
+
+  try {
+    var pos = await new Promise(function(resolve, reject) {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {timeout:12000, maximumAge:60000});
+    });
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+
+    setStatus('Konum tespit edildi, şehir belirleniyor...', true);
+
+    // Reverse geocode via Nominatim
+    var nmRes = await fetch(
+      'https://nominatim.openstreetmap.org/reverse?lat=' + userLat + '&lon=' + userLng + '&format=json&accept-language=tr',
+      {headers:{'Accept-Language':'tr'}}
+    );
+    var nmData = await nmRes.json();
+    var addr = nmData.address || {};
+    detectedCity = addr.province || addr.state || addr.city || addr.county || 'Bilinmiyor';
+    var district = addr.county || addr.town || addr.suburb || addr.village || '';
+    detectedSlug = cityToSlug(detectedCity);
+
+    // Show city
+    document.getElementById('cityName').textContent = detectedCity + (district && district !== detectedCity ? ' / ' + district : '');
+    document.getElementById('cityCoords').textContent = userLat.toFixed(5) + ', ' + userLng.toFixed(5);
+    document.getElementById('cityResult').classList.add('visible');
+
+    // External links
+    document.getElementById('tebLink').href = 'https://www.eczaneler.gen.tr/nobetci/' + detectedSlug;
+    document.getElementById('mapsLink').href = 'https://www.google.com/maps/search/nöbetçi+eczane/@' + userLat + ',' + userLng + ',14z';
+    document.getElementById('yandexLink').href = 'https://yandex.com.tr/harita/?text=nöbetçi eczane&ll=' + userLng + ',' + userLat + '&z=14';
+    document.getElementById('nobetciLinks').classList.add('visible');
+
+    // Init map
+    setStatus('Yakın eczaneler haritaya yükleniyor...', true);
+    initMap(userLat, userLng);
+
+    // Fetch nearby pharmacies from Overpass
+    var pharmacies = await fetchPharmacies(userLat, userLng);
+    renderPharmacies(pharmacies);
+
+    setStatus('Tamamlandı — ' + pharmacies.length + ' eczane bulundu.', false);
+    document.getElementById('mapSection').classList.add('visible');
+
+  } catch(err) {
+    if(err.code === 1) {
+      setError('Konum izni reddedildi. Tarayıcı ayarlarından konuma izin verin ve tekrar deneyin.');
+    } else if(err.code === 2) {
+      setError('Konum belirlenemedi. Lütfen cihazınızın GPS veya Wi-Fi konumlamasını kontrol edin.');
+    } else if(err.code === 3) {
+      setError('Konum isteği zaman aşımına uğradı. Lütfen tekrar deneyin.');
+    } else {
+      setError('Bir hata oluştu: ' + (err.message || 'Bilinmeyen hata'));
+    }
+    btn.disabled = false;
+    return;
+  }
+
+  btn.disabled = false;
+}
+
+function initMap(lat, lng) {
+  if(map) {
+    map.remove();
+    pharmMarkers = [];
+  }
+  map = L.map('map').setView([lat, lng], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  // User marker
+  var userIcon = L.divIcon({
+    html: '<div style="width:14px;height:14px;background:#2563EB;border:3px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>',
+    className: '', iconSize:[14,14], iconAnchor:[7,7]
+  });
+  userMarker = L.marker([lat, lng], {icon: userIcon})
+    .addTo(map)
+    .bindPopup('<b>Konumunuz</b>');
+}
+
+async function fetchPharmacies(lat, lng) {
+  var radius = 2500;
+  var query = '[out:json][timeout:20];(node["amenity"="pharmacy"](around:' + radius + ',' + lat + ',' + lng + ');way["amenity"="pharmacy"](around:' + radius + ',' + lat + ',' + lng + '););out center tags;';
+  var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
+  var res = await fetch(url);
+  var data = await res.json();
+
+  return (data.elements || []).map(function(el) {
+    var elLat = el.lat || (el.center && el.center.lat);
+    var elLng = el.lon || (el.center && el.center.lon);
+    var tags = el.tags || {};
+    var name = tags.name || tags['name:tr'] || 'Eczane';
+    var street = [tags['addr:street'], tags['addr:housenumber']].filter(Boolean).join(' ');
+    var city = tags['addr:city'] || tags['addr:district'] || '';
+    var address = [street, city].filter(Boolean).join(', ');
+    var hours = tags['opening_hours'] || '';
+    var is24 = hours.toLowerCase().replace(/\s/g,'') === '24/7' || hours === 'Mo-Su 00:00-24:00';
+    return {
+      id: el.id,
+      lat: elLat, lng: elLng,
+      name: name, address: address,
+      phone: tags.phone || tags['contact:phone'] || '',
+      hours: hours, is24: is24,
+      dist: haversine(lat, lng, elLat, elLng)
+    };
+  }).filter(function(p){ return p.lat && p.lng; })
+    .sort(function(a,b){ return a.dist - b.dist; });
+}
+
+function renderPharmacies(pharmacies) {
+  var pharmIcon = L.divIcon({
+    html: '<div style="width:10px;height:10px;background:#0F766E;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.3)"></div>',
+    className: '', iconSize:[10,10], iconAnchor:[5,5]
+  });
+
+  var list = document.getElementById('pharmList');
+
+  if(!pharmacies.length) {
+    list.innerHTML = '<div class="empty-state">2.5 km çevresinde kayıtlı eczane bulunamadı.<br>Arama yarıçapını artırın veya harici bağlantıları kullanın.</div>';
+    return;
+  }
+
+  pharmacies.slice(0,20).forEach(function(p, idx) {
+    // Map marker
+    var marker = L.marker([p.lat, p.lng], {icon: pharmIcon}).addTo(map);
+    marker.bindPopup(
+      '<b>' + p.name + '</b>' +
+      (p.address ? '<br><small>' + p.address + '</small>' : '') +
+      (p.phone ? '<br><small>📞 ' + p.phone + '</small>' : '') +
+      '<br><small>' + fmtDist(p.dist) + ' uzaklıkta</small>'
+    );
+    pharmMarkers.push(marker);
+
+    // List card
+    var card = document.createElement('div');
+    card.className = 'pharm-card';
+    card.onclick = function(){
+      map.setView([p.lat, p.lng], 17);
+      marker.openPopup();
+      document.getElementById('map').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+    card.innerHTML =
+      '<div class="pharm-num">' + (idx+1) + '</div>' +
+      '<div class="pharm-info">' +
+        '<div class="pharm-name">' + p.name + '</div>' +
+        (p.address ? '<div class="pharm-addr">' + p.address + '</div>' : '') +
+        '<div class="pharm-meta">' +
+          '<span class="pharm-dist">' + fmtDist(p.dist) + '</span>' +
+          (p.is24 ? '<span class="pharm-hours hours-24">24 Saat</span>' : (p.hours ? '<span class="pharm-hours hours-other">' + p.hours + '</span>' : '')) +
+          (p.phone ? '<span class="pharm-phone">📞 <a href="tel:' + p.phone + '" onclick="event.stopPropagation()">' + p.phone + '</a></span>' : '') +
+        '</div>' +
+      '</div>';
+    list.appendChild(card);
+  });
+
+  // Fit map to show all markers
+  if(pharmacies.length > 0) {
+    var bounds = [[userLat, userLng]];
+    pharmacies.slice(0, 10).forEach(function(p){ bounds.push([p.lat, p.lng]); });
+    map.fitBounds(bounds, {padding:[30,30], maxZoom:15});
+  }
+}
+</script>
+<script src="/ads.js"></script>
+</body>
+</html>

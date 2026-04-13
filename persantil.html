@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persantil Hesaplama - drtr.uk</title>
+    <title>Bebek ve Çocuk Persantil Hesaplama (Boy, Kilo, Baş Çevresi) - DrTR Tools</title>
+    <meta name="description" content="Neyzi 2008 ve WHO referans değerlerine göre çocuk boy, kilo ve baş çevresi persantil hesaplayıcı. Bebek gelişim takibi ve büyüme eğrileri.">
+    <meta name="keywords" content="persantil hesaplama, bebek boy kilo takibi, neyzi persantil, büyüme eğrisi, z-skoru hesaplama, çocuk gelişimi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/persantil.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -221,6 +221,38 @@
         <button class="btn" onclick="calcHCPercentile()" data-tr="Hesapla" data-en="Calculate">Hesapla</button>
         <div class="result-box" id="hc-result"></div>
     </div>
+    <!-- Clinical Information Section for SEO/AdSense -->
+    <section class="clinical-info-section" style="margin-top: 40px; border-top: 2px solid #E2E8F0; padding-top: 30px;">
+        <h3 id="info-section-title" data-tr="Pediatrik Buyume Takibi ve Kaynaklar" data-en="Pediatric Growth Tracking & Resources" style="font-size: 1.1rem; color: #0F172A; margin-bottom: 20px;">Pediatrik Buyume Takibi ve Kaynaklar</h3>
+        
+        <div id="info-content" style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Persantil Nedir -->
+            <div class="info-block" style="background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                <h4 data-tr="Persantil (Yuzdelik) Nedir?" data-en="What is a Percentile?" style="color: #3b82f6; margin-bottom: 10px;">Persantil (Yuzdelik) Nedir?</h4>
+                <p data-tr="Persantil degerleri, bir cocugun buyumesinin ayni yas ve cinsiyetteki diger cocuklarla karsilastirilmasini saglar. Ornegin, 75. persantilde olan bir cocuk, ayni yastaki cocuklarin %75'inden daha uzun veya agir, %25'inden ise daha kisa veya hafiftir. 3. ve 97. persantil degerleri arasindaki buyume genel olarak 'normal' kabul edilir; ancak onemli olan tek bir olcum degil, buyume egrisinin zaman icindeki takibidir." 
+                   data-en="Percentile values allow a child's growth to be compared with other children of the same age and sex. For example, a child at the 75th percentile is taller or heavier than 75% of children the same age, and shorter or lighter than 25%. Growth between the 3rd and 97th percentiles is generally considered 'normal'; however, the important factor is not a single measurement, but the tracking of the growth curve over time."
+                   style="font-size: 0.9rem; line-height: 1.6;"></p>
+            </div>
+
+            <!-- Neyzi 2008 Hakkinda -->
+            <div class="info-block" style="background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                <h4 data-tr="Neyzi 2008 Turk Cocuklari Referanslari" data-en="Neyzi 2008 Turkish Child References" style="color: #3b82f6; margin-bottom: 10px;">Neyzi 2008 Turk Cocuklari Referanslari</h4>
+                <p data-tr="Platformumuzda kullanilan veriler, Prof. Dr. Olcay Neyzi ve arkadaslari tarafindan 2008 yilinda yayinlanan ve Turkiye'deki cocuklarin buyume standartlarini belirleyen en kapsamli yerel calismadir. Genetik ve sosyoekonomik faktorler nedeniyle Turk cocuklarinin buyume kaliplari WHO (Dunya Saglik Orgutu) standartlarindan yer yer farklilik gosterebilir, bu nedenle yerel referanslar klinik pratikte hayati onem tasir."
+                   data-en="The data used in our platform is the most comprehensive local study determining the growth standards of children in Turkey, published by Prof. Dr. Olcay Neyzi and colleagues in 2008. Due to genetic and socioeconomic factors, the growth patterns of Turkish children may differ from WHO standards in some areas, making local references vital in clinical practice."
+                   style="font-size: 0.9rem; line-height: 1.6;"></p>
+                <div class="ref" style="font-size: 0.75rem; color: #94A3B8; margin-top: 8px;">Ref: Neyzi O, et al. Cocuk Sagligi ve Hastaliklari Dergisi 2008.</div>
+            </div>
+
+            <!-- Bas Cevresi ve BMI -->
+            <div class="info-block" style="background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+                <h4 data-tr="Bas Cevresi ve VKI Takibi" data-en="Head Circumference and BMI Tracking" style="color: #3b82f6; margin-bottom: 10px;">Bas Cevresi ve VKI Takibi</h4>
+                <p data-tr="Bas cevresi takibi, ozellikle ilk 3 yas icinde beyin gelisiminin dolayli bir gostergesi olarak kritik oneme sahiptir (mikrosefali/makrosefali taramasi). Vucut Kitle Indeksi (VKI) ise cocuklarda yasa gore degiskenlik gosterdigi icin yetiskinlerdeki sabit sinirlar yerine persantil egrileri uzerinden (P85 uzeri fazla kilolu, P95 uzeri obezite) degerlendirilmelidir."
+                   data-en="Head circumference tracking is critical as an indirect indicator of brain development, especially within the first 3 years (microcephaly/macrocephaly screening). Since Body Mass Index (BMI) varies by age in children, it should be evaluated through percentile curves (above P85 overweight, above P95 obesity) instead of fixed limits used in adults."
+                   style="font-size: 0.9rem; line-height: 1.6;"></p>
+                <div class="ref" style="font-size: 0.75rem; color: #94A3B8; margin-top: 8px;">Ref: WHO Growth Standards 2006.</div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <footer>&copy; 2026 drtr.uk</footer>

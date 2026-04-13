@@ -104,8 +104,14 @@
     <div class="container">
         <div class="page-header">
             <h2>Tıp Sözlüğü</h2>
-            <p>Türkçe–İngilizce tıbbi terimler sözlüğü. Klinik, farmakoloji, anatomi, laboratuvar ve cerrahi alanlarını kapsar.</p>
+            <p>Türkçe–İngilizce tıbbi terimler sözlüğü. Klinik, farmakoloji, anatomi, laboratuvar ve cerrahi alanlarını kapsayan, kanıta dayalı tıp literatürü ve uluslararası terminoloji standartları (ICD, MeSH) temel alınarak hazırlanmış kapsamlı bir rehberdir.</p>
         </div>
+
+        <section class="e-e-a-t-info" style="background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+            <h3 style="color: var(--teal); margin-bottom: 8px; font-size: 1rem;" data-tr="Güvenilirlik ve Metodoloji" data-en="Reliability & Methodology">Güvenilirlik ve Metodoloji</h3>
+            <p data-tr="DrTR Tıp Sözlüğü, tıp öğrencileri, hekimler ve sağlık profesyonelleri için güvenilir bir referans noktası olması amacıyla tıp literatüründeki en güncel terimler ve akademik kaynaklar taranarak derlenmiştir. Sözlüğümüz düzenli olarak güncellenmekte olup, klinik pratikte en sık kullanılan ve teknik hassasiyet gerektiren terimlere odaklanmaktadır."
+               data-en="The DrTR Medical Dictionary has been compiled by reviewing the most up-to-date terms and academic resources in medical literature to serve as a reliable reference point for medical students, physicians, and health professionals. Our dictionary is regularly updated and focuses on the most commonly used terms in clinical practice that require technical precision."></p>
+        </section>
 
         <div class="search-area">
             <div class="search-row">
@@ -133,10 +139,28 @@
         <div class="no-result" id="noResult">Arama kriterlerinize uygun terim bulunamadı.</div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 DrTR Tools &mdash; Tüm hakları saklıdır.</p>
-        <p style="margin-top:6px">
-            <a href="/">Ana Sayfa</a> | <a href="kaynaklar.html">Akademik Kaynaklar</a> | <a href="antikoagulan.html">Antikoagülan Rehberi</a>
+    <style>
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748B;
+            font-size: 0.8rem;
+            border-top: 1px solid #E2E8F0;
+            background: #fff;
+            margin-top: 40px;
+        }
+        footer a { color: #3b82f6; text-decoration: none; margin: 0 8px; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+
+    <footer id="footer">
+        <p>&copy; 2026 DrTR Tools &mdash; <span id="footer-text">Tüm hakları saklıdır.</span></p>
+        <p style="margin-top:10px">
+            <a href="/">Home / Ana Sayfa</a> |
+            <a href="privacy.html" id="link-privacy">Privacy</a> |
+            <a href="terms.html" id="link-terms">Terms</a> |
+            <a href="about.html" id="link-about">About</a> |
+            <a href="disclaimer.html" id="link-disclaimer">Disclaimer</a>
         </p>
     </footer>
 
@@ -459,6 +483,19 @@
         if (ph) ph.placeholder = _lang === 'en'
             ? 'Search Turkish or English term... (e.g. hypertension, tachycardia)'
             : 'Türkçe veya İngilizce terim arayın... (örn: hipertansiyon, tachycardia)';
+        
+        // Footer update
+        const ft = document.getElementById('footer-text');
+        if (ft) ft.textContent = _lang === 'en' ? 'All rights reserved.' : 'Tüm hakları saklıdır.';
+        const labels = {
+            en: { privacy: 'Privacy', terms: 'Terms', about: 'About', disclaimer: 'Disclaimer' },
+            tr: { privacy: 'Gizlilik', terms: 'Şartlar', about: 'Hakkımızda', disclaimer: 'Sorumluluk Reddi' }
+        };
+        const l = labels[_lang];
+        document.getElementById('link-privacy').textContent = l.privacy;
+        document.getElementById('link-terms').textContent = l.terms;
+        document.getElementById('link-about').textContent = l.about;
+        document.getElementById('link-disclaimer').textContent = l.disclaimer;
     }
     </script>
     <script src="/ads.js"></script>
