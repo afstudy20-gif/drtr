@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antikoagülan Etkileşim Kontrolü (DOAC/Warfarin) | DrTR Tools</title>
+  <meta name="description" content="Warfarin ve DOAC ilaç etkileşimlerini kontrol edin. Eşlik eden ilaçlara göre risk düzeyi, olası etki ve klinik yönetim önerisini tek ekranda görün.">
+  <meta name="keywords" content="warfarin etkileşim, doac etkileşim kontrolü, apiksaban etkileşim, rivaroksaban etkileşim, dabigatran etkileşim, antikoagülan ilaç etkileşimleri">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/antikoagulan-etkilesim.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://drtr.uk/antikoagulan-etkilesim.html">
+  <meta property="og:title" content="Antikoagülan Etkileşim Kontrolü | DrTR Tools">
+  <meta property="og:description" content="DOAC/warfarin ile eşlik eden ilaçlar için etkileşim riski ve öneri ekranı.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Antikoagülan Etkileşim Kontrolü",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "url": "https://drtr.uk/antikoagulan-etkilesim.html",
+    "description": "Warfarin/DOAC için ilaç etkileşim riskini sınıflayan klinik karar destek aracı.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "DrTR Tools" }
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --teal: #0F766E;
+      --teal-bg: #F0FDFA;
+      --high: #B91C1C;
+      --high-bg: #FEF2F2;
+      --mod: #B45309;
+      --mod-bg: #FFFBEB;
+      --low: #1D4ED8;
+      --low-bg: #EFF6FF;
+      --ok: #15803D;
+      --ok-bg: #F0FDF4;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-secondary);
+      min-height: 100vh;
+    }
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .topbar-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 11px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand {
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      color: #14B8A6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .actions { display: flex; align-items: center; gap: 8px; }
+    .link-btn, .lang-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.79rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .lang-btn { cursor: pointer; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 26px 20px 58px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #F0FDFA 0%, #EFF6FF 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #99F6E4;
+      background: var(--teal-bg);
+      color: var(--teal);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 1.62rem; color: var(--text-primary); margin-bottom: 10px; line-height: 1.26; }
+    .hero p { font-size: 0.93rem; line-height: 1.72; max-width: 920px; }
+
+    .main-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .card h2 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .field select, .field input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 11px;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: #fff;
+      outline: none;
+    }
+    .field select:focus, .field input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,0.1); }
+    .med-list {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-height: 270px;
+      overflow: auto;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+    .med-item {
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 7px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: #fff;
+    }
+    .med-item input { width: 16px; height: 16px; }
+
+    .summary {
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .summary h3 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .summary strong { font-size: 1.1rem; color: var(--text-primary); }
+
+    .risk-high { background: var(--high-bg); border-color: #FECACA; color: #991B1B; }
+    .risk-mod { background: var(--mod-bg); border-color: #FDE68A; color: #92400E; }
+    .risk-low { background: var(--low-bg); border-color: #BFDBFE; color: #1E3A8A; }
+    .risk-ok { background: var(--ok-bg); border-color: #BBF7D0; color: #166534; }
+
+    .result-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+    .result-top strong { color: var(--text-primary); font-size: 0.94rem; }
+    .badge {
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .badge.high { background: var(--high-bg); border-color: #FECACA; color: #991B1B; }
+    .badge.mod { background: var(--mod-bg); border-color: #FDE68A; color: #92400E; }
+    .badge.low { background: var(--low-bg); border-color: #BFDBFE; color: #1E3A8A; }
+    .result-card p {
+      font-size: 0.84rem;
+      line-height: 1.62;
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+    .muted { color: var(--text-muted); }
+
+    .section {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .section h3 {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .section p, .section li {
+      font-size: 0.89rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .section ul { margin-left: 18px; margin-top: 8px; }
+    .warn {
+      margin-top: 10px;
+      border-left: 4px solid #F59E0B;
+      background: #FFFBEB;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #92400E;
+    }
+    footer {
+      text-align: center;
+      color: #94A3B8;
+      font-size: 0.79rem;
+      margin-top: 24px;
+    }
+    footer a { color: #64748B; text-decoration: none; margin: 0 5px; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 980px) { .main-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="logo">DT</span>DrTR Tools</a>
+      <div class="actions">
+        <a class="link-btn" id="homeLink" href="/">Ana Sayfa</a>
+        <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <span class="hero-badge" id="heroBadge">Klinik Güvenlik Aracı</span>
+      <h1 id="heroTitle">Antikoagülan Etkileşim Kontrolü (DOAC / Warfarin)</h1>
+      <p id="heroIntro">Warfarin ve DOAC tedavisinde eşlik eden ilaçlarla etkileşim riski kanama veya tromboz yönünde klinik sonucu değiştirebilir. Bu araç, sık görülen kombinasyonlar için hızlı bir risk çerçevesi sunar: etkileşim şiddeti, olası mekanizma ve pratik izlem önerisi tek ekranda gösterilir.</p>
+    </section>
+
+    <section class="main-grid">
+      <article class="card">
+        <h2 id="inputTitle">İlaç Seçimi</h2>
+        <div class="field">
+          <label for="anticoag" id="anticoagLabel">Antikoagülan</label>
+          <select id="anticoag">
+            <option value="warfarin">Warfarin</option>
+            <option value="apixaban">Apiksaban</option>
+            <option value="rivaroxaban">Rivaroksaban</option>
+            <option value="dabigatran">Dabigatran</option>
+            <option value="edoxaban">Edoksaban</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="medSearch" id="medSearchLabel">Eşlik eden ilaç ara</label>
+          <input id="medSearch" type="text" placeholder="Örn: amiodaron, flukonazol, rifampisin...">
+        </div>
+
+        <div class="field">
+          <label id="medListLabel">Eşlik eden ilaçlar</label>
+          <div id="medList" class="med-list"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 id="resultTitle">Etkileşim Sonucu</h2>
+        <div id="summaryBox" class="summary risk-ok">
+          <h3 id="summaryLabel">Genel risk</h3>
+          <strong id="summaryValue">Düşük / Majör etkileşim saptanmadı</strong>
+        </div>
+        <div id="results"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <h3 id="useTitle">Klinik kullanım notları</h3>
+      <ul id="useList">
+        <li>Bu ekran, sık kombinasyonlar için hızlı bir güvenlik filtresi sağlar; nihai doz/tedavi kararı yerine geçmez.</li>
+        <li>Warfarin için etkileşimlerde INR izlem sıklığını artırmak çoğu zaman kritik adımdır.</li>
+        <li>DOAC etkileşimlerinde özellikle güçlü CYP3A4/P-gp inhibitörleri ve indükleyicilerde kaçınma veya alternatif ilaç düşünülmelidir.</li>
+      </ul>
+      <div class="warn" id="warnText">Uyarı: Böbrek fonksiyonu, yaş, kanama öyküsü, eş zamanlı antiplatelet kullanımı ve prosedür planı risk düzeyini ciddi ölçüde değiştirebilir.</div>
+    </section>
+
+    <section class="section">
+      <h3 id="srcTitle">Kaynak yaklaşımı</h3>
+      <p id="srcText">Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.</p>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 DrTR Tools</p>
+      <p style="margin-top:8px;">
+        <a href="/about.html">Hakkımızda</a> |
+        <a href="/privacy.html">Gizlilik</a> |
+        <a href="/terms.html">Şartlar</a> |
+        <a href="/disclaimer.html">Sorumluluk Reddi</a>
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    var currentLang = 'tr';
+
+    var uiText = {
+      tr: {
+        home: 'Ana Sayfa',
+        heroBadge: 'Klinik Güvenlik Aracı',
+        heroTitle: 'Antikoagülan Etkileşim Kontrolü (DOAC / Warfarin)',
+        heroIntro: 'Warfarin ve DOAC tedavisinde eşlik eden ilaçlarla etkileşim riski kanama veya tromboz yönünde klinik sonucu değiştirebilir. Bu araç, sık görülen kombinasyonlar için hızlı bir risk çerçevesi sunar: etkileşim şiddeti, olası mekanizma ve pratik izlem önerisi tek ekranda gösterilir.',
+        inputTitle: 'İlaç Seçimi',
+        anticoagLabel: 'Antikoagülan',
+        medSearchLabel: 'Eşlik eden ilaç ara',
+        medSearchPh: 'Örn: amiodaron, flukonazol, rifampisin...',
+        medListLabel: 'Eşlik eden ilaçlar',
+        resultTitle: 'Etkileşim Sonucu',
+        summaryLabel: 'Genel risk',
+        summaryOk: 'Düşük / Majör etkileşim saptanmadı',
+        summaryHigh: 'Yüksek risk etkileşim var',
+        summaryMod: 'Orta risk etkileşim var',
+        summaryLow: 'Düşük risk etkileşim var',
+        mechanism: 'Mekanizma',
+        expected: 'Beklenen etki',
+        action: 'Öneri',
+        noResult: 'Seçili ilaçlarda listelenmiş belirgin bir etkileşim bulunamadı. Klinik bağlama göre standart izlem devam edilmelidir.',
+        riskHigh: 'Yüksek',
+        riskMod: 'Orta',
+        riskLow: 'Düşük',
+        useTitle: 'Klinik kullanım notları',
+        useList: [
+          'Bu ekran, sık kombinasyonlar için hızlı bir güvenlik filtresi sağlar; nihai doz/tedavi kararı yerine geçmez.',
+          'Warfarin için etkileşimlerde INR izlem sıklığını artırmak çoğu zaman kritik adımdır.',
+          'DOAC etkileşimlerinde özellikle güçlü CYP3A4/P-gp inhibitörleri ve indükleyicilerde kaçınma veya alternatif ilaç düşünülmelidir.'
+        ],
+        warnText: 'Uyarı: Böbrek fonksiyonu, yaş, kanama öyküsü, eş zamanlı antiplatelet kullanımı ve prosedür planı risk düzeyini ciddi ölçüde değiştirebilir.',
+        srcTitle: 'Kaynak yaklaşımı',
+        srcText: 'Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.'
+      },
+      en: {
+        home: 'Home',
+        heroBadge: 'Clinical Safety Tool',
+        heroTitle: 'Anticoagulant Interaction Checker (DOAC / Warfarin)',
+        heroIntro: 'Concomitant drugs can shift anticoagulant safety toward bleeding or thrombosis risk. This tool provides a fast screening framework for common combinations: interaction severity, likely mechanism, and practical monitoring suggestions in a single view.',
+        inputTitle: 'Medication Selection',
+        anticoagLabel: 'Anticoagulant',
+        medSearchLabel: 'Search concomitant drug',
+        medSearchPh: 'e.g., amiodarone, fluconazole, rifampicin...',
+        medListLabel: 'Concomitant drugs',
+        resultTitle: 'Interaction Result',
+        summaryLabel: 'Overall risk',
+        summaryOk: 'Low / No major listed interaction detected',
+        summaryHigh: 'High-risk interaction detected',
+        summaryMod: 'Moderate-risk interaction detected',
+        summaryLow: 'Low-risk interaction detected',
+        mechanism: 'Mechanism',
+        expected: 'Expected effect',
+        action: 'Suggested action',
+        noResult: 'No major listed interaction was found for selected drugs. Continue standard monitoring according to clinical context.',
+        riskHigh: 'High',
+        riskMod: 'Moderate',
+        riskLow: 'Low',
+        useTitle: 'Clinical use notes',
+        useList: [
+          'This view is a rapid safety filter for common combinations and does not replace final prescribing decisions.',
+          'For warfarin interactions, increasing INR monitoring frequency is often the key immediate step.',
+          'For DOACs, strong CYP3A4/P-gp inhibitors or inducers may require avoidance or an alternative agent.'
+        ],
+        warnText: 'Warning: renal function, age, bleeding history, concurrent antiplatelet therapy, and procedure planning can significantly alter real risk.',
+        srcTitle: 'Source approach',
+        srcText: 'Classification is simplified into practical high/moderate/low categories using contemporary antithrombotic guideline principles and prescribing-information logic. For final decisions, consult current SmPC, institutional protocol, and specialist input when needed.'
+      }
+    };
+
+    var meds = [
+      { id: 'amiodarone', tr: 'Amiodaron', en: 'Amiodarone' },
+      { id: 'fluconazole', tr: 'Flukonazol', en: 'Fluconazole' },
+      { id: 'itraconazole', tr: 'Itrakonazol/Ketokonazol', en: 'Itraconazole/Ketoconazole' },
+      { id: 'rifampicin', tr: 'Rifampisin', en: 'Rifampicin' },
+      { id: 'carbamazepine', tr: 'Karbamazepin', en: 'Carbamazepine' },
+      { id: 'phenytoin', tr: 'Fenitoin', en: 'Phenytoin' },
+      { id: 'verapamil', tr: 'Verapamil', en: 'Verapamil' },
+      { id: 'diltiazem', tr: 'Diltiazem', en: 'Diltiazem' },
+      { id: 'clarithromycin', tr: 'Klaritromisin', en: 'Clarithromycin' },
+      { id: 'erythromycin', tr: 'Eritromisin', en: 'Erythromycin' },
+      { id: 'metronidazole', tr: 'Metronidazol', en: 'Metronidazole' },
+      { id: 'tmp_smx', tr: 'TMP-SMX', en: 'TMP-SMX' },
+      { id: 'nsaid', tr: 'NSAID (ibuprofen, diklofenak vb.)', en: 'NSAID (ibuprofen, diclofenac etc.)' },
+      { id: 'aspirin', tr: 'Aspirin', en: 'Aspirin' },
+      { id: 'clopidogrel', tr: 'Klopidogrel', en: 'Clopidogrel' },
+      { id: 'ticagrelor', tr: 'Ticagrelor', en: 'Ticagrelor' },
+      { id: 'stjohn', tr: 'Sarı kantaron (St. John’s wort)', en: 'St. John\'s wort' }
+    ];
+
+    var db = {
+      warfarin: {
+        amiodarone: { level: 'high', tr: ['CYP2C9/CYP3A4 inhibisyonu', 'INR yükselir, kanama riski artar', 'Doz azaltımı düşünün, ilk hafta sık INR kontrolü yapın'], en: ['CYP2C9/CYP3A4 inhibition', 'INR increases, bleeding risk rises', 'Consider dose reduction and close INR checks in first week'] },
+        fluconazole: { level: 'high', tr: ['Güçlü CYP inhibisyonu', 'INR belirgin artabilir', 'Mümkünse alternatif antifungal; zorunluysa yakın INR izlemi'], en: ['Strong CYP inhibition', 'Marked INR increase possible', 'Prefer alternative antifungal; if unavoidable, monitor INR closely'] },
+        itraconazole: { level: 'high', tr: ['CYP inhibisyonu', 'Warfarin etkisi artabilir', 'Yakın INR izlemi ve doz ayarı'], en: ['CYP inhibition', 'Warfarin effect may increase', 'Close INR follow-up and dose adjustment'] },
+        metronidazole: { level: 'high', tr: ['Metabolizma inhibisyonu', 'INR artışı', 'Kısa sürede INR kontrolü planlayın'], en: ['Metabolism inhibition', 'INR elevation', 'Plan early INR recheck'] },
+        tmp_smx: { level: 'high', tr: ['Metabolizma/bağlanma etkisi', 'INR artışı ve kanama', 'Mümkünse alternatif antibiyotik; INR takibini sıklaştırın'], en: ['Metabolic/protein-binding interaction', 'INR increase and bleeding', 'Use alternative antibiotic if possible; intensify INR checks'] },
+        rifampicin: { level: 'high', tr: ['Güçlü enzim indüksiyonu', 'INR düşer, tromboz riski artar', 'Doz gereksinimi artabilir; sık INR ile titrasyon yapın'], en: ['Strong enzyme induction', 'INR drops, thrombosis risk rises', 'Higher warfarin dose may be needed; titrate with frequent INR'] },
+        carbamazepine: { level: 'high', tr: ['Enzim indüksiyonu', 'Antikoagülan etki azalır', 'Alternatif düşünün veya yoğun INR izlemi uygulayın'], en: ['Enzyme induction', 'Anticoagulant effect decreases', 'Consider alternative or intensive INR monitoring'] },
+        phenytoin: { level: 'mod', tr: ['Çift yönlü etkileşim potansiyeli', 'INR değişken seyredebilir', 'Başlangıç/ilaç değişiminde sık INR'], en: ['Bidirectional interaction potential', 'INR may fluctuate', 'Frequent INR during initiation/changes'] },
+        clarithromycin: { level: 'mod', tr: ['CYP3A4 inhibisyonu', 'INR artabilir', 'INR kontrolünü öne çekin'], en: ['CYP3A4 inhibition', 'INR may rise', 'Advance INR follow-up'] },
+        erythromycin: { level: 'mod', tr: ['Metabolizma inhibisyonu', 'INR artışı olabilir', 'Yakın klinik/INR izlem'], en: ['Metabolic inhibition', 'Possible INR increase', 'Close clinical/INR follow-up'] },
+        nsaid: { level: 'mod', tr: ['Farmakodinamik kanama riski', 'INR normal olsa da kanama artabilir', 'Mümkünse kaçının, gerekiyorsa kısa süre + gastroproteksiyon'], en: ['Pharmacodynamic bleeding risk', 'Bleeding may increase despite therapeutic INR', 'Avoid if possible; if needed use short course + GI protection'] },
+        aspirin: { level: 'high', tr: ['Antiplatelet eklenmesi', 'Kanama riski belirgin artar', 'Net endikasyon yoksa kombinasyondan kaçının'], en: ['Added antiplatelet effect', 'Bleeding risk markedly increases', 'Avoid combination unless clear indication'] },
+        clopidogrel: { level: 'high', tr: ['Çift antitrombotik etki', 'Kanama riski artar', 'Süreyi kısa tutun, kanama açısından yakın izlem'], en: ['Dual antithrombotic effect', 'Bleeding risk increases', 'Keep duration short and monitor closely'] },
+        ticagrelor: { level: 'high', tr: ['Güçlü antiplatelet ek etkisi', 'Kanama riski yüksek', 'Sadece zorunlu endikasyonda ve yakın takipte kullanın'], en: ['Strong additional antiplatelet effect', 'High bleeding risk', 'Use only with strong indication and close supervision'] },
+        stjohn: { level: 'mod', tr: ['Enzim indüksiyonu', 'INR düşebilir', 'Bitkisel ürünü kesmeyi değerlendirin; INR izleyin'], en: ['Enzyme induction', 'INR may decrease', 'Consider stopping herbal product; monitor INR'] }
+      },
+      apixaban: {
+        amiodarone: { level: 'mod', tr: ['P-gp etkisi', 'İlaç düzeyi artabilir', 'Kanama bulguları ve böbrek fonksiyonu ile izlem'], en: ['P-gp effect', 'Drug exposure may increase', 'Monitor bleeding signs and renal profile'] },
+        fluconazole: { level: 'high', tr: ['CYP3A4/P-gp inhibisyonu', 'İlaç düzeyi artar, kanama riski artar', 'Mümkünse alternatif; gerekiyorsa yakın klinik izlem'], en: ['CYP3A4/P-gp inhibition', 'Exposure increases, bleeding risk rises', 'Prefer alternative; if unavoidable monitor closely'] },
+        itraconazole: { level: 'high', tr: ['Güçlü inhibitör kombinasyonu', 'Kanama riski belirgin artabilir', 'Kombinasyondan kaçınmayı değerlendirin'], en: ['Strong inhibitor combination', 'Marked bleeding risk increase possible', 'Consider avoiding combination'] },
+        rifampicin: { level: 'high', tr: ['Güçlü indüksiyon', 'Etkinlik azalabilir, tromboz riski artar', 'Alternatif antikoagülan düşünün'], en: ['Strong induction', 'Reduced efficacy and higher thrombosis risk', 'Consider alternative anticoagulant'] },
+        carbamazepine: { level: 'high', tr: ['Enzim/P-gp indüksiyonu', 'Apiksaban düzeyi düşebilir', 'Mümkünse kaçının'], en: ['Enzyme/P-gp induction', 'Apixaban levels may drop', 'Avoid when possible'] },
+        phenytoin: { level: 'high', tr: ['İndüksiyon etkisi', 'Etkinlik azalabilir', 'Alternatif strateji düşünün'], en: ['Induction effect', 'Efficacy may decrease', 'Consider alternative strategy'] },
+        diltiazem: { level: 'mod', tr: ['Orta düzey inhibitör etki', 'Düzey artışı olabilir', 'Kanama açısından klinik izlem'], en: ['Moderate inhibitory effect', 'Exposure may rise', 'Clinical bleeding surveillance'] },
+        clarithromycin: { level: 'high', tr: ['Güçlü CYP3A4/P-gp inhibisyonu', 'Kanama riski artar', 'Kısa süre ve yakın takip; mümkünse alternatif'], en: ['Strong CYP3A4/P-gp inhibition', 'Bleeding risk increases', 'Use alternative if possible, otherwise monitor closely'] },
+        nsaid: { level: 'mod', tr: ['Farmakodinamik kanama riski', 'Majör/minör kanama riski artabilir', 'Mümkünse kaçının, kısa süre kullanın'], en: ['Pharmacodynamic bleeding risk', 'Major/minor bleeding risk may increase', 'Avoid if possible; keep duration short'] },
+        aspirin: { level: 'high', tr: ['Ek antiplatelet etki', 'Kanama riski belirgin artar', 'Endikasyonu netleştirin, gereksiz kombinasyondan kaçının'], en: ['Additional antiplatelet effect', 'Marked bleeding risk increase', 'Confirm indication and avoid unnecessary combination'] },
+        clopidogrel: { level: 'high', tr: ['Çift yolak antitrombotik etki', 'Kanama riski artar', 'Süre ve endikasyonu sınırlandırın'], en: ['Dual pathway antithrombotic effect', 'Bleeding risk increases', 'Limit duration and indication'] },
+        ticagrelor: { level: 'high', tr: ['Güçlü antiplatelet kombinasyon', 'Kanama riski yüksektir', 'Yalnızca gerekli durumlarda, yakın takipte'], en: ['Strong antiplatelet combination', 'High bleeding risk', 'Only when necessary with close monitoring'] },
+        stjohn: { level: 'high', tr: ['P-gp/CYP indüksiyonu', 'Düzey düşebilir, etkinlik azalabilir', 'Birlikte kullanımdan kaçının'], en: ['P-gp/CYP induction', 'Exposure can drop, efficacy may decrease', 'Avoid co-use'] }
+      },
+      rivaroxaban: {
+        fluconazole: { level: 'high', tr: ['CYP3A4/P-gp inhibisyonu', 'Kanama riski artar', 'Mümkünse alternatif antifungal'], en: ['CYP3A4/P-gp inhibition', 'Bleeding risk rises', 'Prefer alternative antifungal'] },
+        itraconazole: { level: 'high', tr: ['Güçlü inhibitör', 'İlaç maruziyeti artar', 'Kombinasyondan kaçının'], en: ['Strong inhibitor', 'Exposure increases', 'Avoid combination'] },
+        rifampicin: { level: 'high', tr: ['Güçlü indükleyici', 'Etkinlik azalır', 'Alternatif antikoagülasyon düşünün'], en: ['Strong inducer', 'Efficacy decreases', 'Consider alternative anticoagulation'] },
+        carbamazepine: { level: 'high', tr: ['İndüksiyon etkisi', 'Düzey düşer', 'Kaçınma önerilir'], en: ['Induction effect', 'Exposure decreases', 'Avoid recommended'] },
+        phenytoin: { level: 'high', tr: ['İndüksiyon', 'Tromboz riski artabilir', 'Alternatif strateji planlayın'], en: ['Induction', 'Thrombosis risk may increase', 'Plan alternative strategy'] },
+        diltiazem: { level: 'mod', tr: ['Orta inhibitör etki', 'Düzey artışı olabilir', 'Kanama izlemi'], en: ['Moderate inhibitory effect', 'Possible exposure increase', 'Monitor bleeding'] },
+        clarithromycin: { level: 'high', tr: ['Güçlü inhibitör', 'Kanama riski artar', 'Mümkünse alternatif'], en: ['Strong inhibitor', 'Bleeding risk increases', 'Prefer alternative'] },
+        amiodarone: { level: 'mod', tr: ['P-gp/CYP etkisi', 'Kanama eğilimi artabilir', 'Klinik izlem'], en: ['P-gp/CYP effect', 'Bleeding tendency may increase', 'Clinical monitoring'] },
+        nsaid: { level: 'mod', tr: ['Farmakodinamik kanama etkisi', 'Kanama riski artar', 'Kaçınma veya kısa süreli kullanım'], en: ['Pharmacodynamic bleeding effect', 'Bleeding risk rises', 'Avoid or keep short duration'] },
+        aspirin: { level: 'high', tr: ['Ek antiplatelet etki', 'Kanama riski belirgin artar', 'Endikasyonu netleştirin'], en: ['Additional antiplatelet effect', 'Marked bleeding increase', 'Reconfirm indication'] },
+        clopidogrel: { level: 'high', tr: ['Çift antitrombotik etki', 'Kanama artışı', 'Gerekiyorsa kısa süre + yakın takip'], en: ['Dual antithrombotic effect', 'More bleeding', 'If required, keep short with close monitoring'] },
+        ticagrelor: { level: 'high', tr: ['Güçlü kombine etki', 'Yüksek kanama riski', 'Uzman değerlendirmesi önerilir'], en: ['Strong combined effect', 'High bleeding risk', 'Specialist review advised'] },
+        stjohn: { level: 'high', tr: ['İndüksiyon', 'Etkinlik düşebilir', 'Birlikte kullanımdan kaçının'], en: ['Induction', 'Efficacy may fall', 'Avoid co-use'] }
+      },
+      dabigatran: {
+        verapamil: { level: 'high', tr: ['P-gp inhibisyonu', 'Düzey belirgin artabilir', 'Özellikle renal bozuklukta kaçınma veya doz gözden geçirme'], en: ['P-gp inhibition', 'Marked exposure increase possible', 'Avoid or reassess dose, especially with renal impairment'] },
+        amiodarone: { level: 'mod', tr: ['P-gp inhibisyonu', 'Düzey artışı olabilir', 'Kanama ve böbrek fonksiyonu ile izlem'], en: ['P-gp inhibition', 'Possible exposure increase', 'Monitor bleeding and renal profile'] },
+        clarithromycin: { level: 'high', tr: ['P-gp inhibisyonu', 'Kanama riski artar', 'Alternatif antibiyotik düşünün'], en: ['P-gp inhibition', 'Bleeding risk increases', 'Consider alternative antibiotic'] },
+        rifampicin: { level: 'high', tr: ['P-gp indüksiyonu', 'Etkinlik azalır', 'Birlikte kullanımdan kaçının'], en: ['P-gp induction', 'Efficacy decreases', 'Avoid co-administration'] },
+        carbamazepine: { level: 'high', tr: ['İndüksiyon etkisi', 'Düzey düşebilir', 'Alternatif düşünün'], en: ['Induction effect', 'Exposure may fall', 'Consider alternative'] },
+        phenytoin: { level: 'high', tr: ['İndüksiyon etkisi', 'Tromboz riski artabilir', 'Alternatif tedavi planı'], en: ['Induction effect', 'Thrombosis risk may increase', 'Plan alternative therapy'] },
+        nsaid: { level: 'mod', tr: ['Farmakodinamik kanama etkisi', 'Kanama riski artar', 'Kısa süre/alternatif analjezik tercih edin'], en: ['Pharmacodynamic bleeding effect', 'Bleeding risk increases', 'Prefer short course or alternative analgesic'] },
+        aspirin: { level: 'high', tr: ['Ek antiplatelet etki', 'Kanama riski belirgin artar', 'Yalnızca net endikasyonda kullanın'], en: ['Added antiplatelet effect', 'Bleeding risk markedly increases', 'Use only with clear indication'] },
+        clopidogrel: { level: 'high', tr: ['Kombine antitrombotik etki', 'Kanama riski artışı', 'Yakın takip ve süre sınırlandırması'], en: ['Combined antithrombotic effect', 'Higher bleeding risk', 'Close monitoring and limited duration'] },
+        ticagrelor: { level: 'high', tr: ['Güçlü kombine etki', 'Yüksek kanama riski', 'Uzman görüşü ile yönetin'], en: ['Strong combined effect', 'High bleeding risk', 'Manage with specialist input'] },
+        stjohn: { level: 'high', tr: ['P-gp indüksiyonu', 'Etkinlik azalabilir', 'Birlikte kullanım önerilmez'], en: ['P-gp induction', 'Efficacy may decrease', 'Co-use not recommended'] }
+      },
+      edoxaban: {
+        amiodarone: { level: 'mod', tr: ['P-gp etkisi', 'Düzey artabilir', 'Kanama bulguları ile izlem'], en: ['P-gp effect', 'Exposure may increase', 'Monitor for bleeding signs'] },
+        verapamil: { level: 'mod', tr: ['P-gp inhibisyonu', 'Düzey artabilir', 'Klinik risk varsa doz/izlem planı gözden geçirin'], en: ['P-gp inhibition', 'Exposure may increase', 'Reassess dose/monitoring in higher-risk patients'] },
+        rifampicin: { level: 'high', tr: ['İndüksiyon etkisi', 'Etkinlik düşebilir', 'Alternatif antikoagülan düşünün'], en: ['Induction effect', 'Efficacy may decrease', 'Consider alternative anticoagulant'] },
+        carbamazepine: { level: 'high', tr: ['Enzim/P-gp indüksiyonu', 'Düzey düşebilir', 'Birlikte kullanımdan kaçının'], en: ['Enzyme/P-gp induction', 'Exposure may fall', 'Avoid co-use'] },
+        phenytoin: { level: 'high', tr: ['İndüksiyon', 'Etkisizlik riski', 'Alternatif planlayın'], en: ['Induction', 'Risk of reduced efficacy', 'Plan alternative'] },
+        clarithromycin: { level: 'mod', tr: ['P-gp/CYP etkisi', 'Maruziyet artabilir', 'Yakın klinik izlem'], en: ['P-gp/CYP effect', 'Exposure may rise', 'Close clinical monitoring'] },
+        nsaid: { level: 'mod', tr: ['Kanama eğilimi artar', 'Majör/minör kanama riski artabilir', 'Mümkünse kaçının'], en: ['Bleeding tendency increases', 'Major/minor bleeding risk may rise', 'Avoid when possible'] },
+        aspirin: { level: 'high', tr: ['Antiplatelet ek etkisi', 'Kanama riski artar', 'Kombinasyonu endikasyonla sınırlandırın'], en: ['Additional antiplatelet effect', 'Bleeding risk increases', 'Restrict combination to clear indication'] },
+        clopidogrel: { level: 'high', tr: ['Çift antitrombotik etki', 'Kanama riski artar', 'Yakın takip'], en: ['Dual antithrombotic effect', 'Bleeding risk increases', 'Close follow-up'] },
+        ticagrelor: { level: 'high', tr: ['Güçlü kombine etki', 'Yüksek kanama riski', 'Uzman takibi önerilir'], en: ['Strong combined effect', 'High bleeding risk', 'Specialist supervision advised'] },
+        stjohn: { level: 'high', tr: ['İndüksiyon', 'Etkinlik düşebilir', 'Birlikte kullanım önerilmez'], en: ['Induction', 'Efficacy may drop', 'Co-use not recommended'] }
+      }
+    };
+
+    var selectedMeds = new Set();
+
+    function medName(item) { return currentLang === 'tr' ? item.tr : item.en; }
+
+    function renderMedList() {
+      var q = document.getElementById('medSearch').value.toLowerCase().trim();
+      var list = document.getElementById('medList');
+      list.innerHTML = '';
+      meds.forEach(function(m) {
+        var text = (m.tr + ' ' + m.en).toLowerCase();
+        if (q && text.indexOf(q) === -1) return;
+        var row = document.createElement('label');
+        row.className = 'med-item';
+        row.innerHTML = '<input type="checkbox" value="' + m.id + '" ' + (selectedMeds.has(m.id) ? 'checked' : '') + '><span>' + medName(m) + '</span>';
+        row.querySelector('input').addEventListener('change', function(e) {
+          if (e.target.checked) selectedMeds.add(m.id); else selectedMeds.delete(m.id);
+          renderResults();
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function riskRank(level) {
+      if (level === 'high') return 3;
+      if (level === 'mod') return 2;
+      if (level === 'low') return 1;
+      return 0;
+    }
+
+    function levelText(level) {
+      var t = uiText[currentLang] || uiText.en;
+      if (level === 'high') return t.riskHigh;
+      if (level === 'mod') return t.riskMod;
+      return t.riskLow;
+    }
+
+    function levelClass(level) {
+      if (level === 'high') return 'high';
+      if (level === 'mod') return 'mod';
+      return 'low';
+    }
+
+    function renderResults() {
+      var t = uiText[currentLang] || uiText.en;
+      var anticoag = document.getElementById('anticoag').value;
+      var data = db[anticoag] || {};
+      var results = [];
+
+      selectedMeds.forEach(function(mid) {
+        if (data[mid]) {
+          results.push({ id: mid, level: data[mid].level, vals: currentLang === 'tr' ? data[mid].tr : data[mid].en });
+        }
+      });
+
+      results.sort(function(a, b) { return riskRank(b.level) - riskRank(a.level); });
+
+      var summary = document.getElementById('summaryBox');
+      var summaryValue = document.getElementById('summaryValue');
+
+      if (results.length === 0) {
+        summary.className = 'summary risk-ok';
+        summaryValue.textContent = t.summaryOk;
+        document.getElementById('results').innerHTML = '<div class="result-card"><p class="muted">' + t.noResult + '</p></div>';
+        return;
+      }
+
+      var top = results[0].level;
+      if (top === 'high') {
+        summary.className = 'summary risk-high';
+        summaryValue.textContent = t.summaryHigh;
+      } else if (top === 'mod') {
+        summary.className = 'summary risk-mod';
+        summaryValue.textContent = t.summaryMod;
+      } else {
+        summary.className = 'summary risk-low';
+        summaryValue.textContent = t.summaryLow;
+      }
+
+      var out = '';
+      results.forEach(function(r) {
+        var med = meds.find(function(x) { return x.id === r.id; });
+        out += '<div class="result-card">';
+        out += '<div class="result-top"><strong>' + medName(med) + '</strong><span class="badge ' + levelClass(r.level) + '">' + levelText(r.level) + '</span></div>';
+        out += '<p><strong>' + t.mechanism + ':</strong> ' + r.vals[0] + '</p>';
+        out += '<p><strong>' + t.expected + ':</strong> ' + r.vals[1] + '</p>';
+        out += '<p><strong>' + t.action + ':</strong> ' + r.vals[2] + '</p>';
+        out += '</div>';
+      });
+      document.getElementById('results').innerHTML = out;
+    }
+
+    function applyLang() {
+      var t = uiText[currentLang] || uiText.en;
+      document.documentElement.lang = currentLang;
+      document.getElementById('homeLink').textContent = t.home;
+      document.getElementById('heroBadge').textContent = t.heroBadge;
+      document.getElementById('heroTitle').textContent = t.heroTitle;
+      document.getElementById('heroIntro').textContent = t.heroIntro;
+      document.getElementById('inputTitle').textContent = t.inputTitle;
+      document.getElementById('anticoagLabel').textContent = t.anticoagLabel;
+      document.getElementById('medSearchLabel').textContent = t.medSearchLabel;
+      document.getElementById('medSearch').placeholder = t.medSearchPh;
+      document.getElementById('medListLabel').textContent = t.medListLabel;
+      document.getElementById('resultTitle').textContent = t.resultTitle;
+      document.getElementById('summaryLabel').textContent = t.summaryLabel;
+      document.getElementById('useTitle').textContent = t.useTitle;
+      document.getElementById('warnText').textContent = t.warnText;
+      document.getElementById('srcTitle').textContent = t.srcTitle;
+      document.getElementById('srcText').textContent = t.srcText;
+
+      var ul = document.getElementById('useList');
+      ul.innerHTML = '';
+      t.useList.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+
+      document.getElementById('langBtn').textContent = currentLang === 'tr' ? 'EN' : 'TR';
+      renderMedList();
+      renderResults();
+      localStorage.setItem('drtr_lang', currentLang);
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'tr' ? 'en' : 'tr';
+      applyLang();
+    }
+
+    document.getElementById('medSearch').addEventListener('input', renderMedList);
+    document.getElementById('anticoag').addEventListener('change', renderResults);
+
+    var saved = localStorage.getItem('drtr_lang');
+    if (saved === 'tr' || saved === 'en') currentLang = saved;
+    renderMedList();
+    applyLang();
+  </script>
+</body>
+</html>
