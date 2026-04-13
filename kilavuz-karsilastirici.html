@@ -365,6 +365,12 @@
       <p id="seoText">Bu araç sayfasında yalnızca meta anahtar kelime değil; güçlü başlık yapısı (H1/H2), açıklayıcı içerik, kurum isimleri (ESC, AHA/ACC, NICE), güncellik tarihi, kaynak linkleri ve iç bağlantılar birlikte kullanılmıştır. Arama performansında asıl etkili olan kısım, kullanıcıya gerçekten faydalı özgün içerik ve düzenli güncellemedir.</p>
     </section>
 
+    <section class="section">
+      <h3 id="guideTitle">Detaylı kullanım rehberi</h3>
+      <p id="guideText">Klinik senaryolar ve adım adım yorumlama için kapsamlı içerik sayfasını inceleyin:</p>
+      <p><a id="guideLink" href="/kilavuz-karsilastirici-rehber.html">Kılavuz Karşılaştırıcı Nasıl Kullanılır?</a></p>
+    </section>
+
     <footer>
       <p>&copy; 2026 DrTR Tools</p>
       <p style="margin-top:8px;">
@@ -398,6 +404,9 @@
         noteText: 'Not: Bu sayfa bir "özet karşılaştırma" ekranıdır; rehber metninin birebir yerine geçmez.',
         seoTitle: 'Arama Görünürlüğü İçin İçerik Notu',
         seoText: 'Bu araç sayfasında yalnızca meta anahtar kelime değil; güçlü başlık yapısı (H1/H2), açıklayıcı içerik, kurum isimleri (ESC, AHA/ACC, NICE), güncellik tarihi, kaynak linkleri ve iç bağlantılar birlikte kullanılmıştır. Arama performansında asıl etkili olan kısım, kullanıcıya gerçekten faydalı özgün içerik ve düzenli güncellemedir.',
+        guideTitle: 'Detaylı kullanım rehberi',
+        guideText: 'Klinik senaryolar ve adım adım yorumlama için kapsamlı içerik sayfasını inceleyin:',
+        guideLink: 'Kılavuz Karşılaştırıcı Nasıl Kullanılır?',
         homeLabel: 'Ana Sayfa'
       },
       en: {
@@ -418,6 +427,9 @@
         noteText: 'Note: This page is a comparative summary and not a substitute for complete guideline documents.',
         seoTitle: 'SEO Content Note',
         seoText: 'For search visibility, this page combines meaningful headings, topic-focused explanatory text, institution names (ESC, AHA/ACC, NICE), update date context, source links, and internal linking. Real user value and ongoing content updates matter more than keyword stuffing.',
+        guideTitle: 'Detailed usage guide',
+        guideText: 'For clinical scenarios and step-by-step interpretation, review the full guide page:',
+        guideLink: 'How to Use the Guideline Comparator',
         homeLabel: 'Home'
       }
     };
@@ -596,6 +608,9 @@
       document.getElementById('noteText').textContent = l.noteText;
       document.getElementById('seoTitle').textContent = l.seoTitle;
       document.getElementById('seoText').textContent = l.seoText;
+      document.getElementById('guideTitle').textContent = l.guideTitle;
+      document.getElementById('guideText').textContent = l.guideText;
+      document.getElementById('guideLink').textContent = l.guideLink;
 
       var methodUl = document.getElementById('methodList');
       methodUl.innerHTML = '';

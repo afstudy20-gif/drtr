@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır? (DOAC/Warfarin) | DrTR Tools</title>
+  <meta name="description" content="Warfarin ve DOAC etkileşimlerini güvenli yorumlamak için adım adım klinik kullanım rehberi. Yüksek-orta-düşük risk ayrımı ve izlem önerileri.">
+  <meta name="keywords" content="warfarin etkileşim rehberi, doac etkileşim rehberi, apiksaban etkileşim, rivaroksaban etkileşim, antikoagülan güvenlik">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/antikoagulan-etkilesim-rehber.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://drtr.uk/antikoagulan-etkilesim-rehber.html">
+  <meta property="og:title" content="Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır?">
+  <meta property="og:description" content="DOAC ve warfarin etkileşimlerini klinik risk düzeyine göre yorumlama rehberi.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır? (DOAC/Warfarin)",
+    "description": "Antikoagülan ilaç etkileşimlerini pratik risk kategorileriyle yorumlama rehberi.",
+    "author": {"@type": "Organization", "name": "DrTR Tools"},
+    "publisher": {"@type": "Organization", "name": "DrTR Tools"},
+    "datePublished": "2026-04-13",
+    "dateModified": "2026-04-13",
+    "mainEntityOfPage": "https://drtr.uk/antikoagulan-etkilesim-rehber.html"
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text: #334155;
+      --title: #0F172A;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --teal: #0F766E;
+      --teal-soft: #F0FDFA;
+      --blue-soft: #EFF6FF;
+      --warn-soft: #FFFBEB;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.72;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 11px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand {
+      color: var(--title);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      color: #14B8A6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .container {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 26px 20px 56px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--teal-soft) 0%, var(--blue-soft) 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid #99F6E4;
+      background: #F0FDFA;
+      color: var(--teal);
+      border-radius: 999px;
+      padding: 4px 10px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      color: var(--title);
+      font-size: 1.62rem;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .hero p { font-size: 0.94rem; max-width: 840px; }
+    .meta {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .toc,
+    .section,
+    .warn,
+    .callout {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .toc h2,
+    .section h2,
+    .warn h2,
+    .callout h2 {
+      color: var(--title);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+    .toc ol { margin-left: 20px; }
+    .toc li,
+    .section li,
+    .warn li { margin-bottom: 8px; }
+    .section p,
+    .warn p,
+    .callout p { margin-bottom: 10px; }
+    .section ul,
+    .warn ul { margin-left: 20px; margin-top: 4px; }
+    .warn {
+      border-left: 4px solid #F59E0B;
+      background: var(--warn-soft);
+    }
+    a { color: #1D4ED8; }
+    a:hover { text-decoration: none; }
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: #94A3B8;
+      font-size: 0.79rem;
+    }
+    footer a {
+      color: #64748B;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="logo">DT</span>DrTR Tools</a>
+      <div>
+        <a class="btn" href="/">Ana Sayfa</a>
+        <a class="btn" href="/antikoagulan-etkilesim.html">Aracı Aç</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <span class="badge">İlaç Güvenliği Rehberi</span>
+      <h1>Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır? (DOAC / Warfarin)</h1>
+      <p>Antikoagülan tedavide etkileşimler, hastanın kanama ve tromboz dengesini kısa sürede değiştirebilir. Bu rehber, DrTR Antikoagülan Etkileşim Kontrolü ekranını klinikte doğru konumlandırmanızı sağlar: hangi durumda hızlı tarama yeterli, hangi durumda ayrıntılı değerlendirme ve uzman görüşü gerekir, adım adım açıklar.</p>
+      <p class="meta">Son güncelleme: 13 Nisan 2026</p>
+    </section>
+
+    <section class="toc">
+      <h2>İçindekiler</h2>
+      <ol>
+        <li>Etkileşim riski neden kritik?</li>
+        <li>Aracı doğru kullanma sırası</li>
+        <li>Warfarin ve DOAC için pratik yorum farkları</li>
+        <li>Yüksek risk kombinasyonlarında hızlı eylem planı</li>
+        <li>Sık hatalar ve güvenlik kontrol listesi</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>1) Etkileşim riski neden kritik?</h2>
+      <p>Antikoagülanlar dar terapötik dengeye sahip ilaçlardır. Bir grup etkileşim antikoagülan etkisini yükseltip kanama riskini artırırken, başka bir grup etkileşim ilacın düzeyini düşürerek tromboembolik olay olasılığını artırabilir. Özellikle polifarmasi, ileri yaş, böbrek fonksiyon bozukluğu, eş zamanlı antiplatelet kullanımı ve invazif işlem planı olduğunda risk katlanarak büyür.</p>
+      <p>Bu nedenle etkileşim değerlendirmesi tek bir "ilaç-ilaç" eşleşmesi değildir; hasta bağlamına yerleştirilmiş klinik bir güvenlik kararıdır. DrTR aracı bu süreci hızlandırmak için kombinasyonları yüksek/orta/düşük pratik risk katmanına ayırır ve kısa bir yönetim önerisi sunar.</p>
+    </section>
+
+    <section class="section">
+      <h2>2) Aracı adım adım kullanma</h2>
+      <p>İlk olarak ana antikoagülanı seçin: warfarin, apiksaban, rivaroksaban, dabigatran veya edoksaban. Ardından eşlik eden ilaç arama alanından hastanın güncel tedavisine giren ajanları işaretleyin. Ekran, seçilen kombinasyonlara göre otomatik olarak sıralı risk sonucu üretir.</p>
+      <ul>
+        <li><strong>Genel risk kutusu:</strong> O anki ilaç listesinde en yüksek risk düzeyini özetler.</li>
+        <li><strong>İlaç kartları:</strong> Her kombinasyon için mekanizma, beklenen etki ve pratik eylem önerisini gösterir.</li>
+        <li><strong>Sıralama:</strong> Yüksek risk kombinasyonları en üstte görünür; önceliklendirmeyi kolaylaştırır.</li>
+      </ul>
+      <p>Bu çıktı tedavi kararını tek başına belirlemek için değil, daha güvenli bir karar hazırlığı için tasarlanmıştır. Şüpheli veya kompleks durumda güncel ürün bilgisine (SmPC), kurum protokolüne ve gerekiyorsa klinik eczacılık/hematoloji danışmanlığına dönülmelidir.</p>
+    </section>
+
+    <section class="section">
+      <h2>3) Warfarin ve DOAC yorum farkı</h2>
+      <p><strong>Warfarin:</strong> Etkileşim yönetiminin merkezinde çoğu zaman INR izlem sıklığı vardır. Örneğin güçlü inhibitörlerle INR hızla yükselip kanama riski artabilir; indükleyicilerde ise INR düşerek koruyucu etki azalabilir. Bu nedenle zamanlama kritik: ilaç değişikliğinden kısa süre sonra INR kontrolü planlamak gerekir.</p>
+      <p><strong>DOAC:</strong> Burada INR benzeri bir rutin takip parametresi olmadığı için klinik değerlendirme daha çok farmakokinetik mantık (CYP3A4/P-gp) ve hasta özellikleri üzerinden yürür. Güçlü inhibitörlerde maruziyet artışı, güçlü indükleyicilerde etkisizlik riski düşünülür. Bu nedenle "kaçınma", "alternatif ajan" veya "yakın kanama izlemi" kararları daha öne çıkar.</p>
+    </section>
+
+    <section class="warn">
+      <h2>4) Yüksek risk durumlarında hızlı eylem planı</h2>
+      <ul>
+        <li>Kombinasyonun gerçekten gerekli olup olmadığını yeniden sorgulayın.</li>
+        <li>Mümkünse etkileşimi daha düşük alternatif ilaç değerlendirin.</li>
+        <li>Warfarin hastasında erken ve sık INR planı oluşturun.</li>
+        <li>DOAC hastasında renal fonksiyon, kanama bulguları ve klinik seyri yakın izleyin.</li>
+        <li>Eş zamanlı antiplatelet/NSAID varsa toplam kanama riskini bütüncül değerlendirin.</li>
+        <li>İnvazif işlem varsa perioperatif planı işlem ekibiyle birlikte netleştirin.</li>
+      </ul>
+      <p>Bu adımlar özellikle acil servis, yatış taburculuk geçişleri ve poliklinik reçete değişimlerinde önlenebilir advers olayları azaltır.</p>
+    </section>
+
+    <section class="section">
+      <h2>5) Sık yapılan hatalar</h2>
+      <ul>
+        <li>Sadece bir etkileşim kartına bakıp toplam ilaç yükünü gözden kaçırmak.</li>
+        <li>"Düşük risk" ibaresini "izlem gereksiz" şeklinde yorumlamak.</li>
+        <li>Böbrek fonksiyonunu ve yaş/frajilite etkisini hesaba katmamak.</li>
+        <li>Bitkisel ürünleri ve reçetesiz ilaçları tedavi listesine eklememek.</li>
+      </ul>
+      <p>En güvenli yaklaşım, aracı bir erken uyarı katmanı olarak görmek ve son kararı klinik bağlamda tamamlamaktır.</p>
+    </section>
+
+    <section class="callout">
+      <h2>Devam bağlantıları</h2>
+      <p>Aracı kullanmak için: <a href="/antikoagulan-etkilesim.html">Antikoagülan Etkileşim Kontrolü</a>.</p>
+      <p>Perioperatif ve doz bağlamı için: <a href="/antikoagulan.html">Antikoagülan Rehberi</a>.</p>
+      <p>Kılavuzlar arası yaklaşım farkı için: <a href="/kilavuz-karsilastirici.html">Kılavuz Karşılaştırıcı</a>.</p>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 DrTR Tools</p>
+      <p style="margin-top:8px;">
+        <a href="/about.html">Hakkımızda</a> |
+        <a href="/privacy.html">Gizlilik</a> |
+        <a href="/terms.html">Şartlar</a> |
+        <a href="/disclaimer.html">Sorumluluk Reddi</a>
+      </p>
+    </footer>
+  </main>
+</body>
+</html>

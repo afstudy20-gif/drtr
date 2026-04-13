@@ -348,6 +348,12 @@
       <p id="srcText">Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.</p>
     </section>
 
+    <section class="section">
+      <h3 id="guideTitle">Detaylı kullanım rehberi</h3>
+      <p id="guideText">Bu aracı hasta güvenliği odaklı adımlarla kullanmak için kapsamlı rehbere geçin:</p>
+      <p><a id="guideLink" href="/antikoagulan-etkilesim-rehber.html">Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır?</a></p>
+    </section>
+
     <footer>
       <p>&copy; 2026 DrTR Tools</p>
       <p style="margin-top:8px;">
@@ -394,7 +400,10 @@
         ],
         warnText: 'Uyarı: Böbrek fonksiyonu, yaş, kanama öyküsü, eş zamanlı antiplatelet kullanımı ve prosedür planı risk düzeyini ciddi ölçüde değiştirebilir.',
         srcTitle: 'Kaynak yaklaşımı',
-        srcText: 'Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.'
+        srcText: 'Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.',
+        guideTitle: 'Detaylı kullanım rehberi',
+        guideText: 'Bu aracı hasta güvenliği odaklı adımlarla kullanmak için kapsamlı rehbere geçin:',
+        guideLink: 'Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır?'
       },
       en: {
         home: 'Home',
@@ -427,7 +436,10 @@
         ],
         warnText: 'Warning: renal function, age, bleeding history, concurrent antiplatelet therapy, and procedure planning can significantly alter real risk.',
         srcTitle: 'Source approach',
-        srcText: 'Classification is simplified into practical high/moderate/low categories using contemporary antithrombotic guideline principles and prescribing-information logic. For final decisions, consult current SmPC, institutional protocol, and specialist input when needed.'
+        srcText: 'Classification is simplified into practical high/moderate/low categories using contemporary antithrombotic guideline principles and prescribing-information logic. For final decisions, consult current SmPC, institutional protocol, and specialist input when needed.',
+        guideTitle: 'Detailed usage guide',
+        guideText: 'Open the full guide for a patient-safety-focused step-by-step workflow:',
+        guideLink: 'How to Use the Anticoagulant Interaction Checker'
       }
     };
 
@@ -636,6 +648,9 @@
       document.getElementById('warnText').textContent = t.warnText;
       document.getElementById('srcTitle').textContent = t.srcTitle;
       document.getElementById('srcText').textContent = t.srcText;
+      document.getElementById('guideTitle').textContent = t.guideTitle;
+      document.getElementById('guideText').textContent = t.guideText;
+      document.getElementById('guideLink').textContent = t.guideLink;
 
       var ul = document.getElementById('useList');
       ul.innerHTML = '';
