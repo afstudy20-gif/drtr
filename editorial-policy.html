@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editoryal Politika - DrTR Tools</title>
+    <meta name="description" content="DrTR Tools editoryal politika sayfası: kaynak seçimi, içerik doğrulama, güncelleme ve düzeltme süreci.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drtr.uk/editorial-policy.html">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root { --bg: #F8FAFC; --teal: #0F766E; --text-1: #0F172A; --text-2: #475569; --text-3: #64748B; --surface: #FFFFFF; --border: #E2E8F0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text-2); min-height: 100vh; }
+        .topbar { max-width: 860px; margin: 24px auto 0; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .back { color: var(--text-3); text-decoration: none; font-size: 0.85rem; }
+        .lang-btn { background: #fff; border: 1px solid var(--border); color: var(--text-2); border-radius: 8px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+        .container { max-width: 860px; margin: 12px auto 24px; padding: 32px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+        h1 { color: var(--text-1); font-size: 1.7rem; margin-bottom: 8px; }
+        .meta { font-size: 0.84rem; color: var(--text-3); margin-bottom: 24px; }
+        h2 { color: var(--text-1); font-size: 1.08rem; margin: 24px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        p { line-height: 1.75; font-size: 0.93rem; margin-bottom: 12px; }
+        ul { padding-left: 22px; line-height: 1.75; font-size: 0.92rem; margin-bottom: 10px; }
+        li { margin-bottom: 6px; }
+        .note { background: #F0FDFA; border-left: 4px solid var(--teal); padding: 12px 14px; border-radius: 8px; font-size: 0.88rem; color: #0F766E; margin-top: 16px; }
+        footer { text-align: center; padding: 26px 20px 34px; color: #94A3B8; font-size: 0.78rem; }
+        footer a { color: var(--text-3); text-decoration: none; margin: 0 6px; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/" class="back" id="backLink">← Ana Sayfa</a>
+        <button class="lang-btn" id="langBtn" onclick="toggleLang()">English (EN)</button>
+    </div>
+
+    <main class="container">
+        <h1 id="title">Editoryal Politika</h1>
+        <p class="meta" id="updated"><strong>Son güncelleme:</strong> 13 Nisan 2026</p>
+        <div id="content">
+            <h2>1. Amaç ve Kapsam</h2>
+            <p>DrTR Tools, sağlık profesyonelleri ve araştırmacılar için klinik karar desteği ve akademik üretkenlik araçları sunar. Bu sayfa, platformdaki metin içeriklerin ve hesaplayıcı açıklamalarının nasıl üretildiğini, doğrulandığını ve güncellendiğini şeffaf biçimde açıklamak için hazırlanmıştır.</p>
+
+            <h2>2. Kaynak Seçimi</h2>
+            <p>İçerik oluştururken öncelik sırası aşağıdaki gibidir:</p>
+            <ul>
+                <li>Resmî klinik kılavuzlar (ESC, AHA/ACC, KDIGO, NICE, WHO vb.)</li>
+                <li>Hakemli dergilerde yayımlanan birincil çalışmalar ve sistematik derlemeler</li>
+                <li>İlaç kısa ürün bilgileri ve düzenleyici kurum yayınları</li>
+            </ul>
+
+            <h2>3. İçerik Üretim ve Doğrulama Süreci</h2>
+            <p>Her hesaplayıcı için kullanılan formül, değişken tanımları ve sınır değerler, kaynak literatürle satır düzeyinde karşılaştırılır. Klinik yorumlar, rehber metinlerinde yer alan öneri sınıfı ve kanıt düzeyine göre sadeleştirilerek sunulur.</p>
+            <p>Hesaplayıcı sonuçları, mümkün olduğunda örnek hasta senaryoları ile manuel olarak kontrol edilir. Çelişen kaynak bulunduğunda daha güncel rehber versiyonu esas alınır ve ilgili sayfa revize edilir.</p>
+
+            <h2>4. Güncelleme Politikası</h2>
+            <p>Önemli kılavuz güncellemeleri veya formül değişiklikleri tespit edildiğinde ilgili sayfalar öncelikli olarak güncellenir. İçeriklerde anlamı değiştiren revizyonlar yapıldığında sayfa içindeki "son güncelleme" bilgisi yenilenir.</p>
+
+            <h2>5. Düzeltme ve Geri Bildirim</h2>
+            <p>Kullanıcı geri bildirimleri içerik kalitesi için aktif olarak değerlendirilir. Hata bildirimi veya güncelleme önerisi için e-posta üzerinden iletişim kurulabilir. Doğrulanan hatalar makul süre içinde düzeltilir.</p>
+
+            <h2>6. Reklam ve Editoryal Bağımsızlık</h2>
+            <p>Reklam gösterimi, editoryal karar sürecini etkilemez. Klinik içerik seçimi, kaynak önceliği ve hesaplayıcı mantığı reklam verenlerden bağımsız şekilde belirlenir.</p>
+
+            <h2>7. Sorumluluk Notu</h2>
+            <p>DrTR Tools içerikleri yalnızca eğitim ve bilgilendirme amaçlıdır. Tanı ve tedavi kararları, hastayı değerlendiren yetkin sağlık profesyoneli tarafından verilmelidir.</p>
+
+            <div class="note">
+                Bu politika sayfası, platformun şeffaflık yaklaşımını güçlendirmek amacıyla hazırlanmıştır.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 DrTR Tools</p>
+        <p style="margin-top: 8px;">
+            <a href="about.html">Hakkımızda</a> |
+            <a href="privacy.html">Gizlilik</a> |
+            <a href="terms.html">Şartlar</a> |
+            <a href="disclaimer.html">Sorumluluk Reddi</a>
+        </p>
+    </footer>
+
+    <script>
+    var currentLang = 'tr';
+    var data = {
+        tr: {
+            title: "Editoryal Politika",
+            updated: "<strong>Son güncelleme:</strong> 13 Nisan 2026",
+            back: "← Ana Sayfa",
+            btn: "English (EN)",
+            html: `
+                <h2>1. Amaç ve Kapsam</h2>
+                <p>DrTR Tools, sağlık profesyonelleri ve araştırmacılar için klinik karar desteği ve akademik üretkenlik araçları sunar. Bu sayfa, platformdaki metin içeriklerin ve hesaplayıcı açıklamalarının nasıl üretildiğini, doğrulandığını ve güncellendiğini şeffaf biçimde açıklamak için hazırlanmıştır.</p>
+                <h2>2. Kaynak Seçimi</h2>
+                <p>İçerik oluştururken öncelik sırası aşağıdaki gibidir:</p>
+                <ul>
+                    <li>Resmî klinik kılavuzlar (ESC, AHA/ACC, KDIGO, NICE, WHO vb.)</li>
+                    <li>Hakemli dergilerde yayımlanan birincil çalışmalar ve sistematik derlemeler</li>
+                    <li>İlaç kısa ürün bilgileri ve düzenleyici kurum yayınları</li>
+                </ul>
+                <h2>3. İçerik Üretim ve Doğrulama Süreci</h2>
+                <p>Her hesaplayıcı için kullanılan formül, değişken tanımları ve sınır değerler, kaynak literatürle satır düzeyinde karşılaştırılır. Klinik yorumlar, rehber metinlerinde yer alan öneri sınıfı ve kanıt düzeyine göre sadeleştirilerek sunulur.</p>
+                <p>Hesaplayıcı sonuçları, mümkün olduğunda örnek hasta senaryoları ile manuel olarak kontrol edilir. Çelişen kaynak bulunduğunda daha güncel rehber versiyonu esas alınır ve ilgili sayfa revize edilir.</p>
+                <h2>4. Güncelleme Politikası</h2>
+                <p>Önemli kılavuz güncellemeleri veya formül değişiklikleri tespit edildiğinde ilgili sayfalar öncelikli olarak güncellenir. İçeriklerde anlamı değiştiren revizyonlar yapıldığında sayfa içindeki "son güncelleme" bilgisi yenilenir.</p>
+                <h2>5. Düzeltme ve Geri Bildirim</h2>
+                <p>Kullanıcı geri bildirimleri içerik kalitesi için aktif olarak değerlendirilir. Hata bildirimi veya güncelleme önerisi için e-posta üzerinden iletişim kurulabilir. Doğrulanan hatalar makul süre içinde düzeltilir.</p>
+                <h2>6. Reklam ve Editoryal Bağımsızlık</h2>
+                <p>Reklam gösterimi, editoryal karar sürecini etkilemez. Klinik içerik seçimi, kaynak önceliği ve hesaplayıcı mantığı reklam verenlerden bağımsız şekilde belirlenir.</p>
+                <h2>7. Sorumluluk Notu</h2>
+                <p>DrTR Tools içerikleri yalnızca eğitim ve bilgilendirme amaçlıdır. Tanı ve tedavi kararları, hastayı değerlendiren yetkin sağlık profesyoneli tarafından verilmelidir.</p>
+                <div class="note">Bu politika sayfası, platformun şeffaflık yaklaşımını güçlendirmek amacıyla hazırlanmıştır.</div>
+            `
+        },
+        en: {
+            title: "Editorial Policy",
+            updated: "<strong>Last updated:</strong> April 13, 2026",
+            back: "← Home",
+            btn: "Türkçe (TR)",
+            html: `
+                <h2>1. Purpose and Scope</h2>
+                <p>DrTR Tools provides clinical decision-support and academic productivity tools for healthcare professionals and researchers. This page explains how textual content and calculator explanations are created, verified, and updated.</p>
+                <h2>2. Source Selection</h2>
+                <p>Content is prepared with the following source priority:</p>
+                <ul>
+                    <li>Official clinical guidelines (ESC, AHA/ACC, KDIGO, NICE, WHO, etc.)</li>
+                    <li>Peer-reviewed primary studies and systematic reviews</li>
+                    <li>Drug prescribing information and regulatory publications</li>
+                </ul>
+                <h2>3. Content Production and Validation</h2>
+                <p>For each calculator, formulas, variable definitions, and thresholds are checked against source literature. Clinical interpretations are simplified in line with recommendation classes and evidence levels from guideline documents.</p>
+                <p>Outputs are manually tested with sample scenarios when possible. If sources conflict, the most current guideline version is prioritized and the related page is revised.</p>
+                <h2>4. Update Policy</h2>
+                <p>When major guideline updates or formula changes are identified, related pages are prioritized for revision. Material updates are reflected in the on-page "last updated" information.</p>
+                <h2>5. Corrections and Feedback</h2>
+                <p>User feedback is actively reviewed as part of quality control. Error reports and update suggestions can be sent by email, and verified issues are corrected within a reasonable timeframe.</p>
+                <h2>6. Advertising and Editorial Independence</h2>
+                <p>Advertising does not determine editorial decisions. Clinical content scope, source prioritization, and calculator logic are set independently from advertisers.</p>
+                <h2>7. Responsibility Notice</h2>
+                <p>DrTR Tools content is for educational and informational purposes only. Diagnosis and treatment decisions must be made by a qualified healthcare professional who evaluates the individual patient.</p>
+                <div class="note">This policy page is published to strengthen transparency across the platform.</div>
+            `
+        }
+    };
+
+    function render() {
+        var lang = currentLang;
+        document.documentElement.lang = lang;
+        document.getElementById('title').textContent = data[lang].title;
+        document.getElementById('updated').innerHTML = data[lang].updated;
+        document.getElementById('backLink').textContent = data[lang].back;
+        document.getElementById('langBtn').textContent = data[lang].btn;
+        document.getElementById('content').innerHTML = data[lang].html;
+        localStorage.setItem('drtr_lang', lang);
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'tr' ? 'en' : 'tr';
+        render();
+    }
+
+    var saved = localStorage.getItem('drtr_lang');
+    if (saved === 'en' || saved === 'tr') currentLang = saved;
+    render();
+    </script>
+</body>
+</html>
