@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Altyazı İndirici — DrTR Tools</title>
+  <meta name="description" content="YouTube videolarından altyazı indirin. SRT, TXT formatlarında. Video, playlist ve kanal desteği. Tüm işlemler tarayıcınızda.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/subtitle.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5561716689369449" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    :root {
+      --bg:#F8FAFC; --surface:#FFFFFF;
+      --text-primary:#0F172A; --text-secondary:#334155; --text-muted:#64748B; --text-faint:#94A3B8;
+      --border:#E2E8F0; --teal:#0F766E; --teal-bg:#F0FDFA;
+      --blue:#1D4ED8; --blue-bg:#EFF6FF;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:860px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:860px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{margin-bottom:28px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:10px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.7;max-width:580px}
+
+    .tabs{display:flex;gap:4px;background:#F1F5F9;padding:4px;border-radius:10px;width:fit-content;margin-bottom:24px}
+    .tab-btn{padding:7px 20px;border-radius:7px;border:none;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);background:transparent;transition:all .2s}
+    .tab-btn.active{background:#fff;color:var(--text-primary);box-shadow:var(--shadow)}
+
+    .tab-panel{display:none}.tab-panel.active{display:block}
+
+    /* Input area */
+    .input-row{display:flex;gap:8px;margin-bottom:20px}
+    .input-row input[type="text"]{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:.9rem;color:var(--text-primary);background:#fff;outline:none}
+    .input-row input[type="text"]:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .btn-primary{padding:10px 20px;border-radius:8px;border:none;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;color:#fff;background:var(--teal);transition:background .2s;white-space:nowrap}
+    .btn-primary:hover{background:#0D6D65}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+    /* Status / error */
+    .status-msg{padding:12px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:none}
+    .status-msg.error{display:block;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626}
+    .status-msg.loading{display:block;background:var(--blue-bg);border:1px solid #BFDBFE;color:#1E40AF}
+    .status-msg.success{display:block;background:var(--teal-bg);border:1px solid #99F6E4;color:var(--teal)}
+
+    /* Video result area */
+    .result-area{display:none}
+    .result-area.visible{display:block}
+
+    .video-player{margin-bottom:16px;border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:#000}
+    .video-player iframe{width:100%;height:100%;border:none}
+
+    /* Controls bar */
+    .controls-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+    .controls-bar select{padding:7px 10px;border:1px solid var(--border);border-radius:7px;font:inherit;font-size:.82rem;background:#fff;color:var(--text-primary);outline:none}
+    .controls-bar select:focus{border-color:var(--teal)}
+
+    .btn-sm{padding:6px 14px;border-radius:6px;border:1px solid var(--border);font:inherit;font-size:.78rem;font-weight:600;cursor:pointer;background:#fff;color:var(--text-secondary);transition:all .15s}
+    .btn-sm:hover{background:#F1F5F9;border-color:#CBD5E1}
+    .btn-sm.accent{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .btn-sm.accent:hover{background:#0D6D65}
+
+    /* Subtitle list */
+    .subtitle-list{border:1px solid var(--border);border-radius:10px;max-height:400px;overflow-y:auto;background:#fff}
+    .sub-item{display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);font-size:.84rem;cursor:pointer;transition:background .1s}
+    .sub-item:last-child{border-bottom:none}
+    .sub-item:hover{background:var(--teal-bg)}
+    .sub-item .ts{color:var(--teal);font-weight:600;font-family:monospace;min-width:70px;flex-shrink:0}
+    .sub-item .txt{color:var(--text-secondary);line-height:1.5}
+
+    /* Playlist / channel list */
+    .video-list{border:1px solid var(--border);border-radius:10px;max-height:500px;overflow-y:auto;background:#fff;margin-bottom:16px}
+    .vl-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);font-size:.84rem}
+    .vl-item:last-child{border-bottom:none}
+    .vl-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--teal);flex-shrink:0}
+    .vl-item .vl-title{flex:1;color:var(--text-secondary);line-height:1.4}
+    .vl-item .vl-status{font-size:.75rem;color:var(--text-faint);min-width:60px;text-align:right}
+
+    .batch-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+
+    /* Progress */
+    .progress-bar-wrap{width:100%;height:6px;background:#E2E8F0;border-radius:3px;margin:12px 0;display:none}
+    .progress-bar-wrap.visible{display:block}
+    .progress-bar-fill{height:100%;background:var(--teal);border-radius:3px;transition:width .3s}
+    .progress-text{font-size:.78rem;color:var(--text-muted);margin-bottom:8px}
+
+    @media(max-width:600px){
+      .hero h1{font-size:1.3rem}
+      .input-row{flex-direction:column}
+      .controls-bar{gap:6px}
+      .tabs{width:100%}
+      .tab-btn{flex:1;text-align:center;padding:7px 10px;font-size:.82rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">&larr; Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-badge">Altyazi Araci</div>
+    <h1>YouTube Altyazi Indirici</h1>
+    <p>YouTube videolarindan altyazi indirin. SRT ve TXT formatlarinda, zamanli veya duz metin olarak. Video, playlist ve kanal destegi.</p>
+    <div style="background:var(--blue-bg); border:1px solid #BFDBFE; border-radius:10px; padding:12px; margin-top:12px; font-size:0.82rem; line-height:1.5; color:#1E40AF;">
+      <strong>Gizlilik:</strong> Tum islemler tamamen tarayicinizda gerceklestirilir. Verileriniz sunucuya gonderilmez.
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('video',this)">Video</button>
+    <button class="tab-btn" onclick="switchTab('playlist',this)">Playlist</button>
+    <button class="tab-btn" onclick="switchTab('channel',this)">Kanal</button>
+  </div>
+
+  <!-- VIDEO TAB -->
+  <div class="tab-panel active" id="tab-video">
+    <div class="input-row">
+      <input type="text" id="video-url" placeholder="YouTube video URL'sini yapistiriniz...">
+      <button class="btn-primary" id="video-btn" onclick="loadVideo()">Altyazi Indir</button>
+    </div>
+    <div class="status-msg" id="video-status"></div>
+    <div class="result-area" id="video-result">
+      <div class="video-player" id="video-player"></div>
+      <div class="controls-bar">
+        <select id="lang-select" onchange="changeLang()"></select>
+        <button class="btn-sm accent" onclick="downloadFile('srt-timed')">SRT (zamanli)</button>
+        <button class="btn-sm" onclick="downloadFile('srt-plain')">SRT (duz)</button>
+        <button class="btn-sm accent" onclick="downloadFile('txt-timed')">TXT (zamanli)</button>
+        <button class="btn-sm" onclick="downloadFile('txt-plain')">TXT (duz)</button>
+        <button class="btn-sm" onclick="copyToClipboard()">Kopyala</button>
+      </div>
+      <div class="subtitle-list" id="subtitle-list"></div>
+    </div>
+  </div>
+
+  <!-- PLAYLIST TAB -->
+  <div class="tab-panel" id="tab-playlist">
+    <div class="input-row">
+      <input type="text" id="playlist-url" placeholder="YouTube playlist URL'sini yapistiriniz...">
+      <button class="btn-primary" id="playlist-btn" onclick="loadPlaylist()">Playlist Yukle</button>
+    </div>
+    <div class="status-msg" id="playlist-status"></div>
+    <div class="result-area" id="playlist-result">
+      <div class="batch-controls">
+        <button class="btn-sm" onclick="selectAll('playlist',true)">Tumunu Sec</button>
+        <button class="btn-sm" onclick="selectAll('playlist',false)">Secimi Kaldir</button>
+        <select id="playlist-lang"></select>
+        <select id="playlist-format">
+          <option value="srt-timed">SRT (zamanli)</option>
+          <option value="srt-plain">SRT (duz)</option>
+          <option value="txt-timed">TXT (zamanli)</option>
+          <option value="txt-plain">TXT (duz)</option>
+        </select>
+        <button class="btn-sm accent" onclick="batchDownload('playlist')">ZIP Indir</button>
+      </div>
+      <div class="progress-text" id="playlist-progress-text"></div>
+      <div class="progress-bar-wrap" id="playlist-progress">
+        <div class="progress-bar-fill" id="playlist-progress-fill" style="width:0"></div>
+      </div>
+      <div class="video-list" id="playlist-list"></div>
+    </div>
+  </div>
+
+  <!-- CHANNEL TAB -->
+  <div class="tab-panel" id="tab-channel">
+    <div class="input-row">
+      <input type="text" id="channel-url" placeholder="YouTube kanal URL'sini yapistiriniz...">
+      <button class="btn-primary" id="channel-btn" onclick="loadChannel()">Kanal Yukle</button>
+    </div>
+    <div class="status-msg" id="channel-status"></div>
+    <div class="result-area" id="channel-result">
+      <div class="batch-controls">
+        <button class="btn-sm" onclick="selectAll('channel',true)">Tumunu Sec</button>
+        <button class="btn-sm" onclick="selectAll('channel',false)">Secimi Kaldir</button>
+        <select id="channel-lang"></select>
+        <select id="channel-format">
+          <option value="srt-timed">SRT (zamanli)</option>
+          <option value="srt-plain">SRT (duz)</option>
+          <option value="txt-timed">TXT (zamanli)</option>
+          <option value="txt-plain">TXT (duz)</option>
+        </select>
+        <button class="btn-sm accent" onclick="batchDownload('channel')">ZIP Indir</button>
+      </div>
+      <div class="progress-text" id="channel-progress-text"></div>
+      <div class="progress-bar-wrap" id="channel-progress">
+        <div class="progress-bar-fill" id="channel-progress-fill" style="width:0"></div>
+      </div>
+      <div class="video-list" id="channel-list"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748B;
+    font-size: 0.8rem;
+    border-top: 1px solid #E2E8F0;
+    background: #fff;
+    margin-top: 40px;
+  }
+  footer a { color: #3b82f6; text-decoration: none; margin: 0 8px; }
+  footer a:hover { text-decoration: underline; }
+</style>
+
+<footer>
+  <p>&copy; 2026 DrTR Tools &mdash; Tum haklari saklidir.</p>
+  <p style="margin-top:10px">
+    <a href="/">Home / Ana Sayfa</a> |
+    <a href="privacy.html">Privacy</a> |
+    <a href="terms.html">Terms</a> |
+    <a href="about.html">About</a> |
+    <a href="disclaimer.html">Disclaimer</a>
+  </p>
+</footer>
+
+<script>
+// ── Globals ──────────────────────────────────────────────────────────────────
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+let currentVideoId = '';
+let currentTitle = '';
+let currentSubtitles = [];
+let currentTracks = [];
+let playlistVideos = [];
+let channelVideos = [];
+let ytPlayer = null;
+
+// ── Tab switching ────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Utility ──────────────────────────────────────────────────────────────────
+function setStatus(elId, msg, type) {
+  const el = document.getElementById(elId);
+  el.className = 'status-msg ' + type;
+  el.textContent = msg;
+}
+
+function clearStatus(elId) {
+  const el = document.getElementById(elId);
+  el.className = 'status-msg';
+  el.textContent = '';
+}
+
+function extractVideoId(url) {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function extractPlaylistId(url) {
+  const m = url.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : null;
+}
+
+function extractChannelId(url) {
+  // handle /channel/UC..., /@handle, /c/name, /user/name
+  let m = url.match(/youtube\.com\/channel\/(UC[a-zA-Z0-9_-]+)/);
+  if (m) return { type: 'channel', id: m[1] };
+  m = url.match(/youtube\.com\/@([a-zA-Z0-9_.-]+)/);
+  if (m) return { type: 'handle', id: m[1] };
+  m = url.match(/youtube\.com\/c\/([a-zA-Z0-9_.-]+)/);
+  if (m) return { type: 'custom', id: m[1] };
+  m = url.match(/youtube\.com\/user\/([a-zA-Z0-9_.-]+)/);
+  if (m) return { type: 'user', id: m[1] };
+  return null;
+}
+
+function formatTime(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.round((seconds % 1) * 1000);
+  if (h > 0) return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function formatSrtTime(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.round((seconds % 1) * 1000);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(ms).padStart(3,'0')}`;
+}
+
+function decodeEntities(text) {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)));
+}
+
+function sanitizeFilename(name) {
+  return name.replace(/[<>:"/\\|?*]+/g, '_').replace(/\s+/g, ' ').trim().substring(0, 100);
+}
+
+// ── Parse inline JSON from YouTube HTML ──────────────────────────────────────
+function parseInlineJson(html, varName) {
+  const prefix = 'var ' + varName + ' = ';
+  let start = html.indexOf(prefix);
+  if (start === -1) {
+    // try without 'var '
+    const alt = varName + ' = ';
+    start = html.indexOf(alt);
+    if (start === -1) return null;
+    start += alt.length;
+  } else {
+    start += prefix.length;
+  }
+  let depth = 0;
+  for (let i = start; i < html.length; i++) {
+    if (html[i] === '{') depth++;
+    else if (html[i] === '}') {
+      depth--;
+      if (depth === 0) {
+        try { return JSON.parse(html.slice(start, i + 1)); }
+        catch { return null; }
+      }
+    }
+  }
+  return null;
+}
+
+// ── Parse subtitle XML ──────────────────────────────────────────────────────
+function parseTranscriptXml(xml) {
+  // srv3 format: <p t="ms" d="ms">
+  const srv3Regex = /<p\s+t="(\d+)"\s+d="(\d+)"[^>]*>([\s\S]*?)<\/p>/g;
+  const srv3Results = [];
+  let match;
+  while ((match = srv3Regex.exec(xml)) !== null) {
+    const offsetMs = parseInt(match[1], 10);
+    const durationMs = parseInt(match[2], 10);
+    const inner = match[3];
+    let text = '';
+    const segRegex = /<s[^>]*>([^<]*)<\/s>/g;
+    let segMatch;
+    while ((segMatch = segRegex.exec(inner)) !== null) {
+      text += segMatch[1];
+    }
+    if (!text) text = inner.replace(/<[^>]+>/g, '');
+    text = decodeEntities(text).trim();
+    if (text) {
+      srv3Results.push({ start: offsetMs / 1000, duration: durationMs / 1000, text });
+    }
+  }
+  if (srv3Results.length > 0) return srv3Results;
+
+  // classic format: <text start="s" dur="s">
+  const classicRegex = /<text start="([^"]*)" dur="([^"]*)">([^<]*)<\/text>/g;
+  const classicResults = [];
+  while ((match = classicRegex.exec(xml)) !== null) {
+    classicResults.push({
+      start: parseFloat(match[1]),
+      duration: parseFloat(match[2]),
+      text: decodeEntities(match[3])
+    });
+  }
+  // Also try multiline classic with inner content
+  if (classicResults.length === 0) {
+    const classicRegex2 = /<text start="([^"]*)" dur="([^"]*)"[^>]*>([\s\S]*?)<\/text>/g;
+    while ((match = classicRegex2.exec(xml)) !== null) {
+      classicResults.push({
+        start: parseFloat(match[1]),
+        duration: parseFloat(match[2]),
+        text: decodeEntities(match[3].replace(/<[^>]+>/g, ''))
+      });
+    }
+  }
+  return classicResults;
+}
+
+// ── Fetch via CORS proxy ─────────────────────────────────────────────────────
+async function corsFetch(url) {
+  const res = await fetch(CORS_PROXY + encodeURIComponent(url));
+  if (!res.ok) throw new Error('Istek basarisiz: ' + res.status);
+  return await res.text();
+}
+
+// ── Fetch caption tracks for a video ─────────────────────────────────────────
+async function fetchCaptionTracks(videoId) {
+  const html = await corsFetch('https://www.youtube.com/watch?v=' + videoId);
+
+  if (html.includes('class="g-recaptcha"')) {
+    throw new Error('YouTube istek siniri. Lutfen daha sonra tekrar deneyin.');
+  }
+
+  const playerData = parseInlineJson(html, 'ytInitialPlayerResponse');
+  if (!playerData) throw new Error('Video verisi alinamadi. URL\'yi kontrol edin.');
+
+  const captions = playerData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+  if (!Array.isArray(captions) || captions.length === 0) {
+    throw new Error('Bu video icin altyazi bulunamadi.');
+  }
+
+  const title = playerData?.videoDetails?.title || 'video';
+
+  return { tracks: captions, title };
+}
+
+// ── Fetch subtitles for a specific track ─────────────────────────────────────
+async function fetchSubtitles(track) {
+  const xml = await corsFetch(track.baseUrl);
+  return parseTranscriptXml(xml);
+}
+
+// ── VIDEO TAB ────────────────────────────────────────────────────────────────
+async function loadVideo() {
+  const url = document.getElementById('video-url').value.trim();
+  if (!url) return;
+
+  const videoId = extractVideoId(url);
+  if (!videoId) {
+    setStatus('video-status', 'Gecersiz YouTube URL\'si.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('video-btn');
+  btn.disabled = true;
+  setStatus('video-status', 'Altyazilar yukleniyor...', 'loading');
+  document.getElementById('video-result').classList.remove('visible');
+
+  try {
+    const { tracks, title } = await fetchCaptionTracks(videoId);
+    currentVideoId = videoId;
+    currentTitle = title;
+    currentTracks = tracks;
+
+    // Populate language selector
+    const langSelect = document.getElementById('lang-select');
+    langSelect.innerHTML = '';
+    tracks.forEach((t, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const label = t.name?.simpleText || t.name?.runs?.map(r => r.text).join('') || t.languageCode;
+      opt.textContent = label + ' (' + t.languageCode + ')';
+      langSelect.appendChild(opt);
+    });
+
+    // Load first track
+    await loadTrack(0);
+
+    // Show player
+    document.getElementById('video-player').innerHTML =
+      '<iframe src="https://www.youtube.com/embed/' + videoId + '?enablejsapi=1" allowfullscreen allow="autoplay"></iframe>';
+
+    document.getElementById('video-result').classList.add('visible');
+    clearStatus('video-status');
+  } catch (e) {
+    setStatus('video-status', e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function loadTrack(index) {
+  const track = currentTracks[index];
+  if (!track) return;
+
+  try {
+    currentSubtitles = await fetchSubtitles(track);
+    renderSubtitleList();
+  } catch (e) {
+    setStatus('video-status', 'Altyazi yuklenemedi: ' + e.message, 'error');
+  }
+}
+
+function changeLang() {
+  const index = parseInt(document.getElementById('lang-select').value, 10);
+  setStatus('video-status', 'Altyazi degistiriliyor...', 'loading');
+  loadTrack(index).then(() => clearStatus('video-status'));
+}
+
+function renderSubtitleList() {
+  const el = document.getElementById('subtitle-list');
+  el.innerHTML = '';
+  currentSubtitles.forEach((sub, i) => {
+    const div = document.createElement('div');
+    div.className = 'sub-item';
+    div.innerHTML = '<span class="ts">' + formatTime(sub.start) + '</span><span class="txt">' + escapeHtml(sub.text) + '</span>';
+    div.onclick = () => seekTo(sub.start);
+    el.appendChild(div);
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function seekTo(seconds) {
+  const iframe = document.querySelector('#video-player iframe');
+  if (iframe) {
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: 'command',
+      func: 'seekTo',
+      args: [seconds, true]
+    }), '*');
+  }
+}
+
+// ── Download formats ─────────────────────────────────────────────────────────
+function generateContent(subs, format) {
+  if (format === 'txt-timed') {
+    return subs.map(s => formatTime(s.start) + '  ' + s.text).join('\n');
+  }
+  if (format === 'txt-plain') {
+    return subs.map(s => s.text).join('\n');
+  }
+  if (format === 'srt-timed') {
+    return subs.map((s, i) => {
+      const end = s.start + s.duration;
+      return (i + 1) + '\n' + formatSrtTime(s.start) + ' --> ' + formatSrtTime(end) + '\n' + s.text + '\n';
+    }).join('\n');
+  }
+  if (format === 'srt-plain') {
+    return subs.map((s, i) => {
+      return (i + 1) + '\n' + s.text + '\n';
+    }).join('\n');
+  }
+  return '';
+}
+
+function getExtension(format) {
+  return format.startsWith('srt') ? '.srt' : '.txt';
+}
+
+function downloadFile(format) {
+  if (currentSubtitles.length === 0) return;
+  const content = generateContent(currentSubtitles, format);
+  const filename = sanitizeFilename(currentTitle) + getExtension(format);
+  triggerDownload(content, filename);
+}
+
+function triggerDownload(content, filename) {
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function copyToClipboard() {
+  if (currentSubtitles.length === 0) return;
+  const content = generateContent(currentSubtitles, 'txt-timed');
+  navigator.clipboard.writeText(content).then(() => {
+    setStatus('video-status', 'Panoya kopyalandi!', 'success');
+    setTimeout(() => clearStatus('video-status'), 2000);
+  }).catch(() => {
+    setStatus('video-status', 'Kopyalama basarisiz.', 'error');
+  });
+}
+
+// ── PLAYLIST TAB ─────────────────────────────────────────────────────────────
+async function loadPlaylist() {
+  const url = document.getElementById('playlist-url').value.trim();
+  if (!url) return;
+
+  const listId = extractPlaylistId(url);
+  if (!listId) {
+    setStatus('playlist-status', 'Gecersiz playlist URL\'si. URL\'de list= parametresi olmali.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('playlist-btn');
+  btn.disabled = true;
+  setStatus('playlist-status', 'Playlist yukleniyor...', 'loading');
+  document.getElementById('playlist-result').classList.remove('visible');
+
+  try {
+    const html = await corsFetch('https://www.youtube.com/playlist?list=' + listId);
+    const initialData = parseInlineJson(html, 'ytInitialData');
+    if (!initialData) throw new Error('Playlist verisi alinamadi.');
+
+    const videos = extractPlaylistVideos(initialData);
+    if (videos.length === 0) throw new Error('Playlist\'te video bulunamadi.');
+
+    playlistVideos = videos;
+    renderVideoList('playlist', videos);
+    document.getElementById('playlist-result').classList.add('visible');
+    clearStatus('playlist-status');
+  } catch (e) {
+    setStatus('playlist-status', e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function extractPlaylistVideos(data) {
+  const videos = [];
+  try {
+    const contents = data?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]
+      ?.tabRenderer?.content?.sectionListRenderer?.contents?.[0]
+      ?.itemSectionRenderer?.contents?.[0]?.playlistVideoListRenderer?.contents;
+    if (Array.isArray(contents)) {
+      for (const item of contents) {
+        const v = item?.playlistVideoRenderer;
+        if (v?.videoId) {
+          videos.push({
+            videoId: v.videoId,
+            title: v.title?.runs?.[0]?.text || v.title?.simpleText || v.videoId
+          });
+        }
+      }
+    }
+  } catch {}
+  return videos;
+}
+
+// ── CHANNEL TAB ──────────────────────────────────────────────────────────────
+async function loadChannel() {
+  const url = document.getElementById('channel-url').value.trim();
+  if (!url) return;
+
+  const info = extractChannelId(url);
+  if (!info) {
+    setStatus('channel-status', 'Gecersiz kanal URL\'si.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('channel-btn');
+  btn.disabled = true;
+  setStatus('channel-status', 'Kanal videolari yukleniyor...', 'loading');
+  document.getElementById('channel-result').classList.remove('visible');
+
+  try {
+    let channelUrl;
+    if (info.type === 'channel') channelUrl = 'https://www.youtube.com/channel/' + info.id + '/videos';
+    else if (info.type === 'handle') channelUrl = 'https://www.youtube.com/@' + info.id + '/videos';
+    else if (info.type === 'custom') channelUrl = 'https://www.youtube.com/c/' + info.id + '/videos';
+    else channelUrl = 'https://www.youtube.com/user/' + info.id + '/videos';
+
+    const html = await corsFetch(channelUrl);
+    const initialData = parseInlineJson(html, 'ytInitialData');
+    if (!initialData) throw new Error('Kanal verisi alinamadi.');
+
+    const videos = extractChannelVideos(initialData);
+    if (videos.length === 0) throw new Error('Kanalda video bulunamadi.');
+
+    channelVideos = videos;
+    renderVideoList('channel', videos);
+    document.getElementById('channel-result').classList.add('visible');
+    clearStatus('channel-status');
+  } catch (e) {
+    setStatus('channel-status', e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function extractChannelVideos(data) {
+  const videos = [];
+  try {
+    // Navigate the nested structure to find video items
+    const tabs = data?.contents?.twoColumnBrowseResultsRenderer?.tabs;
+    if (!Array.isArray(tabs)) return videos;
+
+    for (const tab of tabs) {
+      const contents = tab?.tabRenderer?.content?.richGridRenderer?.contents;
+      if (!Array.isArray(contents)) continue;
+      for (const item of contents) {
+        const v = item?.richItemRenderer?.content?.videoRenderer;
+        if (v?.videoId) {
+          videos.push({
+            videoId: v.videoId,
+            title: v.title?.runs?.[0]?.text || v.title?.simpleText || v.videoId
+          });
+        }
+      }
+    }
+  } catch {}
+  return videos;
+}
+
+// ── Shared list rendering ────────────────────────────────────────────────────
+function renderVideoList(type, videos) {
+  const el = document.getElementById(type + '-list');
+  el.innerHTML = '';
+  videos.forEach((v, i) => {
+    const div = document.createElement('div');
+    div.className = 'vl-item';
+    div.innerHTML =
+      '<input type="checkbox" checked data-index="' + i + '" id="' + type + '-cb-' + i + '">' +
+      '<label class="vl-title" for="' + type + '-cb-' + i + '">' + escapeHtml(v.title) + '</label>' +
+      '<span class="vl-status" id="' + type + '-st-' + i + '"></span>';
+    el.appendChild(div);
+  });
+}
+
+function selectAll(type, checked) {
+  const el = document.getElementById(type + '-list');
+  el.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = checked);
+}
+
+// ── Batch download ───────────────────────────────────────────────────────────
+async function batchDownload(type) {
+  const videos = type === 'playlist' ? playlistVideos : channelVideos;
+  const listEl = document.getElementById(type + '-list');
+  const checkboxes = listEl.querySelectorAll('input[type="checkbox"]:checked');
+  const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index, 10));
+
+  if (indices.length === 0) {
+    setStatus(type + '-status', 'Lutfen en az bir video secin.', 'error');
+    return;
+  }
+
+  const format = document.getElementById(type + '-format').value;
+  const progressWrap = document.getElementById(type + '-progress');
+  const progressFill = document.getElementById(type + '-progress-fill');
+  const progressText = document.getElementById(type + '-progress-text');
+
+  progressWrap.classList.add('visible');
+  progressFill.style.width = '0%';
+
+  const zip = new JSZip();
+  let completed = 0;
+  let failed = 0;
+
+  for (const idx of indices) {
+    const video = videos[idx];
+    const statusEl = document.getElementById(type + '-st-' + idx);
+    statusEl.textContent = 'Yukleniyor...';
+    statusEl.style.color = 'var(--blue)';
+
+    try {
+      const { tracks } = await fetchCaptionTracks(video.videoId);
+      if (tracks.length === 0) throw new Error('Altyazi yok');
+
+      // Use first available track (or user-selected language could be added)
+      const subs = await fetchSubtitles(tracks[0]);
+      if (subs.length === 0) throw new Error('Bos altyazi');
+
+      const content = generateContent(subs, format);
+      const filename = sanitizeFilename(video.title) + getExtension(format);
+      zip.file(filename, content);
+
+      statusEl.textContent = 'Tamam';
+      statusEl.style.color = 'var(--teal)';
+    } catch (e) {
+      statusEl.textContent = 'Hata';
+      statusEl.style.color = '#DC2626';
+      failed++;
+    }
+
+    completed++;
+    const pct = Math.round((completed / indices.length) * 100);
+    progressFill.style.width = pct + '%';
+    progressText.textContent = completed + ' / ' + indices.length + ' tamamlandi' + (failed ? ' (' + failed + ' hata)' : '');
+
+    // Small delay to avoid rate limiting
+    if (completed < indices.length) {
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+
+  // Generate and download ZIP
+  try {
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (type === 'playlist' ? 'playlist' : 'kanal') + '_altyazilar.zip';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setStatus(type + '-status', 'ZIP dosyasi indirildi! (' + (completed - failed) + ' basarili, ' + failed + ' hata)', 'success');
+  } catch (e) {
+    setStatus(type + '-status', 'ZIP olusturulamadi: ' + e.message, 'error');
+  }
+}
+
+// ── Enter key support ────────────────────────────────────────────────────────
+document.getElementById('video-url').addEventListener('keydown', e => { if (e.key === 'Enter') loadVideo(); });
+document.getElementById('playlist-url').addEventListener('keydown', e => { if (e.key === 'Enter') loadPlaylist(); });
+document.getElementById('channel-url').addEventListener('keydown', e => { if (e.key === 'Enter') loadChannel(); });
+</script>
+</body>
+</html>
