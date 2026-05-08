@@ -356,54 +356,90 @@ function describeStatus(status, target) {
   }
 }
 
-function chooseDoseAdjustment(status, previousStatus, transientFactor) {
+function tuneForBleedingRisk(adjustmentPercent, status, highBleedingRisk) {
+  if (!highBleedingRisk) {
+    return adjustmentPercent;
+  }
+
+  if (adjustmentPercent > 0) {
+    if (status === "veryLow") {
+      return Math.max(10, adjustmentPercent - 5);
+    }
+    return Math.max(0, adjustmentPercent - 5);
+  }
+
+  if (adjustmentPercent < 0) {
+    return Math.max(-20, adjustmentPercent - 5);
+  }
+
+  return adjustmentPercent;
+}
+
+function chooseDoseAdjustment(status, previousStatus, transientFactor, highBleedingRisk) {
   const sameDirectionLow = LOW_STATES.has(status) && LOW_STATES.has(previousStatus);
   const sameDirectionHigh = HIGH_STATES.has(status) && HIGH_STATES.has(previousStatus);
   const previousInRange = previousStatus === "inRange";
+  let adjustmentPercent;
 
   switch (status) {
     case "veryLow":
-      if (transientFactor === "low") return 10;
-      if (sameDirectionLow) return 20;
-      if (previousInRange) return 10;
-      return 15;
+      if (transientFactor === "low") adjustmentPercent = 10;
+      else if (sameDirectionLow) adjustmentPercent = 20;
+      else if (previousInRange) adjustmentPercent = 10;
+      else adjustmentPercent = 15;
+      break;
     case "low":
-      if (transientFactor === "low") return 5;
-      if (sameDirectionLow) return 15;
-      if (previousInRange) return 5;
-      return 10;
+      if (transientFactor === "low") adjustmentPercent = 5;
+      else if (sameDirectionLow) adjustmentPercent = 15;
+      else if (previousInRange) adjustmentPercent = 5;
+      else adjustmentPercent = 10;
+      break;
     case "slightlyLow":
-      if (transientFactor === "low" || previousInRange) return 0;
-      if (sameDirectionLow) return 10;
-      return 5;
+      if (transientFactor === "low" || previousInRange) adjustmentPercent = 0;
+      else if (sameDirectionLow) adjustmentPercent = 10;
+      else adjustmentPercent = 5;
+      break;
     case "inRange":
-      return 0;
+      adjustmentPercent = 0;
+      break;
     case "slightlyHigh":
-      if (transientFactor === "high" || previousInRange) return 0;
-      if (sameDirectionHigh) return -10;
-      return -5;
+      if (transientFactor === "high" || previousInRange) adjustmentPercent = 0;
+      else if (sameDirectionHigh) adjustmentPercent = -10;
+      else adjustmentPercent = -5;
+      break;
     case "mildHigh":
-      if (transientFactor === "high") return -5;
-      if (sameDirectionHigh) return -10;
-      return -5;
+      if (transientFactor === "high") adjustmentPercent = -5;
+      else if (sameDirectionHigh) adjustmentPercent = -10;
+      else adjustmentPercent = -5;
+      break;
     case "high":
-      if (transientFactor === "high") return -10;
-      if (sameDirectionHigh) return -15;
-      return -10;
+      if (transientFactor === "high") adjustmentPercent = -10;
+      else if (sameDirectionHigh) adjustmentPercent = -15;
+      else adjustmentPercent = -10;
+      break;
     case "veryHigh":
-      if (transientFactor === "high") return -10;
-      return -15;
+      if (transientFactor === "high") adjustmentPercent = -10;
+      else adjustmentPercent = -15;
+      break;
     default:
-      return 0;
+      adjustmentPercent = 0;
   }
+
+  return tuneForBleedingRisk(adjustmentPercent, status, highBleedingRisk);
 }
 
-function buildImmediateAction(status, adjustmentPercent, target, currentInr) {
+function buildImmediateAction(status, adjustmentPercent, target, currentInr, highBleedingRisk) {
   if (status === "veryLow") {
+    if (highBleedingRisk) {
+      return "Belirgin düşük INR var; kanama riski yüksek işaretlendiği için yükleme kararı klinisyen değerlendirmesine bırakılır.";
+    }
     return "Bir kerelik 1.5–2 günlük doz yüklemesi klinik olarak düşünülebilir; sonra aşağıdaki bakım planına geçilir.";
   }
 
   if (status === "low") {
+    if (highBleedingRisk) {
+      return "Düşük INR için haftalık artış temkinli tutuldu; yükleme kararı klinik risk-fayda ile verilir.";
+    }
     return "Gerekirse bir kerelik 1.5 günlük doz yüklemesi düşünülebilir; sonra aşağıdaki bakım planına geçilir.";
   }
 
@@ -426,10 +462,16 @@ function buildImmediateAction(status, adjustmentPercent, target, currentInr) {
   }
 
   if (status === "mildHigh") {
+    if (highBleedingRisk) {
+      return "Kanama riski yüksek olduğu için doz azaltımı ve yakın INR kontrolü önceliklidir; tek doz atlama düşünülebilir.";
+    }
     return "0.5–1 doz atlama klinik olarak düşünülebilir; sonra aşağıdaki azaltılmış plana geçilir.";
   }
 
   if (status === "high") {
+    if (highBleedingRisk) {
+      return "Kanama riski yüksek olduğu için tek doz atlama ve daha erken INR kontrolü düşünülür.";
+    }
     return "1 doz atlama düşünülür; sonra aşağıdaki azaltılmış bakım planına geçilir.";
   }
 
@@ -443,7 +485,13 @@ function buildImmediateAction(status, adjustmentPercent, target, currentInr) {
   return "-";
 }
 
-function chooseNextInrDays(status, previousStatus, adjustmentPercent) {
+function chooseNextInrDays(status, previousStatus, adjustmentPercent, highBleedingRisk) {
+  if (highBleedingRisk && HIGH_STATES.has(status)) {
+    if (status === "veryHigh") return 1;
+    if (status === "high") return 3;
+    return 5;
+  }
+
   switch (status) {
     case "veryLow":
       return 7;
@@ -466,7 +514,7 @@ function chooseNextInrDays(status, previousStatus, adjustmentPercent) {
   }
 }
 
-function explainAdjustment(status, adjustmentPercent, previousStatus, transientFactor, usedHistory) {
+function explainAdjustment(status, adjustmentPercent, previousStatus, transientFactor, usedHistory, highBleedingRisk) {
   const reasons = [];
 
   if (usedHistory) {
@@ -489,6 +537,16 @@ function explainAdjustment(status, adjustmentPercent, previousStatus, transientF
 
   if (transientFactor === "high" && HIGH_STATES.has(status)) {
     reasons.push("Yüksek INR'yi açıklayabilecek geçici neden işaretlendiği için kalıcı haftalık azalış daha temkinli tutuldu.");
+  }
+
+  if (highBleedingRisk) {
+    if (LOW_STATES.has(status)) {
+      reasons.push("Yüksek kanama riski işaretlendiği için doz artırımı ve yükleme önerisi daha temkinli tutuldu.");
+    } else if (HIGH_STATES.has(status)) {
+      reasons.push("Yüksek kanama riski işaretlendiği için azaltım/takip daha erken ve koruyucu seçildi.");
+    } else {
+      reasons.push("Yüksek kanama riski işaretlendi; terapötik aralıkta gereksiz doz değişiminden kaçınıldı.");
+    }
   }
 
   if (adjustmentPercent === 0) {
@@ -523,7 +581,8 @@ export function analyzeWarfarinCase({
   weeklySchedule,
   intervalPattern,
   transientFactor,
-  activeBleeding
+  activeBleeding,
+  highBleedingRisk
 }) {
   const target = TARGETS[targetKey] ?? TARGETS.standard;
   const errors = [];
@@ -618,14 +677,15 @@ export function analyzeWarfarinCase({
   const adjustmentPercent = chooseDoseAdjustment(
     currentStatus,
     previousStatus,
-    transientFactor
+    transientFactor,
+    highBleedingRisk
   );
   const recommendedWeeklyTablets = roundToStep(
     basisWeeklyDoseTablets * (1 + adjustmentPercent / 100),
     0.5
   );
   const recommendedSchedule = buildBalancedSchedule(recommendedWeeklyTablets, 7);
-  const nextInrDays = chooseNextInrDays(currentStatus, previousStatus, adjustmentPercent);
+  const nextInrDays = chooseNextInrDays(currentStatus, previousStatus, adjustmentPercent, highBleedingRisk);
   const nextInrDate = currentDate ? addDays(currentDate, nextInrDays) : null;
 
   return {
@@ -648,7 +708,8 @@ export function analyzeWarfarinCase({
       currentStatus,
       adjustmentPercent,
       target,
-      currentInr
+      currentInr,
+      highBleedingRisk
     ),
     nextInrDays,
     nextInrDate,
@@ -659,7 +720,8 @@ export function analyzeWarfarinCase({
       adjustmentPercent,
       previousStatus,
       transientFactor,
-      usedHistory
+      usedHistory,
+      highBleedingRisk
     )
   };
 }

@@ -153,11 +153,19 @@
                   <input
                     id="drug-input"
                     type="text"
-                    placeholder="Örnek: flukonazol, amiodaron, rifampisin…"
+                    placeholder="Örnek: metotreksat, leflunomid, steroid, NSAID, flukonazol…"
                   />
+                  <small>
+                    Romatolojik ilaçlar, OTC, bitkisel ürün, takviye ve belirgin diyet/alkol değişimini yazın.
+                  </small>
                 </label>
               </div>
             </details>
+
+            <label class="checkbox-field">
+              <input id="high-bleeding-risk" type="checkbox" />
+              <span>Kanama riski yüksek: yaş &gt;70, düşme, ülser/GİS kanama, karaciğer/böbrek hastalığı, trombosit sorunu, aspirin/NSAID/antiplatelet/steroid kullanımı</span>
+            </label>
 
             <label class="checkbox-field">
               <input id="active-bleeding" type="checkbox" />
@@ -209,39 +217,81 @@
           </div>
           <div class="method-list">
             <p>
-              Uygulama, bakım dozu için toplam haftalık dozun yüzdesel ayarı
-              mantığını kullanan şeffaf bir nomogram yaklaşımı üzerine kuruldu.
+              Uygulama, uzun dönem ve kanamasız erişkin bakım dozunda toplam haftalık doz
+              ayarlama mantığını kullanır. Başlangıç titrasyonu, köprüleme, gebelik, çocuk,
+              aktif kanama ve INR ≥ 5 senaryoları kapsam dışıdır.
             </p>
             <p>
-              Hafif tek sapmada doz değiştirmeden 1–2 hafta içinde tekrar INR
-              bakma seçeneği korunur; daha belirgin sapmalarda haftalık dozda
-              genelde %5–20 değişim önerilir.
+              Hedef aralığa göre hafif tek sapmada dozu koruyup erken tekrar INR bakma
+              seçeneği korunur. Daha belirgin sapmalarda haftalık doz genelde %5-20
+              bandında değiştirilir; yüksek kanama riski işaretlenirse artışlar daha temkinli,
+              yüksek INR takipleri daha erken seçilir.
             </p>
             <p>
-              Önceki INR ve ara dönem gerçek kullanım girildiğinde, uygulama
-              bant içinden daha temkinli veya daha agresif ucu seçmek için trend
-              bilgisi kullanır. Bu kısım, kılavuz bantları üzerine kurulmuş
-              uygulama mantığıdır; ayrı bir doğrulanmış prediktif model değildir.
+              Etkileşim denetimi; CYP2C9/1A2/3A4 inhibitör-indüktörleri, antibiyotikler,
+              antifungaller, NSAID/antiplatelet/SSRI-SNRI gibi INR değişmeden kanamayı
+              artırabilen ilaçları, K vitamini/alkol/bitkisel ürünleri ve sık kullanılan
+              romatolojik ilaç gruplarını uyarı olarak gösterir. Bu liste kapsamlı ilaç veri
+              tabanı değildir.
+            </p>
+            <p>
+              Romatoloji ekleri: kortikosteroidler, azatioprin/6-merkaptopurin, leflunomid,
+              sulfasalazin, metotreksat, allopurinol ve IL-6 inhibitörleri için INR/kanama
+              izlemi uyarısı üretir. Hidroksiklorokin doğrudan güçlü INR etkileşimi olarak
+              değil, ilaç değişimi bağlamında izlem notu olarak gösterilir.
+            </p>
+            <p class="source-note">
+              Kaynak kontrolü: 8 Mayıs 2026.
             </p>
             <ul class="source-list">
               <li>
+                <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=91fa852c-b43d-4a55-983b-74aa6827125d" target="_blank" rel="noreferrer">
+                  DailyMed COUMADIN etiketi: bireyselleştirilmiş doz, INR izlem, CYP/diyet/ilaç etkileşimleri
+                </a>
+              </li>
+              <li>
+                <a href="https://www2.gov.bc.ca/assets/gov/health/about-bc-s-health-care-system/bc-guidelines/warfarin_management.pdf" target="_blank" rel="noreferrer">
+                  BC Guidelines: Warfarin Therapy Management doz ayarlama tablosu
+                </a>
+              </li>
+              <li>
+                <a href="https://health.ucsd.edu/for-health-care-professionals/anticoagulation-guidelines/warfarin/drug-interactions/" target="_blank" rel="noreferrer">
+                  UC San Diego Anticoagulation Clinic: varfarin ilaç etkileşimleri
+                </a>
+              </li>
+              <li>
+                <a href="https://health.ucsd.edu/for-health-care-professionals/anticoagulation-guidelines/warfarin/warfarin-initiation/" target="_blank" rel="noreferrer">
+                  UC San Diego Anticoagulation Clinic: başlangıç ve izlem ilkeleri
+                </a>
+              </li>
+              <li>
                 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3278060/" target="_blank" rel="noreferrer">
-                  CHEST 2012 antitrombbotik kılavuz özeti
+                  CHEST antitrombotik tedavi kılavuzu özeti
                 </a>
               </li>
               <li>
-                <a href="https://sites.uw.edu/anticoag/drugs/warfarin/" target="_blank" rel="noreferrer">
-                  UW Medicine varfarin bakım dozu nomogramı
+                <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=0a4f8671-b632-4cc5-8dc9-6b863e62b467" target="_blank" rel="noreferrer">
+                  DailyMed leflunomid etiketi: warfarin ile INR yakın izlemi
                 </a>
               </li>
               <li>
-                <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9131906/" target="_blank" rel="noreferrer">
-                  Hafif tek sapmada watchful waiting verisi (Blood Advances 2022)
+                <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=606101a0-6244-7eff-e053-2a91aa0acadd" target="_blank" rel="noreferrer">
+                  DailyMed IMURAN etiketi: azatioprin warfarin etkisini azaltabilir
                 </a>
               </li>
               <li>
-                <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8056736/" target="_blank" rel="noreferrer">
-                  Varfarin doz algoritmaları sistematik derleme
+                <a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=47b8c920-4648-604e-e063-6294a90a1f54" target="_blank" rel="noreferrer">
+                  DailyMed allopurinol etiketi: warfarin eklenince INR izlem
+                </a>
+              </li>
+              <li>
+                <a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=2e5365ff-cb2a-4b16-b2c7-e35c6bf2de13" target="_blank" rel="noreferrer">
+                  DailyMed ACTEMRA etiketi: CYP450 substratlarında warfarin etkisi izlemi
+                </a>
+              </li>
+              <li>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/11098339/" target="_blank" rel="noreferrer">
+                  Sulfasalazin-warfarin vaka bildirimi: direnç ve INR düşüşü
                 </a>
               </li>
             </ul>

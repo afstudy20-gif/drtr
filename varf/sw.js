@@ -1,4 +1,4 @@
-const CACHE_NAME = "varfarin-v1.4";
+const CACHE_NAME = "varfarin-v1.6";
 const ASSETS = [
   "/varf/",
   "/varf/styles.css",

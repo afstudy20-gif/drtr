@@ -545,7 +545,8 @@ button:hover {
 .result-banner,
 .warning-banner,
 .success-banner,
-.interaction-banner {
+.interaction-banner,
+.interaction-info {
   border-radius: 20px;
   padding: 18px 20px;
   line-height: 1.6;
@@ -576,6 +577,34 @@ button:hover {
 
 [data-theme="dark"] .interaction-banner {
   color: #d4a845;
+}
+
+.interaction-info {
+  background: rgba(20, 92, 109, 0.07);
+  border: 1px solid rgba(20, 92, 109, 0.14);
+  color: var(--muted);
+}
+
+.interaction-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(180, 120, 40, 0.18);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.interaction-banner small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.interaction-banner em {
+  font-style: normal;
+  font-weight: 700;
 }
 
 .result-actions {
@@ -636,6 +665,11 @@ button:hover {
 
 .method-list p {
   margin: 0 0 12px;
+}
+
+.source-note {
+  color: var(--muted);
+  font-size: 0.84rem;
 }
 
 .source-list a {

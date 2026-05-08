@@ -17,59 +17,294 @@ import {
 // ─── Drug Interactions ──────────────────────────────────────────────
 
 const DRUG_INTERACTIONS = [
-  { name: "flukonazol", direction: "increase", severity: "major", note: "CYP2C9 inhibitörü; INR'yi belirgin artırır" },
-  { name: "metronidazol", direction: "increase", severity: "major", note: "CYP2C9 inhibitörü; INR artışı beklenir" },
-  { name: "kotrimoksazol", direction: "increase", severity: "major", note: "Trimetoprim-sulfametoksazol INR'yi artırır" },
-  { name: "amiodaron", direction: "increase", severity: "major", note: "CYP2C9/1A2 inhibitörü; uzun süreli etki, doz %30–50 azaltılmalı" },
-  { name: "fluoksetin", direction: "increase", severity: "moderate", note: "CYP2C9 inhibitörü; INR izlenmeli" },
-  { name: "eritromisin", direction: "increase", severity: "moderate", note: "CYP3A4 inhibitörü; INR artışı olabilir" },
-  { name: "klaritromisin", direction: "increase", severity: "moderate", note: "CYP3A4 inhibitörü; INR artışı olabilir" },
-  { name: "siprofloksasin", direction: "increase", severity: "moderate", note: "CYP1A2 inhibitörü; INR artabilir" },
-  { name: "ibuprofen", direction: "increase", severity: "moderate", note: "NSAID; kanama riskini artırır, GİS koruması düşünülmeli" },
-  { name: "naproksen", direction: "increase", severity: "moderate", note: "NSAID; kanama riskini artırır" },
-  { name: "diklofenak", direction: "increase", severity: "moderate", note: "NSAID; kanama riskini artırır" },
-  { name: "aspirin", direction: "increase", severity: "moderate", note: "Antiplatelet + antikoagülan; kanama riski artar, endikasyon değerlendirilmeli" },
-  { name: "piroksikam", direction: "increase", severity: "moderate", note: "NSAID; kanama riskini artırır" },
-  { name: "fenofibrat", direction: "increase", severity: "moderate", note: "CYP2C9 inhibitörü; INR izlenmeli" },
-  { name: "omeprazol", direction: "increase", severity: "minor", note: "CYP2C19 inhibitörü; hafif INR artışı olabilir" },
-  { name: "parasetamol", direction: "increase", severity: "minor", note: "Yüksek dozda (>2 g/gün) INR artabilir" },
-  { name: "rifampisin", direction: "decrease", severity: "major", note: "Güçlü CYP indüktörü; INR belirgin düşer, doz 2–3 kat artırılmalı" },
-  { name: "karbamazepin", direction: "decrease", severity: "major", note: "CYP3A4/2C9 indüktörü; INR düşmesi beklenir" },
-  { name: "fenitoin", direction: "decrease", severity: "major", note: "CYP indüktörü; INR düşer" },
-  { name: "fenobarbital", direction: "decrease", severity: "moderate", note: "CYP indüktörü; INR azalabilir" },
-  { name: "kolestiramin", direction: "decrease", severity: "moderate", note: "Varfarin emilimini azaltır; en az 4 saat arayla alınmalı" },
-  { name: "sukralfat", direction: "decrease", severity: "minor", note: "Varfarin emilimini hafif azaltabilir" },
-  { name: "k vitamini", direction: "decrease", severity: "major", note: "Doğrudan antagonist; diyet değişiklikleri INR'yi etkiler" },
-  { name: "st john", direction: "decrease", severity: "major", note: "St. John's Wort (sarıkantaron); CYP indüktörü, INR düşer" },
-  { name: "sarikantaron", direction: "decrease", severity: "major", note: "CYP indüktörü; INR belirgin düşer" }
+  {
+    name: "amiodaron",
+    aliases: ["amiodaron", "cordarone"],
+    direction: "increase",
+    severity: "major",
+    mechanism: "CYP2C9/1A2/3A4 inhibisyonu",
+    note: "INR yavaş yükselir; etki 6-8 haftaya yayılabilir.",
+    action: "Yakın INR izlemi; seri ayarlamalarla %25-50 bakım dozu azaltımı gerekebilir."
+  },
+  {
+    name: "flukonazol",
+    aliases: ["flukonazol", "fluconazole"],
+    direction: "increase",
+    severity: "major",
+    mechanism: "CYP2C9 inhibisyonu",
+    note: "INR artışı belirgin olabilir.",
+    action: "Tek dozda bir doz atlama düşünülebilir; uzun kürde %25-50 azaltım ve yakın INR."
+  },
+  {
+    name: "metronidazol",
+    aliases: ["metronidazol", "flagyl"],
+    direction: "increase",
+    severity: "major",
+    mechanism: "CYP2C9 inhibisyonu",
+    note: "INR artışı beklenir.",
+    action: "%25-50 azaltım gerekebilir; INR kısa aralıkla kontrol edilmeli."
+  },
+  {
+    name: "TMP-SMX",
+    aliases: ["kotrimoksazol", "trimetoprim", "sulfametoksazol", "sulfamethoxazole", "bactrim", "septra", "tmp-smx"],
+    direction: "increase",
+    severity: "major",
+    mechanism: "CYP2C9 inhibisyonu + barsak florası etkisi",
+    note: "INR ve kanama riski belirgin artabilir.",
+    action: "%25-50 azaltım gerekebilir; antibiyotik başlama/bitirme sonrası yakın INR."
+  },
+  {
+    name: "rifampisin",
+    aliases: ["rifampisin", "rifampin", "rifadin"],
+    direction: "decrease",
+    severity: "major",
+    mechanism: "Güçlü CYP indüksiyonu",
+    note: "INR belirgin düşebilir; etki başlarken ve kesilince gecikmeli değişir.",
+    action: "Doz gereksinimi 2-5 kat artabilir; kesilince hızlı doz düşürme ve sık INR gerekir."
+  },
+  {
+    name: "karbamazepin",
+    aliases: ["karbamazepin", "carbamazepine", "tegretol"],
+    direction: "decrease",
+    severity: "major",
+    mechanism: "CYP indüksiyonu",
+    note: "INR düşebilir.",
+    action: "Başlama/kesme sonrası sık INR; bakım dozu ihtiyacı değişebilir."
+  },
+  {
+    name: "fenitoin",
+    aliases: ["fenitoin", "phenytoin", "epdantoin"],
+    direction: "mixed",
+    severity: "major",
+    mechanism: "Kompleks protein bağlanma ve CYP etkisi",
+    note: "Başta INR artabilir, uzamış kullanımda düşebilir; fenitoin düzeyi de etkilenebilir.",
+    action: "Yakın INR ve klinik izlem; tek yönlü otomatik doz varsayımı yapmayın."
+  },
+  {
+    name: "florokinolon",
+    aliases: ["siprofloksasin", "ciprofloxacin", "levofloksasin", "levofloxacin", "moksifloksasin", "moxifloxacin", "florokinolon", "fluoroquinolone"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "CYP/intestinal flora ve hastalık etkisi",
+    note: "INR artabilir; her hastada klinik olarak anlamlı olmayabilir.",
+    action: "Antibiyotik süresince ve kesilince INR izlemi."
+  },
+  {
+    name: "makrolid",
+    aliases: ["eritromisin", "erythromycin", "klaritromisin", "clarithromycin", "azitromisin", "azithromycin", "makrolid", "macrolide"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "CYP3A4/intestinal flora etkisi",
+    note: "INR artabilir.",
+    action: "Başlama/kesme sonrası INR kontrolü; klinik kanama bulguları sorgulanmalı."
+  },
+  {
+    name: "doksisiklin",
+    aliases: ["doksisiklin", "doxycycline"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "Protein bağlanma/intestinal flora etkisi",
+    note: "INR artabilir; her hastada belirgin olmayabilir.",
+    action: "Sistemik hastalık varsa daha yakın INR izlemi."
+  },
+  {
+    name: "NSAID",
+    aliases: ["ibuprofen", "naproksen", "naproxen", "diklofenak", "diclofenac", "piroksikam", "piroxicam", "indometazin", "indomethacin", "meloksikam", "meloxicam", "etodolak", "etodolac", "celecoxib", "selekoksib", "nsaid", "nsaii"],
+    direction: "bleeding",
+    severity: "major",
+    mechanism: "Platelet/GİS hasarı; INR değişmeden kanama artabilir",
+    note: "Kanama riski artar.",
+    action: "Mümkünse kaçın; zorunluysa endikasyon, mide koruma ve yakın kanama izlemi."
+  },
+  {
+    name: "aspirin/antiplatelet",
+    aliases: ["aspirin", "asa", "asetilsalisilik", "klopidogrel", "clopidogrel", "prasugrel", "tikagrelor", "ticagrelor", "antiplatelet"],
+    direction: "bleeding",
+    severity: "major",
+    mechanism: "Antiplatelet + antikoagülan etki",
+    note: "INR değişmeden kanama riski artabilir.",
+    action: "Endikasyon doğrulanmalı; gereksiz kombinasyondan kaçınılmalı."
+  },
+  {
+    name: "SSRI/SNRI",
+    aliases: ["fluoksetin", "fluoxetine", "sertralin", "sertraline", "paroksetin", "paroxetine", "sitalopram", "citalopram", "essitalopram", "escitalopram", "venlafaksin", "venlafaxine", "duloksetin", "duloxetine", "ssri", "snri"],
+    direction: "bleeding",
+    severity: "moderate",
+    mechanism: "Platelet serotonin etkisi; bazı ajanlarda CYP etkisi",
+    note: "Kanama riski artabilir; bazı ajanlar INR'yi yükseltebilir.",
+    action: "Başlama/kesme sonrası INR ve kanama bulguları izlenmeli."
+  },
+  {
+    name: "parasetamol",
+    aliases: ["parasetamol", "acetaminophen", "asetaminofen", "apap"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "Doza bağlı INR artışı",
+    note: "Yüksek doz veya birkaç gün üst üste kullanım INR'yi artırabilir.",
+    action: "Günlük 2000 mg üstünden kaçın; gerekiyorsa INR kontrolü."
+  },
+  {
+    name: "alkol",
+    aliases: ["alkol", "alcohol", "etanol"],
+    direction: "mixed",
+    severity: "moderate",
+    mechanism: "Akut alım INR artırabilir, kronik yoğun kullanım azaltabilir",
+    note: "Değişken alım INR'yi oynatır.",
+    action: "Aşırı ve düzensiz alımdan kaçın; belirgin değişiklikte INR kontrolü."
+  },
+  {
+    name: "K vitamini",
+    aliases: ["k vitamini", "vitamin k", "fitonadion", "phytonadione"],
+    direction: "decrease",
+    severity: "major",
+    mechanism: "Farmakodinamik antagonizma",
+    note: "Yüksek veya değişken K vitamini alımı INR'yi düşürebilir.",
+    action: "Diyet ve takviyelerde ani değişimden kaçın; değişimde INR sıklaştırılır."
+  },
+  {
+    name: "sarıkantaron",
+    aliases: ["sarikantaron", "sarıkantaron", "st john", "st. john", "hypericum"],
+    direction: "decrease",
+    severity: "major",
+    mechanism: "CYP/P-gp indüksiyonu",
+    note: "INR düşebilir.",
+    action: "Birlikte kullanım genellikle kaçınılacak grup; başlama/kesme sonrası sık INR."
+  },
+  {
+    name: "kolestiramin",
+    aliases: ["kolestiramin", "cholestyramine"],
+    direction: "decrease",
+    severity: "moderate",
+    mechanism: "Emilim azalması",
+    note: "Varfarin emilimini azaltabilir.",
+    action: "Dozları ayırın; INR yanıtına göre izleyin."
+  },
+  {
+    name: "tiroid replasmanı",
+    aliases: ["levotiroksin", "levothyroxine", "tiroksin", "thyroxine", "thyroid"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "Pıhtılaşma faktörü döngüsü değişimi",
+    note: "Tiroid replasmanı veya tiroid durum değişikliği INR'yi artırabilir.",
+    action: "Başlama/doz değişimi sonrası INR izlemi."
+  },
+  {
+    name: "kortikosteroid",
+    aliases: ["prednizon", "prednisone", "prednizolon", "prednisolone", "metilprednizolon", "methylprednisolone", "deksametazon", "dexamethasone", "kortizon", "cortisone", "steroid", "glukokortikoid", "glucocorticoid"],
+    direction: "mixed",
+    severity: "major",
+    mechanism: "VKA yanıtı değişebilir; GİS kanama ve doku kırılganlığı artabilir",
+    note: "INR artabilir veya azalabilir; GİS kanama riski eklenir.",
+    action: "Başlama, doz değişimi ve kesme döneminde INR ve kanama bulguları yakın izlenmeli."
+  },
+  {
+    name: "azatioprin / 6-MP",
+    aliases: ["azatioprin", "azathioprine", "imuran", "merkaptopurin", "mercaptopurine", "6-mp", "6 mp"],
+    direction: "decrease",
+    severity: "major",
+    mechanism: "Warfarinin hipoprotrombinemik etkisini azaltabilir",
+    note: "INR düşebilir; kesilince tersine INR yükselip kanama riski doğabilir.",
+    action: "Başlama/kesme sonrası sık INR; warfarin dozu yalnız INR yanıtına göre ayarlanmalı."
+  },
+  {
+    name: "leflunomid",
+    aliases: ["leflunomid", "leflunomide", "arava", "teriflunomid", "teriflunomide"],
+    direction: "mixed",
+    severity: "major",
+    mechanism: "Teriflunomid ve warfarin etkileşimi; etki yönü kaynaklarda değişken bildirildi",
+    note: "INR azalması veya artışı görülebilir.",
+    action: "Başlama/kesme ve kolestiramin eliminasyon protokolünde INR yakın izlenmeli."
+  },
+  {
+    name: "sulfasalazin",
+    aliases: ["sulfasalazin", "sulfasalazine", "sulphasalazine", "salazopyrin"],
+    direction: "mixed",
+    severity: "moderate",
+    mechanism: "Vaka bildirimlerinde INR artışı veya warfarin direnci",
+    note: "Etki yönü öngörülemez; ayrıca kan sayımı/karaciğer izlem gerektirir.",
+    action: "Başlama/kesme sonrası INR kontrolü; morarma/kanama veya subterapötik INR açısından izlem."
+  },
+  {
+    name: "metotreksat",
+    aliases: ["metotreksat", "methotrexate", "mtx"],
+    direction: "bleeding",
+    severity: "moderate",
+    mechanism: "Protein bağlanma ve kemik iliği/trombosit toksisitesi klinik riski artırabilir",
+    note: "Doğrudan INR yönü tutarlı değildir; NSAID/aspirin eşliği riski büyütür.",
+    action: "INR yanında tam kan sayımı, karaciğer/böbrek fonksiyonu ve kanama bulguları izlenmeli."
+  },
+  {
+    name: "allopurinol",
+    aliases: ["allopurinol", "allopurinol", "zyloric"],
+    direction: "increase",
+    severity: "moderate",
+    mechanism: "Kumarin antikoagülan etkisini artırabilir; mekanizma net değil",
+    note: "INR artışı görülebilir.",
+    action: "Allopurinol eklenince INR sık değerlendirilmeli ve warfarin dozu INR'ye göre ayarlanmalı."
+  },
+  {
+    name: "IL-6 inhibitörü",
+    aliases: ["tocilizumab", "tosilizumab", "actemra", "sarilumab", "kevzara", "il-6", "il6"],
+    direction: "decrease",
+    severity: "moderate",
+    mechanism: "IL-6 blokajı CYP450 aktivitesini artırıp CYP substratlarının etkisini azaltabilir",
+    note: "Warfarin etkisi azalabilir; kesilince ters yönde değişebilir.",
+    action: "Başlama veya kesmede INR izlemi; doz, ölçülen INR yanıtına göre ayarlanır."
+  },
+  {
+    name: "hidroksiklorokin",
+    aliases: ["hidroksiklorokin", "hydroxychloroquine", "plaquenil", "hcq"],
+    direction: "monitor",
+    severity: "minor",
+    mechanism: "Doğrudan warfarin-INR etkileşimi için güçlü sinyal yok",
+    note: "Tek başına yüksek riskli warfarin etkileşimi olarak işaretlenmez.",
+    action: "Yeni başlama/kesme, eş NSAID/steroid/antibiyotik veya hastalık alevlenmesinde INR izlenmeli."
+  }
 ];
 
-function checkDrugInteractions(drugText) {
-  if (!drugText || !drugText.trim()) return [];
-
-  const normalized = drugText.toLowerCase()
+function normalizeDrugText(text) {
+  return String(text)
+    .toLowerCase()
     .replace(/[çÇ]/g, "c")
     .replace(/[şŞ]/g, "s")
     .replace(/[ğĞ]/g, "g")
     .replace(/[İ]/g, "i")
     .replace(/[ıI]/g, "i")
     .replace(/[öÖ]/g, "o")
-    .replace(/[üÜ]/g, "u");
+    .replace(/[üÜ]/g, "u")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-  const terms = normalized.split(/[,;]+/).map((t) => t.trim()).filter(Boolean);
+function interactionMatches(term, drug) {
+  const normalizedAliases = [drug.name, ...(drug.aliases ?? [])].map(normalizeDrugText);
+  return normalizedAliases.some((alias) => {
+    if (alias.length < 4 || term.length < 4) return term === alias;
+    return term.includes(alias) || alias.includes(term);
+  });
+}
+
+function checkDrugInteractions(drugText) {
+  if (!drugText || !drugText.trim()) return [];
+
+  const terms = normalizeDrugText(drugText)
+    .split(/[,;\n]+/)
+    .map((term) => term.trim())
+    .filter(Boolean);
   const found = [];
 
   for (const term of terms) {
     for (const drug of DRUG_INTERACTIONS) {
-      if (term.includes(drug.name) || drug.name.includes(term)) {
-        if (!found.some((f) => f.name === drug.name)) {
-          found.push(drug);
-        }
+      if (interactionMatches(term, drug) && !found.some((item) => item.name === drug.name)) {
+        found.push(drug);
       }
     }
   }
 
-  return found;
+  return found.sort((left, right) => {
+    const rank = { major: 0, moderate: 1, minor: 2 };
+    return rank[left.severity] - rank[right.severity];
+  });
 }
 
 // ─── Dose History (localStorage) ────────────────────────────────────
@@ -445,7 +680,48 @@ function buildTrendHtml(currentInr, previousInr) {
   return `<span class="inr-trend">(${formatNumber(previousInr, 1)} <span class="trend-arrow ${cls}">${arrow}</span> ${formatNumber(currentInr, 1)})</span>`;
 }
 
-function renderResult(result, tabletStrengthMg, interactions) {
+function severityLabel(severity) {
+  if (severity === "major") return "majör";
+  if (severity === "moderate") return "orta";
+  return "minör";
+}
+
+function directionLabel(direction) {
+  if (direction === "increase") return "INR artışı";
+  if (direction === "decrease") return "INR düşüşü";
+  if (direction === "bleeding") return "kanama riski";
+  if (direction === "monitor") return "izlem";
+  return "değişken etki";
+}
+
+function renderInteractionHtml(interactions, hasDrugText) {
+  if (interactions.length > 0) {
+    return `<div class="interaction-banner">
+      <strong>&#9888; İlaç / takviye etkileşim uyarısı</strong>
+      <ul class="reason-list">
+        ${interactions.map((drug) => `
+          <li>
+            <strong>${drug.name}</strong>
+            <span class="interaction-tag">${severityLabel(drug.severity)} / ${directionLabel(drug.direction)}</span><br />
+            ${drug.note} <em>${drug.action}</em>
+            <small>${drug.mechanism}</small>
+          </li>
+        `).join("")}
+      </ul>
+      <div class="source-note">Yeni başlanan, kesilen veya düzensiz alınan her ilaçta INR takibini sıklaştırın.</div>
+    </div>`;
+  }
+
+  if (hasDrugText) {
+    return `<div class="interaction-info">
+      Girilen ilaçlarda yerleşik listede yüksek-risk eşleşme bulunmadı. Liste tüm etkileşimleri kapsamaz; yeni başlama/kesme, antibiyotik, antifungal, NSAID, antiplatelet, takviye veya belirgin diyet değişiminde INR takibini sıklaştırın.
+    </div>`;
+  }
+
+  return "";
+}
+
+function renderResult(result, tabletStrengthMg, interactions, hasDrugText) {
   const adjustedText =
     result.adjustmentPercent === 0
       ? "Doz degisikligi yok"
@@ -466,14 +742,7 @@ function renderResult(result, tabletStrengthMg, interactions) {
 
   const trendHtml = buildTrendHtml(result.currentInr, result.previousInr);
 
-  const interactionsHtml = interactions.length > 0
-    ? `<div class="interaction-banner">
-        <strong>&#9888; Ilac Etkilesim Uyarisi</strong>
-        <ul class="reason-list">
-          ${interactions.map((d) => `<li><strong>${d.name}</strong> (${d.severity === "major" ? "major" : d.severity === "moderate" ? "orta" : "minOr"}): ${d.note}</li>`).join("")}
-        </ul>
-      </div>`
-    : "";
+  const interactionsHtml = renderInteractionHtml(interactions, hasDrugText);
 
   resultRoot.innerHTML = `
     <div class="result-panel">
@@ -590,6 +859,7 @@ function handleSubmit(event) {
   const intervalPattern = document.querySelector("#interval-pattern").value;
   const transientFactor = document.querySelector("#transient-factor").value;
   const activeBleeding = document.querySelector("#active-bleeding").checked;
+  const highBleedingRisk = document.querySelector("#high-bleeding-risk").checked;
   const weeklySchedule = readWeeklySchedule();
 
   const result = analyzeWarfarinCase({
@@ -602,7 +872,8 @@ function handleSubmit(event) {
     weeklySchedule,
     intervalPattern,
     transientFactor,
-    activeBleeding
+    activeBleeding,
+    highBleedingRisk
   });
 
   if (!result.ok) {
@@ -616,7 +887,7 @@ function handleSubmit(event) {
   }
 
   const interactions = checkDrugInteractions(drugInput.value);
-  renderResult(result, tabletStrengthMg, interactions);
+  renderResult(result, tabletStrengthMg, interactions, Boolean(drugInput.value.trim()));
 
   addHistoryEntry({
     date: currentDate,
