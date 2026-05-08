@@ -238,6 +238,21 @@
       margin-bottom: 5px;
       color: var(--text-secondary);
     }
+    .mechanism-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 6px 0 8px;
+    }
+    .mech-tag {
+      border-radius: 999px;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+    }
     .muted { color: var(--text-muted); }
 
     .section {
@@ -258,6 +273,7 @@
       color: var(--text-secondary);
     }
     .section ul { margin-left: 18px; margin-top: 8px; }
+    .source-list a { color: var(--teal); font-weight: 600; }
     .warn {
       margin-top: 10px;
       border-left: 4px solid #F59E0B;
@@ -346,6 +362,13 @@
     <section class="section">
       <h3 id="srcTitle">Kaynak yaklaşımı</h3>
       <p id="srcText">Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.</p>
+      <ul class="source-list">
+        <li><a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=33752f5d-2ca7-45c0-8292-b54742219b97" target="_blank" rel="noreferrer">DailyMed ELIQUIS etiketi</a></li>
+        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=10db92f9-2300-4a80-836b-673e1ae91610" target="_blank" rel="noreferrer">DailyMed XARELTO etiketi</a></li>
+        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1a214cf1-b41e-46f6-8f24-e3637e6d2612" target="_blank" rel="noreferrer">DailyMed PRADAXA etiketi</a></li>
+        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e77d3400-56ad-11e3-949a-0800200c9a66" target="_blank" rel="noreferrer">DailyMed SAVAYSA etiketi</a></li>
+        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=91fa852c-b43d-4a55-983b-74aa6827125d" target="_blank" rel="noreferrer">DailyMed COUMADIN etiketi</a></li>
+      </ul>
     </section>
 
     <section class="section">
@@ -377,7 +400,7 @@
         inputTitle: 'İlaç Seçimi',
         anticoagLabel: 'Antikoagülan',
         medSearchLabel: 'Eşlik eden ilaç ara',
-        medSearchPh: 'Örn: amiodaron, flukonazol, rifampisin...',
+        medSearchPh: 'Örn: ritonavir, ketokonazol, SSRI, steroid, metotreksat...',
         medListLabel: 'Eşlik eden ilaçlar',
         resultTitle: 'Etkileşim Sonucu',
         summaryLabel: 'Genel risk',
@@ -386,6 +409,7 @@
         summaryMod: 'Orta risk etkileşim var',
         summaryLow: 'Düşük risk etkileşim var',
         mechanism: 'Mekanizma',
+        mechanismDetail: 'Mekanizma detayı',
         expected: 'Beklenen etki',
         action: 'Öneri',
         noResult: 'Seçili ilaçlarda listelenmiş belirgin bir etkileşim bulunamadı. Klinik bağlama göre standart izlem devam edilmelidir.',
@@ -400,7 +424,7 @@
         ],
         warnText: 'Uyarı: Böbrek fonksiyonu, yaş, kanama öyküsü, eş zamanlı antiplatelet kullanımı ve prosedür planı risk düzeyini ciddi ölçüde değiştirebilir.',
         srcTitle: 'Kaynak yaklaşımı',
-        srcText: 'Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.',
+        srcText: 'Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. DOAC uyarıları güçlü CYP3A4/P-gp inhibitörleri ve indükleyicileri, antiplatelet/NSAID/SSRI-SNRI kanama riski ve renal fonksiyon bağlamına göre özetlenir. Warfarin uyarıları INR artışı/düşüşü ve farmakodinamik kanama riskine göre tarama amaçlıdır.',
         guideTitle: 'Detaylı kullanım rehberi',
         guideText: 'Bu aracı hasta güvenliği odaklı adımlarla kullanmak için kapsamlı rehbere geçin:',
         guideLink: 'Antikoagülan Etkileşim Kontrolü Nasıl Kullanılır?'
@@ -413,7 +437,7 @@
         inputTitle: 'Medication Selection',
         anticoagLabel: 'Anticoagulant',
         medSearchLabel: 'Search concomitant drug',
-        medSearchPh: 'e.g., amiodarone, fluconazole, rifampicin...',
+        medSearchPh: 'e.g., ritonavir, ketoconazole, SSRI, steroid, methotrexate...',
         medListLabel: 'Concomitant drugs',
         resultTitle: 'Interaction Result',
         summaryLabel: 'Overall risk',
@@ -422,6 +446,7 @@
         summaryMod: 'Moderate-risk interaction detected',
         summaryLow: 'Low-risk interaction detected',
         mechanism: 'Mechanism',
+        mechanismDetail: 'Mechanism detail',
         expected: 'Expected effect',
         action: 'Suggested action',
         noResult: 'No major listed interaction was found for selected drugs. Continue standard monitoring according to clinical context.',
@@ -436,7 +461,7 @@
         ],
         warnText: 'Warning: renal function, age, bleeding history, concurrent antiplatelet therapy, and procedure planning can significantly alter real risk.',
         srcTitle: 'Source approach',
-        srcText: 'Classification is simplified into practical high/moderate/low categories using contemporary antithrombotic guideline principles and prescribing-information logic. For final decisions, consult current SmPC, institutional protocol, and specialist input when needed.',
+        srcText: 'Classification is simplified into practical high/moderate/low categories using contemporary antithrombotic guideline principles and prescribing-information logic. DOAC alerts summarize strong CYP3A4/P-gp inhibitors and inducers, antiplatelet/NSAID/SSRI-SNRI bleeding risk, and renal-context issues. Warfarin alerts screen for INR increase/decrease and pharmacodynamic bleeding risk.',
         guideTitle: 'Detailed usage guide',
         guideText: 'Open the full guide for a patient-safety-focused step-by-step workflow:',
         guideLink: 'How to Use the Anticoagulant Interaction Checker'
@@ -445,22 +470,55 @@
 
     var meds = [
       { id: 'amiodarone', tr: 'Amiodaron', en: 'Amiodarone' },
+      { id: 'dronedarone', tr: 'Dronedaron', en: 'Dronedarone' },
+      { id: 'quinidine', tr: 'Kinidin', en: 'Quinidine' },
+      { id: 'ranolazine', tr: 'Ranolazin', en: 'Ranolazine' },
       { id: 'fluconazole', tr: 'Flukonazol', en: 'Fluconazole' },
       { id: 'itraconazole', tr: 'Itrakonazol/Ketokonazol', en: 'Itraconazole/Ketoconazole' },
+      { id: 'posaconazole', tr: 'Posakonazol/Vorikonazol', en: 'Posaconazole/Voriconazole' },
+      { id: 'ritonavir', tr: 'Ritonavir/Cobicistat', en: 'Ritonavir/Cobicistat' },
       { id: 'rifampicin', tr: 'Rifampisin', en: 'Rifampicin' },
       { id: 'carbamazepine', tr: 'Karbamazepin', en: 'Carbamazepine' },
       { id: 'phenytoin', tr: 'Fenitoin', en: 'Phenytoin' },
+      { id: 'phenobarbital', tr: 'Fenobarbital/Primidon', en: 'Phenobarbital/Primidone' },
+      { id: 'oxcarbazepine', tr: 'Okskarbazepin', en: 'Oxcarbazepine' },
       { id: 'verapamil', tr: 'Verapamil', en: 'Verapamil' },
       { id: 'diltiazem', tr: 'Diltiazem', en: 'Diltiazem' },
       { id: 'clarithromycin', tr: 'Klaritromisin', en: 'Clarithromycin' },
       { id: 'erythromycin', tr: 'Eritromisin', en: 'Erythromycin' },
+      { id: 'azithromycin', tr: 'Azitromisin', en: 'Azithromycin' },
       { id: 'metronidazole', tr: 'Metronidazol', en: 'Metronidazole' },
       { id: 'tmp_smx', tr: 'TMP-SMX', en: 'TMP-SMX' },
+      { id: 'fluoroquinolone', tr: 'Florokinolon (sipro/levo/moksi)', en: 'Fluoroquinolone (cipro/levo/moxi)' },
+      { id: 'doxycycline', tr: 'Doksisiklin', en: 'Doxycycline' },
+      { id: 'cephalosporin', tr: 'Sefalosporinler', en: 'Cephalosporins' },
       { id: 'nsaid', tr: 'NSAID (ibuprofen, diklofenak vb.)', en: 'NSAID (ibuprofen, diclofenac etc.)' },
+      { id: 'celecoxib', tr: 'Celecoxib', en: 'Celecoxib' },
+      { id: 'acetaminophen', tr: 'Parasetamol yüksek doz', en: 'High-dose acetaminophen' },
       { id: 'aspirin', tr: 'Aspirin', en: 'Aspirin' },
       { id: 'clopidogrel', tr: 'Klopidogrel', en: 'Clopidogrel' },
       { id: 'ticagrelor', tr: 'Ticagrelor', en: 'Ticagrelor' },
-      { id: 'stjohn', tr: 'Sarı kantaron (St. John’s wort)', en: 'St. John\'s wort' }
+      { id: 'prasugrel', tr: 'Prasugrel', en: 'Prasugrel' },
+      { id: 'ssri_snri', tr: 'SSRI/SNRI antidepresan', en: 'SSRI/SNRI antidepressant' },
+      { id: 'steroid', tr: 'Kortikosteroid', en: 'Corticosteroid' },
+      { id: 'heparin', tr: 'Heparin/LMWH/fondaparinuks', en: 'Heparin/LMWH/fondaparinux' },
+      { id: 'thrombolytic', tr: 'Trombolitik/fibrinolitik', en: 'Thrombolytic/fibrinolytic' },
+      { id: 'omeprazole', tr: 'Omeprazol/esomeprazol', en: 'Omeprazole/esomeprazole' },
+      { id: 'cimetidine', tr: 'Simetidin', en: 'Cimetidine' },
+      { id: 'cholestyramine', tr: 'Kolestiramin', en: 'Cholestyramine' },
+      { id: 'vitamin_k', tr: 'K vitamini / yeşil diyet artışı', en: 'Vitamin K / increased greens' },
+      { id: 'alcohol', tr: 'Alkol düzensiz/aşırı kullanım', en: 'Irregular/heavy alcohol' },
+      { id: 'methotrexate', tr: 'Metotreksat', en: 'Methotrexate' },
+      { id: 'leflunomide', tr: 'Leflunomid/Teriflunomid', en: 'Leflunomide/Teriflunomide' },
+      { id: 'azathioprine', tr: 'Azatioprin/6-MP', en: 'Azathioprine/6-MP' },
+      { id: 'sulfasalazine', tr: 'Sulfasalazin', en: 'Sulfasalazine' },
+      { id: 'allopurinol', tr: 'Allopurinol', en: 'Allopurinol' },
+      { id: 'tocilizumab', tr: 'Tocilizumab/Sarilumab', en: 'Tocilizumab/Sarilumab' },
+      { id: 'cyclosporine', tr: 'Siklosporin/Takrolimus', en: 'Cyclosporine/Tacrolimus' },
+      { id: 'ginkgo_garlic', tr: 'Ginkgo / sarımsak / zencefil', en: 'Ginkgo / garlic / ginger' },
+      { id: 'cranberry', tr: 'Kızılcık/cranberry ürünü', en: 'Cranberry product' },
+      { id: 'stjohn', tr: 'Sarı kantaron (St. John’s wort)', en: 'St. John\'s wort' },
+      { id: 'grapefruit', tr: 'Greyfurt', en: 'Grapefruit' }
     ];
 
     var db = {
@@ -539,6 +597,173 @@
       }
     };
 
+    var anticoags = ['warfarin', 'apixaban', 'rivaroxaban', 'dabigatran', 'edoxaban'];
+    var doacs = ['apixaban', 'rivaroxaban', 'dabigatran', 'edoxaban'];
+    var xaDoacs = ['apixaban', 'rivaroxaban', 'edoxaban'];
+
+    function addInteraction(targets, medId, level, tr, en) {
+      targets.forEach(function(target) {
+        if (!db[target]) db[target] = {};
+        if (!db[target][medId]) db[target][medId] = { level: level, tr: tr, en: en };
+      });
+    }
+
+    addInteraction(['warfarin'], 'dronedarone', 'mod', ['CYP/P-gp inhibisyonu', 'INR artışı veya kanama eğilimi olabilir', 'Başlama/kesmede INR kontrolünü öne çekin'], ['CYP/P-gp inhibition', 'INR increase or bleeding tendency may occur', 'Advance INR follow-up when starting/stopping']);
+    addInteraction(['warfarin'], 'quinidine', 'mod', ['Metabolizma/P-gp etkisi', 'INR artışı bildirilebilir', 'Yakın INR ve kanama izlemi'], ['Metabolism/P-gp effect', 'INR increase may occur', 'Close INR and bleeding surveillance']);
+    addInteraction(['warfarin'], 'ranolazine', 'low', ['CYP/P-gp etkileşim potansiyeli', 'INR değişimi genelde öngörülemez', 'Yeni başlama/kesmede INR izleyin'], ['CYP/P-gp interaction potential', 'INR change is usually unpredictable', 'Monitor INR when starting/stopping']);
+    addInteraction(['warfarin'], 'posaconazole', 'high', ['Güçlü azol/CYP inhibisyonu', 'INR belirgin artabilir', 'Alternatif düşünün; zorunluysa sık INR ve doz ayarı'], ['Strong azole/CYP inhibition', 'Marked INR increase possible', 'Consider alternative; if unavoidable use frequent INR and dose adjustment']);
+    addInteraction(['warfarin'], 'ritonavir', 'high', ['CYP inhibisyon/indüksiyon etkisi değişken', 'INR artabilir veya düşebilir', 'Antiviral başlama/kesmede yoğun INR takibi yapın'], ['Variable CYP inhibition/induction', 'INR may increase or decrease', 'Use intensive INR monitoring when starting/stopping antiviral therapy']);
+    addInteraction(['warfarin'], 'phenobarbital', 'high', ['Güçlü enzim indüksiyonu', 'INR düşer, tromboz riski artabilir', 'Alternatif düşünün veya sık INR ile titrasyon yapın'], ['Strong enzyme induction', 'INR decreases and thrombosis risk may rise', 'Consider alternative or titrate with frequent INR']);
+    addInteraction(['warfarin'], 'oxcarbazepine', 'mod', ['Enzim indüksiyonu', 'INR düşebilir', 'INR kontrolünü sıklaştırın'], ['Enzyme induction', 'INR may decrease', 'Increase INR monitoring']);
+    addInteraction(['warfarin'], 'azithromycin', 'low', ['Antibiyotik/hastalık etkisi', 'INR artışı nadiren görülebilir', 'Klinik risk varsa INR kontrolünü öne çekin'], ['Antibiotic/illness effect', 'INR increase can occur rarely', 'Advance INR follow-up if clinical risk is present']);
+    addInteraction(['warfarin'], 'fluoroquinolone', 'mod', ['CYP/intestinal flora ve hastalık etkisi', 'INR artabilir', 'Antibiyotik süresince ve kesilince INR izleyin'], ['CYP/gut flora and illness effect', 'INR may rise', 'Monitor INR during and after antibiotic course']);
+    addInteraction(['warfarin'], 'doxycycline', 'mod', ['Protein bağlanma/flora etkisi', 'INR artabilir', 'Kısa aralıkla INR ve kanama izlemi'], ['Protein-binding/gut flora effect', 'INR may rise', 'Short-interval INR and bleeding monitoring']);
+    addInteraction(['warfarin'], 'cephalosporin', 'mod', ['K vitamini/flora etkisi', 'INR artabilir, özellikle beslenme bozuksa', 'Kür sırasında INR izlemi düşünün'], ['Vitamin K/gut flora effect', 'INR may rise, especially with poor intake', 'Consider INR monitoring during course']);
+    addInteraction(['warfarin'], 'celecoxib', 'mod', ['COX-2/kanama ve CYP2C9 etkisi', 'Kanama riski ve INR artışı olabilir', 'En düşük doz/kısa süre; INR ve GİS kanama izlemi'], ['COX-2 bleeding and CYP2C9 effect', 'Bleeding risk and INR increase may occur', 'Lowest dose/short duration; monitor INR and GI bleeding']);
+    addInteraction(['warfarin'], 'acetaminophen', 'mod', ['Doza bağlı INR etkisi', 'Günlerce yüksek dozda INR artabilir', '2 g/gün üstü kullanımda INR kontrolü planlayın'], ['Dose-related INR effect', 'Several days of high-dose use may raise INR', 'Plan INR check when exceeding 2 g/day']);
+    addInteraction(['warfarin'], 'ssri_snri', 'mod', ['Platelet serotonin etkisi', 'INR değişmeden kanama artabilir; bazı ajanlarda INR artabilir', 'Kanama bulguları ve INR izleyin'], ['Platelet serotonin effect', 'Bleeding can increase without INR change; some agents may raise INR', 'Monitor bleeding signs and INR']);
+    addInteraction(['warfarin'], 'steroid', 'mod', ['VKA yanıtı ve GİS kanama riski', 'INR değişebilir, GİS kanama riski artar', 'Başlama/doz değişimi/kesmede INR ve kanama izlemi'], ['VKA response and GI bleeding risk', 'INR may change and GI bleeding risk increases', 'Monitor INR and bleeding when starting/changing/stopping']);
+    addInteraction(['warfarin'], 'heparin', 'high', ['Kombine antikoagülasyon', 'Kanama riski belirgin artar', 'Yalnız köprü/akut endikasyonla ve protokolle kullanın'], ['Combined anticoagulation', 'Bleeding risk markedly increases', 'Use only for bridging/acute indications under protocol']);
+    addInteraction(['warfarin'], 'thrombolytic', 'high', ['Fibrinoliz + antikoagülasyon', 'Majör kanama riski çok yüksek', 'Acil/uzman protokolü dışında birlikte kullanmayın'], ['Fibrinolysis plus anticoagulation', 'Very high major bleeding risk', 'Avoid outside emergency/specialist protocol']);
+    addInteraction(['warfarin'], 'omeprazole', 'low', ['CYP2C19 etkisi', 'Hafif INR artışı olabilir', 'Başlama/kesmede rutin INR takibini aksatmayın'], ['CYP2C19 effect', 'Mild INR increase may occur', 'Keep routine INR monitoring when starting/stopping']);
+    addInteraction(['warfarin'], 'cimetidine', 'mod', ['CYP inhibisyonu', 'INR artabilir', 'Alternatif H2/PPI düşünün veya INR izleyin'], ['CYP inhibition', 'INR may increase', 'Consider alternative H2/PPI or monitor INR']);
+    addInteraction(['warfarin'], 'cholestyramine', 'mod', ['Emilim azalması', 'INR düşebilir', 'Dozları ayırın ve INR yanıtını izleyin'], ['Reduced absorption', 'INR may decrease', 'Separate doses and monitor INR response']);
+    addInteraction(['warfarin'], 'vitamin_k', 'high', ['Farmakodinamik antagonizma', 'INR düşer, etki azalır', 'Diyet/takviye değişimini sabit tutun; INR sıklaştırın'], ['Pharmacodynamic antagonism', 'INR decreases and effect falls', 'Keep diet/supplement intake consistent; increase INR monitoring']);
+    addInteraction(['warfarin'], 'alcohol', 'mod', ['Akut/kronik alım farklı etkiler', 'INR değişkenleşir ve kanama riski artabilir', 'Düzensiz/aşırı alımdan kaçının; INR izleyin'], ['Acute/chronic intake differ', 'INR becomes variable and bleeding risk may rise', 'Avoid irregular/heavy intake; monitor INR']);
+    addInteraction(['warfarin'], 'methotrexate', 'mod', ['Protein bağlanma ve kemik iliği toksisitesi', 'Kanama riski artabilir; INR yönü tutarlı değildir', 'INR yanında CBC, böbrek/karaciğer ve kanama izlemi'], ['Protein binding and marrow toxicity', 'Bleeding risk may rise; INR direction is not consistent', 'Monitor INR plus CBC, renal/liver profile, and bleeding']);
+    addInteraction(['warfarin'], 'leflunomide', 'high', ['Teriflunomid-warfarin etkileşimi', 'INR artabilir veya azalabilir', 'Başlama/kesme ve eliminasyon protokolünde yakın INR'], ['Teriflunomide-warfarin interaction', 'INR may increase or decrease', 'Close INR when starting/stopping and during elimination protocol']);
+    addInteraction(['warfarin'], 'azathioprine', 'high', ['Warfarin etkisini azaltabilir', 'INR düşebilir; kesilince INR yükselebilir', 'Başlama/kesme sonrası sık INR'], ['May reduce warfarin effect', 'INR may fall; INR may rise after stopping', 'Frequent INR after starting/stopping']);
+    addInteraction(['warfarin'], 'sulfasalazine', 'mod', ['Vaka düzeyinde değişken etki', 'INR artışı veya direnç görülebilir', 'Başlama/kesmede INR kontrolü'], ['Variable case-level effect', 'INR increase or resistance may occur', 'Check INR when starting/stopping']);
+    addInteraction(['warfarin'], 'allopurinol', 'mod', ['Kumarin etkisi artabilir', 'INR artışı görülebilir', 'INR sık değerlendirilmeli'], ['Coumarin effect may increase', 'INR increase may occur', 'Increase INR assessment']);
+    addInteraction(['warfarin'], 'tocilizumab', 'mod', ['IL-6 blokajı CYP aktivitesini artırabilir', 'Warfarin etkisi azalabilir; kesilince tersine dönebilir', 'Başlama/kesmede INR izlemi'], ['IL-6 blockade may increase CYP activity', 'Warfarin effect may decrease; reverse after stopping', 'Monitor INR when starting/stopping']);
+    addInteraction(['warfarin'], 'cyclosporine', 'mod', ['CYP/P-gp ve organ fonksiyonu etkisi', 'INR/kanama riski değişken olabilir', 'INR, böbrek/karaciğer ve ilaç düzeyi bağlamında izlem'], ['CYP/P-gp and organ-function effects', 'INR/bleeding risk may vary', 'Monitor with INR, renal/liver profile, and drug levels when relevant']);
+    addInteraction(['warfarin'], 'ginkgo_garlic', 'mod', ['Platelet/farmakodinamik etki', 'INR değişmeden kanama artabilir', 'Yüksek doz bitkisel ürünlerden kaçının'], ['Platelet/pharmacodynamic effect', 'Bleeding may increase without INR change', 'Avoid high-dose herbal products']);
+    addInteraction(['warfarin'], 'cranberry', 'low', ['Vaka bildirimleri ve değişken kanıt', 'INR artışı bildirilebilir', 'Düzenli/yoğun kullanımda INR izleyin'], ['Case reports and variable evidence', 'INR increase has been reported', 'Monitor INR with regular/heavy use']);
+    addInteraction(['warfarin'], 'grapefruit', 'low', ['CYP etkisi teorik/değişken', 'INR etkisi genelde öngörülemez', 'Aşırı tüketimde INR izleyin'], ['Theoretical/variable CYP effect', 'INR effect is usually unpredictable', 'Monitor INR with heavy intake']);
+
+    addInteraction(doacs, 'ritonavir', 'high', ['Güçlü CYP3A4/P-gp inhibisyonu', 'DOAC maruziyeti ve kanama riski artar', 'Kombinasyondan kaçınma veya etiket/uzman doz planı gerekir'], ['Strong CYP3A4/P-gp inhibition', 'DOAC exposure and bleeding risk increase', 'Avoid combination or use label/specialist dose plan']);
+    addInteraction(doacs, 'posaconazole', 'high', ['Güçlü azol/P-gp-CYP inhibisyonu', 'DOAC düzeyi artabilir', 'Mümkünse alternatif antifungal/antikoagülan düşünün'], ['Strong azole/P-gp-CYP inhibition', 'DOAC levels may increase', 'Prefer alternative antifungal/anticoagulant when possible']);
+    addInteraction(doacs, 'phenobarbital', 'high', ['Güçlü indüksiyon', 'DOAC düzeyi düşer, tromboz riski artar', 'Birlikte kullanımdan kaçının veya alternatif antikoagülasyon planlayın'], ['Strong induction', 'DOAC levels fall and thrombosis risk rises', 'Avoid co-use or plan alternative anticoagulation']);
+    addInteraction(doacs, 'oxcarbazepine', 'mod', ['İndüksiyon potansiyeli', 'DOAC etkisi azalabilir', 'Alternatif veya yakın klinik takip düşünün'], ['Induction potential', 'DOAC effect may decrease', 'Consider alternative or close clinical follow-up']);
+    addInteraction(doacs, 'ssri_snri', 'mod', ['Platelet serotonin etkisi', 'Kanama riski INR olmadan artabilir', 'Kanama bulguları, Hb ve ek antiplatelet/NSAID kullanımı açısından izleyin'], ['Platelet serotonin effect', 'Bleeding risk may increase without INR change', 'Monitor bleeding signs, hemoglobin, and added antiplatelet/NSAID use']);
+    addInteraction(doacs, 'steroid', 'mod', ['GİS kanama ve doku kırılganlığı', 'Kanama riski artabilir', 'GİS riskini azaltın; kısa süre ve klinik izlem'], ['GI bleeding and tissue fragility', 'Bleeding risk may rise', 'Mitigate GI risk; short duration and clinical monitoring']);
+    addInteraction(doacs, 'heparin', 'high', ['Kombine antikoagülasyon', 'Kanama riski belirgin artar', 'Geçiş/köprü protokolü dışında üst üste bindirmeyin'], ['Combined anticoagulation', 'Bleeding risk markedly increases', 'Avoid overlap outside transition/bridging protocols']);
+    addInteraction(doacs, 'thrombolytic', 'high', ['Fibrinoliz + antikoagülasyon', 'Majör kanama riski çok yüksek', 'Acil/uzman protokolü dışında birlikte kullanmayın'], ['Fibrinolysis plus anticoagulation', 'Very high major bleeding risk', 'Avoid outside emergency/specialist protocol']);
+    addInteraction(doacs, 'prasugrel', 'high', ['Güçlü antiplatelet ek etki', 'Kanama riski belirgin artar', 'Net endikasyon, kısa süre ve yakın takip gerekir'], ['Strong added antiplatelet effect', 'Bleeding risk markedly increases', 'Requires clear indication, short duration, and close follow-up']);
+    addInteraction(doacs, 'ginkgo_garlic', 'mod', ['Platelet/farmakodinamik etki', 'Kanama riski artabilir', 'Yüksek doz bitkisel ürünlerden kaçının'], ['Platelet/pharmacodynamic effect', 'Bleeding risk may rise', 'Avoid high-dose herbal products']);
+    addInteraction(doacs, 'grapefruit', 'mod', ['CYP3A4/P-gp inhibisyon potansiyeli', 'Özellikle Xa inhibitörlerinde düzey artabilir', 'Düzenli/aşırı tüketimde kanama izlemi yapın'], ['CYP3A4/P-gp inhibition potential', 'Levels may rise especially with Xa inhibitors', 'Monitor bleeding with regular/heavy intake']);
+    addInteraction(doacs, 'cyclosporine', 'mod', ['P-gp/CYP ve renal fonksiyon etkisi', 'DOAC düzeyi artabilir', 'Böbrek fonksiyonu ve kanama bulguları ile izleyin'], ['P-gp/CYP and renal-function effects', 'DOAC levels may rise', 'Monitor renal profile and bleeding signs']);
+    addInteraction(xaDoacs, 'diltiazem', 'mod', ['Orta CYP3A4/P-gp inhibisyonu', 'Xa inhibitör düzeyi artabilir', 'Yaşlı/renal bozuklukta kanama izlemini artırın'], ['Moderate CYP3A4/P-gp inhibition', 'Xa inhibitor levels may rise', 'Increase bleeding surveillance in older/renal-risk patients']);
+    addInteraction(xaDoacs, 'fluconazole', 'mod', ['Orta CYP/P-gp inhibisyonu', 'Xa inhibitör maruziyeti artabilir', 'Kanama riski yüksekse alternatif veya yakın izlem'], ['Moderate CYP/P-gp inhibition', 'Xa inhibitor exposure may rise', 'Use alternative or close monitoring if bleeding risk is high']);
+    addInteraction(['apixaban', 'rivaroxaban'], 'dronedarone', 'mod', ['P-gp/CYP3A4 inhibisyonu', 'Düzey artabilir', 'Kanama açısından klinik izlem; renal riskte daha dikkatli olun'], ['P-gp/CYP3A4 inhibition', 'Levels may rise', 'Clinical bleeding surveillance; extra caution with renal risk']);
+    addInteraction(['dabigatran'], 'dronedarone', 'high', ['Güçlü P-gp inhibisyonu', 'Dabigatran düzeyi belirgin artabilir', 'Renal fonksiyona göre kaçınma veya etiket doz azaltımı gerekir'], ['Strong P-gp inhibition', 'Dabigatran levels may markedly increase', 'Avoid or reduce dose per label depending on renal function']);
+    addInteraction(['dabigatran'], 'quinidine', 'mod', ['P-gp inhibisyonu', 'Dabigatran düzeyi artabilir', 'Böbrek fonksiyonu ve kanama bulgularıyla izleyin'], ['P-gp inhibition', 'Dabigatran levels may rise', 'Monitor renal function and bleeding signs']);
+    addInteraction(['dabigatran'], 'cyclosporine', 'high', ['Güçlü P-gp inhibisyonu', 'Dabigatran maruziyeti artabilir', 'Birlikte kullanımdan kaçınmayı değerlendirin'], ['Strong P-gp inhibition', 'Dabigatran exposure may increase', 'Consider avoiding co-use']);
+    addInteraction(['edoxaban'], 'dronedarone', 'mod', ['P-gp inhibisyonu', 'Edoksaban düzeyi artabilir', 'Endikasyon/renal fonksiyona göre doz ve izlem planını gözden geçirin'], ['P-gp inhibition', 'Edoxaban levels may rise', 'Reassess dose and monitoring by indication/renal function']);
+    addInteraction(['edoxaban'], 'quinidine', 'mod', ['P-gp inhibisyonu', 'Edoksaban düzeyi artabilir', 'Kanama izlemi; renal riskte dikkat'], ['P-gp inhibition', 'Edoxaban levels may rise', 'Bleeding surveillance; caution with renal risk']);
+    addInteraction(['edoxaban'], 'cyclosporine', 'mod', ['P-gp inhibisyonu', 'Edoksaban maruziyeti artabilir', 'Kanama ve renal fonksiyon izlemi'], ['P-gp inhibition', 'Edoxaban exposure may increase', 'Monitor bleeding and renal function']);
+
+    var mechanismTags = {
+      amiodarone: ['P-gp', 'CYP3A4', 'CYP2C9'],
+      dronedarone: ['P-gp', 'CYP3A4'],
+      quinidine: ['P-gp'],
+      ranolazine: ['P-gp', 'CYP3A4'],
+      fluconazole: ['CYP2C9', 'CYP3A4'],
+      itraconazole: ['CYP3A4', 'P-gp'],
+      posaconazole: ['CYP3A4', 'P-gp'],
+      ritonavir: ['CYP3A4', 'P-gp'],
+      rifampicin: ['indüksiyon', 'CYP3A4', 'P-gp'],
+      carbamazepine: ['indüksiyon', 'CYP3A4', 'P-gp'],
+      phenytoin: ['indüksiyon', 'CYP', 'protein bağlanma'],
+      phenobarbital: ['indüksiyon', 'CYP3A4'],
+      oxcarbazepine: ['indüksiyon'],
+      verapamil: ['P-gp'],
+      diltiazem: ['CYP3A4', 'P-gp'],
+      clarithromycin: ['CYP3A4', 'P-gp'],
+      erythromycin: ['CYP3A4', 'P-gp'],
+      azithromycin: ['floraya bağlı', 'hastalık etkisi'],
+      metronidazole: ['CYP2C9'],
+      tmp_smx: ['CYP2C9', 'protein bağlanma', 'K vitamini florası'],
+      fluoroquinolone: ['CYP1A2', 'floraya bağlı', 'hastalık etkisi'],
+      doxycycline: ['protein bağlanma', 'floraya bağlı'],
+      cephalosporin: ['K vitamini florası'],
+      nsaid: ['farmakodinamik kanama', 'GİS hasarı'],
+      celecoxib: ['farmakodinamik kanama', 'CYP2C9'],
+      acetaminophen: ['doza bağlı INR'],
+      aspirin: ['farmakodinamik kanama', 'antiplatelet'],
+      clopidogrel: ['farmakodinamik kanama', 'antiplatelet'],
+      ticagrelor: ['farmakodinamik kanama', 'antiplatelet'],
+      prasugrel: ['farmakodinamik kanama', 'antiplatelet'],
+      ssri_snri: ['farmakodinamik kanama', 'platelet serotonin'],
+      steroid: ['GİS hasarı', 'değişken INR'],
+      heparin: ['farmakodinamik kanama', 'çift antikoagülasyon'],
+      thrombolytic: ['fibrinoliz', 'farmakodinamik kanama'],
+      omeprazole: ['CYP2C19'],
+      cimetidine: ['CYP inhibisyonu'],
+      cholestyramine: ['emilim azalması'],
+      vitamin_k: ['K vitamini antagonizması'],
+      alcohol: ['CYP değişken', 'karaciğer', 'kanama'],
+      methotrexate: ['kemik iliği', 'protein bağlanma'],
+      leflunomide: ['CYP2C9', 'değişken INR'],
+      azathioprine: ['warfarin antagonizması'],
+      sulfasalazine: ['değişken INR', 'floraya bağlı'],
+      allopurinol: ['kumarin etkisi artışı'],
+      tocilizumab: ['CYP aktivitesi artışı', 'IL-6 blokajı'],
+      cyclosporine: ['P-gp', 'CYP3A4', 'renal etki'],
+      ginkgo_garlic: ['farmakodinamik kanama', 'platelet'],
+      cranberry: ['değişken INR'],
+      stjohn: ['indüksiyon', 'CYP3A4', 'P-gp'],
+      grapefruit: ['CYP3A4', 'P-gp']
+    };
+
+    var mechanismLibrary = {
+      tr: {
+        warfarinCyp: 'Warfarin için CYP2C9 inhibisyonu S-warfarin klirensini azaltır; INR yükselip kanama riski artabilir. CYP1A2/CYP3A4 etkileri de katkı sağlayabilir.',
+        doacInhibitor: 'DOAC için P-gp ve/veya CYP3A4 inhibisyonu barsak dışa atımı ve/veya hepatik metabolizmayı azaltır; ilaç maruziyeti artıp kanama riski yükselir.',
+        inducer: 'Enzim/taşıyıcı indüksiyonu CYP3A4 veya P-gp aktivitesini artırır; warfarin INR düşebilir, DOAC düzeyi azalabilir ve tromboz riski artabilir.',
+        pharmacodynamic: 'Farmakodinamik etkileşimde antikoagülan düzeyi veya INR değişmeden kanama riski artar; antiplateletler, NSAID, SSRI/SNRI, heparin ve trombolitikler bu gruptadır.',
+        absorption: 'Emilim etkileşiminde antikoagülanın barsaktan alınması azalır; warfarin için kolestiramin gibi bağlayıcılar INR düşüşü yapabilir.',
+        vitaminK: 'K vitamini veya K vitamini üreten barsak florasındaki değişim warfarin etkisini doğrudan değiştirir; INR düşebilir veya antibiyotiklerle yükselebilir.',
+        marrow: 'Kemik iliği/trombosit toksisitesi kanama eşiğini düşürür; INR normal olsa bile kanama riski artabilir.',
+        variable: 'Bu kombinasyonda etki yönü kişiye, doz-zamanlamaya, renal/hepatik fonksiyona ve eş ilaçlara göre değişebilir; ölçüm/klinik izlem belirleyicidir.'
+      },
+      en: {
+        warfarinCyp: 'For warfarin, CYP2C9 inhibition reduces S-warfarin clearance; INR can rise and bleeding risk can increase. CYP1A2/CYP3A4 effects may also contribute.',
+        doacInhibitor: 'For DOACs, P-gp and/or CYP3A4 inhibition reduces intestinal efflux and/or hepatic metabolism; exposure rises and bleeding risk increases.',
+        inducer: 'Enzyme/transporter induction increases CYP3A4 or P-gp activity; warfarin INR can fall, DOAC exposure can decrease, and thrombosis risk can rise.',
+        pharmacodynamic: 'Pharmacodynamic interaction increases bleeding risk without changing anticoagulant level or INR; antiplatelets, NSAIDs, SSRI/SNRI, heparin, and thrombolytics fit here.',
+        absorption: 'Absorption interaction reduces intestinal uptake of the anticoagulant; binders such as cholestyramine can lower warfarin effect and INR.',
+        vitaminK: 'Vitamin K intake or vitamin-K-producing gut flora changes directly alter warfarin effect; INR may fall or rise with antibiotics.',
+        marrow: 'Bone marrow/platelet toxicity lowers the bleeding threshold; bleeding risk can rise even with a normal INR.',
+        variable: 'Effect direction varies with patient, dose timing, renal/hepatic function, and co-medications; measurement and clinical monitoring drive management.'
+      }
+    };
+
+    function mechanismDetail(anticoag, medId, vals) {
+      var tags = mechanismTags[medId] || [];
+      var text = (vals || []).join(' ').toLowerCase();
+      var lib = mechanismLibrary[currentLang] || mechanismLibrary.en;
+
+      if (tags.indexOf('farmakodinamik kanama') !== -1 || tags.indexOf('antiplatelet') !== -1 || tags.indexOf('fibrinoliz') !== -1) {
+        return lib.pharmacodynamic;
+      }
+      if (tags.indexOf('indüksiyon') !== -1) return lib.inducer;
+      if (tags.indexOf('emilim azalması') !== -1) return lib.absorption;
+      if (tags.indexOf('K vitamini antagonizması') !== -1 || tags.indexOf('K vitamini florası') !== -1) return lib.vitaminK;
+      if (tags.indexOf('kemik iliği') !== -1) return lib.marrow;
+      if (anticoag === 'warfarin' && (tags.indexOf('CYP2C9') !== -1 || text.indexOf('inr') !== -1)) return lib.warfarinCyp;
+      if (anticoag !== 'warfarin' && (tags.indexOf('P-gp') !== -1 || tags.indexOf('CYP3A4') !== -1)) return lib.doacInhibitor;
+      return lib.variable;
+    }
+
+    function mechanismTagHtml(medId) {
+      var tags = mechanismTags[medId] || [];
+      if (!tags.length) return '';
+      return '<div class="mechanism-tags">' + tags.map(function(tag) {
+        return '<span class="mech-tag">' + tag + '</span>';
+      }).join('') + '</div>';
+    }
+
     var selectedMeds = new Set();
 
     function medName(item) { return currentLang === 'tr' ? item.tr : item.en; }
@@ -546,6 +771,8 @@
     function renderMedList() {
       var q = document.getElementById('medSearch').value.toLowerCase().trim();
       var list = document.getElementById('medList');
+      var label = document.getElementById('medListLabel');
+      if (label) label.textContent = (uiText[currentLang] || uiText.en).medListLabel + ' (' + meds.length + ')';
       list.innerHTML = '';
       meds.forEach(function(m) {
         var text = (m.tr + ' ' + m.en).toLowerCase();
@@ -622,7 +849,9 @@
         var med = meds.find(function(x) { return x.id === r.id; });
         out += '<div class="result-card">';
         out += '<div class="result-top"><strong>' + medName(med) + '</strong><span class="badge ' + levelClass(r.level) + '">' + levelText(r.level) + '</span></div>';
+        out += mechanismTagHtml(r.id);
         out += '<p><strong>' + t.mechanism + ':</strong> ' + r.vals[0] + '</p>';
+        out += '<p><strong>' + t.mechanismDetail + ':</strong> ' + mechanismDetail(anticoag, r.id, r.vals) + '</p>';
         out += '<p><strong>' + t.expected + ':</strong> ' + r.vals[1] + '</p>';
         out += '<p><strong>' + t.action + ':</strong> ' + r.vals[2] + '</p>';
         out += '</div>';
