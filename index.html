@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>DrTR Tools — Sağlık Profesyonelleri İçin Klinik ve Akademik Araçlar</title>
-    <meta name="description" content="Ücretsiz ve güvenilir tıbbi hesaplayıcılar, akademik atıf yönetimi ve klinik karar destek araçları. DrTR Tools: Doktorlar ve araştırmacılar için tasarlanmış dijital bir ekosistem.">
-    <meta name="keywords" content="tıbbi hesaplayıcılar, klinik karar destek, doçentlik puan hesaplama, warfarin doz asistanı, tıbbi sözlük, akademik araçlar, BMI hesaplama, eGFR, kılavuz karşılaştırıcı, ESC AHA ACC NICE karşılaştırma, doac etkileşim kontrolü, warfarin etkileşim kontrolü, antikoagülan etkileşim">
-    <meta name="author" content="DrTR Tools">
+    <title>DrTR Tools | Dr. Yusuf Hoşoğlu'nun Klinik ve Akademik Araçları</title>
+    <meta name="description" content="Dr. Yusuf Hoşoğlu tarafından geliştirilen DrTR Tools; kardiyoloji, antikoagülan yönetimi, klinik hesaplamalar ve akademik üretkenlik için ücretsiz dijital araçlar sunar.">
+    <meta name="keywords" content="Dr Yusuf Hoşoğlu, Yusuf Hoşoğlu, kardiyoloji uzmanı, DrTR Tools, tıbbi hesaplayıcılar, klinik karar destek, warfarin doz asistanı, antikoagülan etkileşim kontrolü, doac etkileşim, eGFR, kardiyoloji araçları, akademik araçlar">
+    <meta name="author" content="Dr. Yusuf Hoşoğlu">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://drtr.uk/">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://drtr.uk/">
-    <meta property="og:title" content="DrTR Tools - Clinical, Research & Productivity Tools">
-    <meta property="og:description" content="Free professional tools for healthcare workers and researchers.">
+    <meta property="og:title" content="DrTR Tools | Dr. Yusuf Hoşoğlu">
+    <meta property="og:description" content="Kardiyoloji, klinik karar destek ve akademik üretkenlik için ücretsiz dijital araçlar.">
     <meta property="og:locale" content="tr_TR">
     <meta property="og:locale:alternate" content="en_US">
     <meta property="og:locale:alternate" content="ar_SA">
@@ -24,8 +24,8 @@
     <meta property="og:locale:alternate" content="az_AZ">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="DrTR Tools - Clinical, Research & Productivity Tools">
-    <meta name="twitter:description" content="Free professional tools for healthcare workers and researchers.">
+    <meta name="twitter:title" content="DrTR Tools | Dr. Yusuf Hoşoğlu">
+    <meta name="twitter:description" content="Kardiyoloji ve klinik pratik için ücretsiz dijital araçlar.">
 
     <link rel="alternate" hreflang="tr" href="https://drtr.uk/">
     <link rel="alternate" hreflang="en" href="https://drtr.uk/">
@@ -41,8 +41,17 @@
         "@type": "WebSite",
         "name": "DrTR Tools",
         "url": "https://drtr.uk",
-        "description": "Clinical, Research & Productivity Tools for healthcare professionals",
-        "author": { "@type": "Organization", "name": "DrTR Tools", "email": "adycovs@gmail.com" }
+        "description": "Dr. Yusuf Hoşoğlu tarafından geliştirilen klinik, akademik ve üretkenlik araçları",
+        "author": {
+            "@type": "Person",
+            "name": "Dr. Yusuf Hoşoğlu",
+            "jobTitle": "Kardiyoloji Uzmanı",
+            "url": "https://www.dryusufhosoglu.com.tr/"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "DrTR Tools"
+        }
     }
     </script>
 
@@ -127,6 +136,21 @@
         }
 
         .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .personal-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid #99F6E4;
+            background: var(--teal-bg);
+            color: var(--teal);
+            text-decoration: none;
+            font-size: 0.73rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .personal-link:hover { text-decoration: underline; }
 
         .clock {
             font-size: 0.8rem;
@@ -366,6 +390,13 @@
 
         /* Contact */
         .contact-section { max-width: 960px; margin: 0 auto; padding: 20px 24px; text-align: center; }
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
 
         .contact-inner {
             background: var(--surface); border: 1px solid var(--border);
@@ -432,6 +463,7 @@
             <div class="topbar-right">
                 <div class="clock" id="clock"></div>
                 <div class="weather-strip" id="weather-strip"></div>
+                <a class="personal-link" href="https://www.dryusufhosoglu.com.tr/" target="_blank" rel="noreferrer">dryusufhosoglu.com.tr</a>
                 <nav class="lang-switcher" aria-label="Language selector">
                     <button class="lang-btn active" data-lang="tr">TR</button>
                     <button class="lang-btn" data-lang="az">AZ</button>
@@ -737,6 +769,9 @@
                     <p data-i18n="why_drtr_desc" style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
                         Platformumuz, en güncel uluslararası kılavuzları (WHO, ESC, AHA/ACC) temel alarak geliştirilmiştir. Tüm hesaplamalar tarayıcı tarafında yapıldığından kullanıcı verileri asla sunucularımıza gönderilmez. Hem klinik pratik hem de akademik ilerleme için hepsi bir arada bir çözüm sunuyoruz.
                     </p>
+                    <p style="font-size: 0.84rem; line-height: 1.6; color: var(--text-muted); margin-top: 12px;">
+                        <a href="https://www.dryusufhosoglu.com.tr/" target="_blank" rel="noreferrer" style="color: var(--teal); font-weight: 600;">Dr. Yusuf Hoşoğlu kişisel web sitesi</a>
+                    </p>
                 </div>
                 <div class="about-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
                     <h4 data-i18n="professional_reliability_title" style="margin-bottom: 10px; color: var(--blue-accent);">Profesyonel Güvenilirlik</h4>
@@ -761,7 +796,10 @@
     <section class="contact-section">
         <div class="contact-inner">
             <h3 data-i18n="contact_title">İletişim</h3>
-            <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a>
+            <div class="contact-links">
+                <a href="mailto:adycovs@gmail.com">adycovs@gmail.com</a>
+                <a href="https://www.dryusufhosoglu.com.tr/" target="_blank" rel="noreferrer">dryusufhosoglu.com.tr</a>
+            </div>
         </div>
     </section>
 
@@ -824,9 +862,9 @@
             cookie_text:"Bu site çerezler kullanmaktadır.", cookie_accept:"Kabul Et", cookie_decline:"Reddet",
             about_platform_title:"DrTR Tools Hakkında",
             why_drtr_title:"Neden DrTR Tools?",
-            why_drtr_desc:"Platformumuz, en güncel uluslararası kılavuzları (WHO, ESC, AHA/ACC) temel alarak geliştirilmiştir. Tüm hesaplamalar tarayıcı tarafında yapıldığından kullanıcı verileri asla sunucularımıza gönderilmez. Hem klinik pratik hem de akademik ilerleme için hepsi bir arada bir çözüm sunuyoruz.",
+            why_drtr_desc:"DrTR Tools, Dr. Yusuf Hoşoğlu'nun klinik pratiğinde önem verdiği kanıta dayalı, hızlı ve sade karar desteği yaklaşımıyla geliştirilmiştir. Tüm hesaplamalar tarayıcı tarafında yapıldığından kullanıcı verileri sunucuya gönderilmez. Platform; kardiyoloji, antikoagülan yönetimi ve günlük klinik iş akışlarını destekleyen pratik bir araç seti sunar.",
             professional_reliability_title:"Profesyonel Güvenilirlik",
-            professional_reliability_desc:"DrTR Tools, sağlık çalışanlarının günlük iş akışlarını daha verimli hale getirmek için tasarlanmıştır. Akademik atıf yönetiminden pediatrik büyüme takibine kadar tüm araçlarımız doğruluk ve kullanım kolaylığı odağıyla hazırlanmıştır."
+            professional_reliability_desc:"Platformun içeriği; kılavuz karşılaştırmaları, antikoagülan güvenliği, risk skorları ve klinik hesaplamalar gibi alanlarda hızlı erişim sağlayacak şekilde yapılandırılmıştır. Amaç, muayene ve takip süreçlerinde doğru bilgiye daha düzenli ve daha hızlı ulaşılmasını sağlamaktır."
         },
         az: {
             brand_sub:"Klinik, Akademik & M\u0259hsuldarl\u0131q Al\u0259tl\u0259ri",
@@ -897,9 +935,9 @@
             cookie_text:"This site uses cookies.", cookie_accept:"Accept", cookie_decline:"Decline",
             about_platform_title:"About DrTR Tools",
             why_drtr_title:"Why DrTR Tools?",
-            why_drtr_desc:"Our platform is developed based on the latest international guidelines (WHO, ESC, AHA/ACC). Since all calculations are performed browser-side, user data is never sent to our servers. We offer an all-in-one solution for both clinical practice and academic progression.",
+            why_drtr_desc:"DrTR Tools is shaped by Dr. Yusuf Hoşoğlu's evidence-based, practical approach to clinical decision support. All calculations run in the browser, so user data is not sent to a server. The platform focuses on cardiology, anticoagulation safety, and fast day-to-day clinical workflows.",
             professional_reliability_title:"Professional Reliability",
-            professional_reliability_desc:"DrTR Tools is designed to make the daily workflows of healthcare professionals more efficient. From academic citation management to pediatric growth tracking, all our tools are prepared with a focus on accuracy and ease of use."
+            professional_reliability_desc:"The content is organized for quick access to guideline comparisons, anticoagulant safety checks, risk scores, and core clinical calculators. The goal is faster access to structured information during patient care and follow-up."
         },
         ar: {
             brand_sub:"\u0623\u062f\u0648\u0627\u062a \u0633\u0631\u064a\u0631\u064a\u0629 \u0648\u0628\u062d\u062b\u064a\u0629 \u0648\u0625\u0646\u062a\u0627\u062c\u064a\u0629",

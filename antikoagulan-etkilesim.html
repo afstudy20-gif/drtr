@@ -274,6 +274,36 @@
     }
     .section ul { margin-left: 18px; margin-top: 8px; }
     .source-list a { color: var(--teal); font-weight: 600; }
+    .source-strip {
+      margin-top: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+    .source-strip strong {
+      display: block;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .source-links a {
+      border: 1px solid #99F6E4;
+      border-radius: 999px;
+      background: var(--teal-bg);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      text-decoration: none;
+    }
+    .source-links a:hover { text-decoration: underline; }
     .warn {
       margin-top: 10px;
       border-left: 4px solid #F59E0B;
@@ -312,6 +342,17 @@
       <span class="hero-badge" id="heroBadge">Klinik Güvenlik Aracı</span>
       <h1 id="heroTitle">Antikoagülan Etkileşim Kontrolü (DOAC / Warfarin)</h1>
       <p id="heroIntro">Warfarin ve DOAC tedavisinde eşlik eden ilaçlarla etkileşim riski kanama veya tromboz yönünde klinik sonucu değiştirebilir. Bu araç, sık görülen kombinasyonlar için hızlı bir risk çerçevesi sunar: etkileşim şiddeti, olası mekanizma ve pratik izlem önerisi tek ekranda gösterilir.</p>
+    </section>
+
+    <section class="source-strip" aria-label="Etkileşim kaynak linkleri">
+      <strong>Etkileşim kaynak linkleri</strong>
+      <div class="source-links">
+        <a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=33752f5d-2ca7-45c0-8292-b54742219b97" target="_blank" rel="noreferrer">ELIQUIS</a>
+        <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=10db92f9-2300-4a80-836b-673e1ae91610" target="_blank" rel="noreferrer">XARELTO</a>
+        <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1a214cf1-b41e-46f6-8f24-e3637e6d2612" target="_blank" rel="noreferrer">PRADAXA</a>
+        <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e77d3400-56ad-11e3-949a-0800200c9a66" target="_blank" rel="noreferrer">SAVAYSA</a>
+        <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=91fa852c-b43d-4a55-983b-74aa6827125d" target="_blank" rel="noreferrer">COUMADIN</a>
+      </div>
     </section>
 
     <section class="main-grid">
@@ -362,13 +403,6 @@
     <section class="section">
       <h3 id="srcTitle">Kaynak yaklaşımı</h3>
       <p id="srcText">Sınıflama, güncel antitrombotik kılavuz prensipleri ve ürün bilgisi mantığıyla "yüksek/orta/düşük" pratik risk kategorisine indirgenmiştir. Bu özet yaklaşım, klinisyenin hızlı tarama yapmasını amaçlar; tam karar için güncel SmPC, kurum protokolü ve gerektiğinde klinik eczacılık/hematoloji görüşü kullanılmalıdır.</p>
-      <ul class="source-list">
-        <li><a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=33752f5d-2ca7-45c0-8292-b54742219b97" target="_blank" rel="noreferrer">DailyMed ELIQUIS etiketi</a></li>
-        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=10db92f9-2300-4a80-836b-673e1ae91610" target="_blank" rel="noreferrer">DailyMed XARELTO etiketi</a></li>
-        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=1a214cf1-b41e-46f6-8f24-e3637e6d2612" target="_blank" rel="noreferrer">DailyMed PRADAXA etiketi</a></li>
-        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e77d3400-56ad-11e3-949a-0800200c9a66" target="_blank" rel="noreferrer">DailyMed SAVAYSA etiketi</a></li>
-        <li><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=91fa852c-b43d-4a55-983b-74aa6827125d" target="_blank" rel="noreferrer">DailyMed COUMADIN etiketi</a></li>
-      </ul>
     </section>
 
     <section class="section">
