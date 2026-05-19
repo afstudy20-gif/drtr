@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarihe Gün Ekle / Çıkar — DrTR Tools</title>
+  <meta name="description" content="Bir tarihten istenilen gün kadar önce veya sonrasını hesapla. Tekli veya toplu kullanım. Karışık formatlı tarihler desteklenir.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/tarih-gun-ekle.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg:#F8FAFC; --surface:#FFFFFF;
+      --text-primary:#0F172A; --text-secondary:#334155; --text-muted:#64748B; --text-faint:#94A3B8;
+      --border:#E2E8F0; --teal:#0F766E; --teal-bg:#F0FDFA;
+      --red:#DC2626; --red-bg:#FEF2F2;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{margin-bottom:18px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.6;max-width:720px}
+
+    .tabs{display:flex;gap:4px;background:#F1F5F9;padding:4px;border-radius:10px;width:fit-content;margin-bottom:20px}
+    .tab-btn{padding:7px 22px;border-radius:7px;border:none;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--text-muted);background:transparent;transition:all .2s}
+    .tab-btn.active{background:#fff;color:var(--text-primary);box-shadow:var(--shadow)}
+
+    .tab-panel{display:none}.tab-panel.active{display:block}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow)}
+    .row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+    .field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
+    .field label{font-size:.74rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .field input,.field select{font:inherit;font-size:.92rem;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-primary);outline:none}
+    .field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .btn{font:inherit;font-size:.88rem;font-weight:600;padding:8px 18px;border-radius:8px;border:none;cursor:pointer;transition:all .15s}
+    .btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:#0d6b63}
+    .btn-secondary{background:#fff;color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:#F1F5F9}
+    .btn-danger{background:#fff;color:var(--red);border:1px solid #FECACA}.btn-danger:hover{background:var(--red-bg)}
+
+    .result{margin-top:20px;background:linear-gradient(135deg,#F0FDFA 0%,#ECFCCB 100%);border:1px solid #A7F3D0;border-radius:12px;padding:18px 22px}
+    .result-label{font-size:.74rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+    .result-value{font-size:1.5rem;font-weight:800;color:var(--text-primary);font-family:'SF Mono',Monaco,Consolas,monospace}
+    .result-sub{margin-top:8px;font-size:.86rem;color:var(--text-muted)}
+    .result.bad{background:var(--red-bg);border-color:#FECACA}.result.bad .result-label{color:var(--red)}
+
+    .panes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+    .pane{background:var(--surface);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;box-shadow:var(--shadow);min-height:380px}
+    .pane-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .pane-head h3{font-size:.88rem;font-weight:700;color:var(--text-primary)}
+    .pane-head .meta{font-size:.74rem;color:var(--text-faint)}
+    textarea.io{flex:1;width:100%;border:none;outline:none;resize:vertical;font:inherit;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:.84rem;padding:12px 14px;color:var(--text-primary);background:transparent;line-height:1.6;min-height:340px}
+    .out-list{flex:1;overflow:auto;padding:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:.84rem;line-height:1.6;min-height:340px}
+    .out-row{padding:0 14px;white-space:pre;color:var(--text-primary)}
+    .out-row.bad{color:var(--red);background:var(--red-bg)}
+    .out-row.empty{color:var(--text-faint)}
+
+    .stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:.8rem;color:var(--text-muted)}
+    .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 10px}
+    .stat-chip b{color:var(--text-primary);font-weight:700;margin-right:4px}
+
+    .info{margin-top:22px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 22px;font-size:.86rem;color:var(--text-secondary);line-height:1.7}
+    .info h4{color:var(--text-primary);font-size:.95rem;margin-bottom:6px}
+    .info code{background:#F1F5F9;padding:1px 6px;border-radius:4px;font-size:.82rem}
+    .info ul{padding-left:20px;margin-top:6px}
+
+    @media(max-width:780px){
+      .panes{grid-template-columns:1fr}
+      .pane{min-height:240px}
+      textarea.io,.out-list{min-height:220px}
+      .hero h1{font-size:1.35rem}
+      .result-value{font-size:1.2rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-badge">Tarih Aracı</span>
+    <h1>Tarihe Gün Ekle / Çıkar</h1>
+    <p>Bir tarihten istenen gün kadar önce veya sonrasını hesaplar. Tekli veya toplu (her satır bir tarih) çalışır. Karışık tarih formatları otomatik algılanır. Her şey tarayıcınızda işlenir.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="single">Tekli</button>
+    <button class="tab-btn" data-tab="bulk">Toplu</button>
+  </div>
+
+  <!-- ── SINGLE ── -->
+  <div class="tab-panel active" id="tab-single">
+    <div class="card">
+      <div class="row">
+        <div class="field" style="flex:2">
+          <label for="s-date">Başlangıç tarihi</label>
+          <input id="s-date" type="text" placeholder="ör. 01.01.2023 / 5 Ocak 2024 / 2023-12-31">
+        </div>
+        <div class="field">
+          <label for="s-days">Gün</label>
+          <input id="s-days" type="number" value="180">
+        </div>
+        <div class="field">
+          <label for="s-dir">Yön</label>
+          <select id="s-dir">
+            <option value="after">Sonra (+)</option>
+            <option value="before">Önce (−)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-fmt">Çıktı formatı</label>
+          <select id="s-fmt">
+            <option value="tr">GG.AA.YYYY</option>
+            <option value="iso">YYYY-AA-GG</option>
+            <option value="us">AA/GG/YYYY</option>
+            <option value="long-tr">5 Ocak 2024</option>
+          </select>
+        </div>
+      </div>
+      <div class="result" id="s-result">
+        <div class="result-label">Sonuç</div>
+        <div class="result-value" id="s-out">—</div>
+        <div class="result-sub" id="s-sub">Tarih girin</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BULK ── -->
+  <div class="tab-panel" id="tab-bulk">
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label for="b-days">Gün</label>
+          <input id="b-days" type="number" value="180">
+        </div>
+        <div class="field">
+          <label for="b-dir">Yön</label>
+          <select id="b-dir">
+            <option value="after">Sonra (+)</option>
+            <option value="before">Önce (−)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="b-fmt">Çıktı formatı</label>
+          <select id="b-fmt">
+            <option value="tr">GG.AA.YYYY</option>
+            <option value="iso">YYYY-AA-GG</option>
+            <option value="us">AA/GG/YYYY</option>
+            <option value="long-tr">5 Ocak 2024</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="b-order">Belirsizlik</label>
+          <select id="b-order">
+            <option value="auto">Otomatik</option>
+            <option value="dmy">Gün önce</option>
+            <option value="mdy">Ay önce</option>
+          </select>
+        </div>
+        <div class="field" style="flex-direction:row;align-self:flex-end;gap:8px;flex:0;min-width:auto">
+          <button class="btn btn-secondary" id="b-ex">Örnek</button>
+          <button class="btn btn-danger" id="b-clear">Temizle</button>
+          <button class="btn btn-primary" id="b-copy">Kopyala</button>
+        </div>
+      </div>
+
+      <div class="panes">
+        <div class="pane">
+          <div class="pane-head">
+            <h3>Girdi (her satıra bir tarih)</h3>
+            <span class="meta">Karışık format OK</span>
+          </div>
+          <textarea id="b-in" class="io" placeholder="01.01.2023&#10;15/03/2024&#10;5 Ocak 2024&#10;2023-12-31"></textarea>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <h3>Çıktı</h3>
+            <span class="meta" id="b-meta">—</span>
+          </div>
+          <div id="b-out" class="out-list"></div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-chip"><b id="b-total">0</b>toplam</div>
+        <div class="stat-chip"><b id="b-ok">0</b>başarılı</div>
+        <div class="stat-chip"><b id="b-bad">0</b>algılanamadı</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>İpuçları</h4>
+    <ul>
+      <li>Bir tarihten <code>180</code> gün sonrası: <code>01.01.2023</code> + 180 = <code>30.06.2023</code></li>
+      <li>180 gün önce: <code>01.01.2023</code> − 180 = <code>05.07.2022</code></li>
+      <li>Negatif gün girerseniz yön ters çevrilir.</li>
+      <li>Desteklenen formatlar: <code>GG.AA.YYYY</code>, <code>GG/AA/YYYY</code>, <code>YYYY-AA-GG</code>, <code>5 Ocak 2024</code>, <code>Jan 5, 2024</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const TR_MONTHS={ocak:1,şubat:2,subat:2,mart:3,nisan:4,mayıs:5,mayis:5,haziran:6,temmuz:7,ağustos:8,agustos:8,eylül:9,eylul:9,ekim:10,kasım:11,kasim:11,aralık:12,aralik:12,oca:1,şub:2,sub:2,mar:3,nis:4,may:5,haz:6,tem:7,ağu:8,agu:8,eyl:9,eki:10,kas:11,ara:12};
+  const EN_MONTHS={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12,jan:1,feb:2,mar:3,apr:4,jun:6,jul:7,aug:8,sep:9,sept:9,oct:10,nov:11,dec:12};
+  const TR_LONG=['','Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const TR_DAYS=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+
+  function century2(yy){return yy<=50?2000+yy:1900+yy}
+  function isValid(y,m,d){
+    if(m<1||m>12||d<1||d>31||y<1900||y>2999)return false;
+    const dt=new Date(Date.UTC(y,m-1,d));
+    return dt.getUTCFullYear()===y&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d;
+  }
+  function parseOne(raw){
+    if(!raw)return null;
+    let s=raw.trim();if(!s)return null;
+    s=s.replace(/\s+/g,' ').replace(/,/g,' ');
+    let m;
+    if(/^-?\d+$/.test(s)){const n=parseInt(s);if(n>59&&n<200000){const ms=n*86400000;const dt=new Date(Date.UTC(1899,11,30)+ms);return{y:dt.getUTCFullYear(),mo:dt.getUTCMonth()+1,d:dt.getUTCDate(),ambig:false}}return null}
+    m=s.match(/^(\d{4})[\-\/\.](\d{1,2})[\-\/\.](\d{1,2})\b/);
+    if(m){const y=+m[1],mo=+m[2],d=+m[3];if(isValid(y,mo,d))return{y,mo,d,ambig:false}}
+    m=s.match(/^(\d{1,2})[\-\/\. ](\d{1,2})[\-\/\. ](\d{2,4})\b/);
+    if(m){const a=+m[1],b=+m[2];let y=+m[3];if(y<100)y=century2(y);
+      const dmyOK=isValid(y,b,a),mdyOK=isValid(y,a,b);
+      if(dmyOK&&mdyOK)return{y,mo:b,d:a,ambig:true,alt:{y,mo:a,d:b}};
+      if(dmyOK)return{y,mo:b,d:a,ambig:false};
+      if(mdyOK)return{y,mo:a,d:b,ambig:false};
+      return null;
+    }
+    const lower=s.toLowerCase();let mt;
+    mt=lower.match(/^(\d{1,2})\s+([a-zçşğıöü]+)\.?\s+(\d{2,4})\b/);
+    if(mt){const d=+mt[1];const mo=TR_MONTHS[mt[2]]||EN_MONTHS[mt[2]];let y=+mt[3];if(mo){if(y<100)y=century2(y);if(isValid(y,mo,d))return{y,mo,d,ambig:false}}}
+    mt=lower.match(/^([a-zçşğıöü]+)\.?\s+(\d{1,2})\s+(\d{2,4})\b/);
+    if(mt){const mo=TR_MONTHS[mt[1]]||EN_MONTHS[mt[1]];const d=+mt[2];let y=+mt[3];if(mo){if(y<100)y=century2(y);if(isValid(y,mo,d))return{y,mo,d,ambig:false}}}
+    return null;
+  }
+  function resolveAmbigList(parsed,order){
+    if(order==='dmy')return parsed.map(p=>p&&p.ambig?{y:p.y,mo:p.mo,d:p.d,ambig:false}:p);
+    if(order==='mdy')return parsed.map(p=>p&&p.ambig?{y:p.alt.y,mo:p.alt.mo,d:p.alt.d,ambig:false}:p);
+    let dmySig=0,mdySig=0;
+    for(const p of parsed){if(!p||!p.ambig)continue;if(p.d>12)dmySig++;if(p.mo>12)mdySig++}
+    const useDMY=dmySig>=mdySig;
+    return parsed.map(p=>{if(!p||!p.ambig)return p;return useDMY?{y:p.y,mo:p.mo,d:p.d,ambig:false}:{y:p.alt.y,mo:p.alt.mo,d:p.alt.d,ambig:false}});
+  }
+  function addDays(p,days){
+    const dt=new Date(Date.UTC(p.y,p.mo-1,p.d));
+    dt.setUTCDate(dt.getUTCDate()+days);
+    return{y:dt.getUTCFullYear(),mo:dt.getUTCMonth()+1,d:dt.getUTCDate(),dow:dt.getUTCDay()};
+  }
+  function fmt(p,kind){
+    const yy=String(p.y),mm=String(p.mo).padStart(2,'0'),dd=String(p.d).padStart(2,'0');
+    switch(kind){
+      case 'iso':return `${yy}-${mm}-${dd}`;
+      case 'us':return `${mm}/${dd}/${yy}`;
+      case 'long-tr':return `${p.d} ${TR_LONG[p.mo]} ${p.y}`;
+      default:return `${dd}.${mm}.${yy}`;
+    }
+  }
+
+  // ── Tabs ──
+  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    $('tab-'+b.dataset.tab).classList.add('active');
+  }));
+
+  // ── Single ──
+  function renderSingle(){
+    const raw=$('s-date').value;const days=parseInt($('s-days').value)||0;const dir=$('s-dir').value;const kind=$('s-fmt').value;
+    const r=$('s-result'),out=$('s-out'),sub=$('s-sub');
+    r.classList.remove('bad');
+    if(!raw.trim()){out.textContent='—';sub.textContent='Tarih girin';return}
+    let p=parseOne(raw);
+    if(!p){out.textContent='⚠';sub.textContent='Tarih algılanamadı: '+raw;r.classList.add('bad');return}
+    if(p.ambig)p={y:p.y,mo:p.mo,d:p.d};
+    const offset=dir==='after'?days:-days;
+    const res=addDays(p,offset);
+    out.textContent=fmt(res,kind);
+    const sign=offset>=0?'+':'';
+    sub.textContent=`${fmt(p,'tr')} ${sign}${offset} gün → ${TR_DAYS[res.dow]}`;
+  }
+  ['s-date','s-days','s-dir','s-fmt'].forEach(id=>$(id).addEventListener('input',renderSingle));
+  ['s-dir','s-fmt'].forEach(id=>$(id).addEventListener('change',renderSingle));
+  $('s-date').value='01.01.2023';renderSingle();
+
+  // ── Bulk ──
+  function renderBulk(){
+    const lines=$('b-in').value.split(/\r?\n/);
+    const days=parseInt($('b-days').value)||0;
+    const dir=$('b-dir').value;const kind=$('b-fmt').value;const order=$('b-order').value;
+    const offset=dir==='after'?days:-days;
+    const parsed=lines.map(parseOne);
+    const resolved=resolveAmbigList(parsed,order);
+    let ok=0,bad=0;
+    $('b-out').innerHTML='';
+    const plain=[];
+    resolved.forEach((p,i)=>{
+      const row=document.createElement('div');row.className='out-row';
+      if(!lines[i].trim()){row.classList.add('empty');row.textContent='';plain.push('')}
+      else if(!p){row.classList.add('bad');row.textContent='⚠ algılanamadı: '+lines[i];bad++;plain.push('')}
+      else{const res=addDays(p,offset);const s=fmt(res,kind);row.textContent=s;ok++;plain.push(s)}
+      $('b-out').appendChild(row);
+    });
+    $('b-total').textContent=lines.length;
+    $('b-ok').textContent=ok;$('b-bad').textContent=bad;
+    $('b-meta').textContent=ok+' satır';
+    $('b-out').dataset.plain=plain.join('\n');
+  }
+  ['b-in','b-days','b-dir','b-fmt','b-order'].forEach(id=>$(id).addEventListener('input',renderBulk));
+  ['b-dir','b-fmt','b-order'].forEach(id=>$(id).addEventListener('change',renderBulk));
+  $('b-ex').addEventListener('click',()=>{$('b-in').value=['01.01.2023','15/03/2024','5 Ocak 2024','2023-12-31','Jan 2, 2022'].join('\n');renderBulk()});
+  $('b-clear').addEventListener('click',()=>{$('b-in').value='';renderBulk()});
+  $('b-copy').addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText($('b-out').dataset.plain||'');const b=$('b-copy');const old=b.textContent;b.textContent='✓ Kopyalandı';setTimeout(()=>b.textContent=old,1400)}
+    catch(e){alert('Kopyalama başarısız')}
+  });
+  renderBulk();
+})();
+</script>
+</body>
+</html>
