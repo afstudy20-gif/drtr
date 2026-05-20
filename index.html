@@ -1099,26 +1099,95 @@
 
     var healthTips = {
         tr: [
-            {text:"Gunluk 30 dakika yuruyus, kalp hastaliklari riskini %35 azaltabilir.", source:"American Heart Association", url:"https://www.heart.org/"},
-            {text:"Yetiskinlerin gunde 7-9 saat uyumasi onerilir. Yetersiz uyku bagisiklik sistemini zayiflatir.", source:"National Sleep Foundation", url:"https://www.sleepfoundation.org/"},
-            {text:"Gunde 2-3 litre su icmek bobrek sagligini korur ve metabolizmayi hizlandirir.", source:"European J. of Clinical Nutrition", url:"https://www.nature.com/ejcn/"},
-            {text:"Haftada 150 dakika orta yogunlukta egzersiz depresyon belirtilerini onemli olcude azaltir.", source:"WHO", url:"https://www.who.int/"},
-            {text:"Akdeniz diyeti kardiyovaskuler olaylari %30 oraninda azaltabilir.", source:"NEJM", url:"https://www.nejm.org/"},
-            {text:"Sigara birakildiktan 1 yil sonra kalp krizi riski yarisina iner.", source:"CDC", url:"https://www.cdc.gov/"},
-            {text:"Gunde 5 porsiyon sebze ve meyve tuketimi felc riskini %26 azaltir.", source:"The Lancet", url:"https://www.thelancet.com/"},
-            {text:"D vitamini eksikligi kas-iskelet agrisina neden olabilir. Gunluk 15 dk gunes isigi onemlidir.", source:"Endocrine Society", url:"https://www.endocrine.org/"},
-            {text:"Omega-3 yagli asitler iltihaplanmayi azaltir ve beyin sagligini destekler.", source:"Harvard Medical School", url:"https://www.health.harvard.edu/"},
-            {text:"Asiri tuz tuketimi hipertansiyon riskini arttirir. Gunluk 5 gramdan fazla tuzdan kacinin.", source:"WHO", url:"https://www.who.int/"}
+            {text:"Gunluk 30 dakika tempolu yuruyus, kardiyovaskuler olum riskini %35 azaltabilir.", source:"American Heart Association", url:"https://www.heart.org/"},
+            {text:"Yetiskinlerin gunde 7-9 saat uyumasi onerilir. Yetersiz uyku hipertansiyon ve atriyal fibrilasyon riskini arttirir.", source:"National Sleep Foundation", url:"https://www.sleepfoundation.org/"},
+            {text:"Gunde 2-2.5 litre su icmek bobrek sagligini korur; ancak kalp yetmezligi olanlarda hekim onerisi sarttir.", source:"European J. of Clinical Nutrition", url:"https://www.nature.com/ejcn/"},
+            {text:"Haftada 150 dakika orta veya 75 dakika yuksek yogunlukta egzersiz, hem depresyonu hem ani kardiyak olum riskini anlamli azaltir.", source:"WHO", url:"https://www.who.int/"},
+            {text:"Akdeniz diyeti major kardiyovaskuler olaylari yaklasik %30 oraninda azaltir (PREDIMED calismasi).", source:"NEJM (PREDIMED)", url:"https://www.nejm.org/doi/full/10.1056/NEJMoa1800389"},
+            {text:"Sigara birakildiktan 1 yil sonra koroner kalp hastaligi riski yariya, 5 yil sonra inme riski sigara icmeyene yakin duzeye iner.", source:"CDC", url:"https://www.cdc.gov/tobacco/"},
+            {text:"Gunde 5 porsiyon (yaklasik 400 g) sebze ve meyve tuketimi inme riskini %26, koroner olay riskini %8 azaltir.", source:"The Lancet", url:"https://www.thelancet.com/"},
+            {text:"D vitamini eksikligi kas-iskelet agrisi ve dusus riski ile iliskilidir. 25(OH)D < 20 ng/mL ise destek dusunulmelidir.", source:"Endocrine Society", url:"https://www.endocrine.org/"},
+            {text:"Haftada 2 porsiyon yagli balik (somon, sardalye, uskumru) omega-3 ile koroner kalp hastaligi olumunu azaltir.", source:"Harvard Medical School", url:"https://www.health.harvard.edu/"},
+            {text:"Gunluk tuz alimini 5 gramin altinda tutmak sistolik kan basincini ortalama 5 mmHg dusurur.", source:"WHO", url:"https://www.who.int/"},
+
+            // ── Kardiyak ──
+            {text:"Evde tansiyon olcumu klinik olcumlerden daha guvenilirdir; sabah ve aksam 2 olcumun ortalamasini alin.", source:"ESC Hipertansiyon Kilavuzu 2024", url:"https://www.escardio.org/Guidelines"},
+            {text:"Hedef LDL kolesterol cok yuksek riskli hastalarda < 55 mg/dL, yuksek riskte < 70 mg/dL olmalidir.", source:"ESC Dislipidemi Kilavuzu", url:"https://www.escardio.org/Guidelines"},
+            {text:"Atriyal fibrilasyonda inme riski CHA2DS2-VASc skoru ile degerlendirilir; erkekte >=2, kadinda >=3 ise oral antikoagulan onerilir.", source:"ESC AF Kilavuzu 2024", url:"https://www.escardio.org/Guidelines"},
+            {text:"Statin tedavisinde ilk 4-12 hafta icinde LDL kontrolu ve kas semptomu sorgulanmalidir; rabdomiyoliz nadirdir ama izlenmelidir.", source:"AHA/ACC Cholesterol Guideline", url:"https://www.ahajournals.org/"},
+            {text:"Stabil angina hastalarinda dilalti nitrogliserin etkisi 1-3 dakikada baslar; 5 dakika sonra agri devam ediyorsa 112 aranmalidir.", source:"ESC Stabil KAH Kilavuzu", url:"https://www.escardio.org/Guidelines"},
+            {text:"Kalp yetmezligi olan hastalarda gunluk tuz < 5 g, sivi alimi genelde 1.5-2 L ile sinirlandirilmalidir.", source:"ESC Kalp Yetmezligi 2023", url:"https://www.escardio.org/Guidelines"},
+            {text:"QT uzatici ilaclarla baslamadan once 12 derivasyonlu EKG ve K/Mg duzeyleri kontrol edilmelidir; QTc > 500 ms tehlikelidir.", source:"AHA Scientific Statement", url:"https://www.ahajournals.org/"},
+            {text:"Anti-iskemik tedavide beta-bloker, hedef istirahat kalp hizini 55-60/dk olacak sekilde titre edilmelidir.", source:"ESC KAH Kilavuzu", url:"https://www.escardio.org/Guidelines"},
+            {text:"Akut MI suphesinde ilk EKG 10 dakika icinde cekilmelidir; STEMI'de hedef kapi-balon suresi <=90 dakikadir.", source:"ESC STEMI Kilavuzu", url:"https://www.escardio.org/Guidelines"},
+            {text:"Gebede hipertansiyon: 140/90 mmHg ustu tedavi gerektirir; metildopa, labetalol ve nifedipin guvenli secimlerdir.", source:"ACOG", url:"https://www.acog.org/"},
+            {text:"Atletlerde sinkop, gogus agrisi veya aile oykusu varsa hipertrofik kardiyomiyopati acisindan EKG + ekokardiyografi onerilir.", source:"ESC Sports Cardiology", url:"https://www.escardio.org/Guidelines"},
+            {text:"Hipertansif kriz: hedef ilk 1 saatte MAP'i %25'ten fazla dusurmek beyin/koroner iskemiye yol acabilir.", source:"AHA HTN Guidelines", url:"https://www.ahajournals.org/"},
+            {text:"DOAC (apiksaban, rivaroksaban) kullanan hastalarda kreatinin klirensi yilda en az bir kez izlenmelidir.", source:"ESC AF 2024", url:"https://www.escardio.org/Guidelines"},
+            {text:"Periferik arter hastaligi olan her hastada koroner arter hastaligi taranmali; ABI < 0.9 anlamlidir.", source:"ESC PAD Guideline", url:"https://www.escardio.org/Guidelines"},
+
+            // ── Beslenme ──
+            {text:"Tam tahil tuketimi (gunde 3 porsiyon) kardiyovaskuler olum riskini %15-20 azaltir.", source:"Circulation (AHA)", url:"https://www.ahajournals.org/journal/circ"},
+            {text:"Trans yag tuketimini sifirlamak LDL'yi dusurur, HDL'yi korur; islenmis sanayi gidalarini sinirlandirin.", source:"WHO REPLACE", url:"https://www.who.int/teams/nutrition-and-food-safety/replace-trans-fat"},
+            {text:"DASH diyeti (meyve, sebze, dusuk yagli sut, tam tahil) sistolik kan basincini 8-14 mmHg dusurur.", source:"NHLBI DASH", url:"https://www.nhlbi.nih.gov/education/dash-eating-plan"},
+            {text:"Gunluk 30 g (bir avuc) findik/ceviz tuketimi koroner kalp hastaligi riskini %25-30 azaltir.", source:"BMC Medicine (2016)", url:"https://bmcmedicine.biomedcentral.com/"},
+            {text:"Kahve tuketimi (gunde 3-5 fincan) tip 2 diyabet riskini azaltabilir; ancak filtre kahve tercih edin (kafestol kolesterolu artirir).", source:"AHA", url:"https://www.heart.org/"},
+            {text:"Seker eklenmis icecekleri azaltmak insulin direnci ve hipertansiyon riskini belirgin sekilde dusurur.", source:"Circulation", url:"https://www.ahajournals.org/journal/circ"},
+            {text:"Hipertansiyonda potasyumdan zengin gida (muz, ispanak, kuru fasulye) tuketimi kan basincini dengeler — bobrek yetmezliginde dikkat.", source:"ESH Guidelines", url:"https://www.eshonline.org/"},
+            {text:"Tip 2 diyabette dusuk karbonhidrat veya Akdeniz tipi beslenme HbA1c'yi 0.5-1% azaltabilir.", source:"ADA Standards of Care", url:"https://diabetesjournals.org/care"},
+            {text:"Alkol tuketimi: erkekte gunde 2, kadinda 1 standart icimi gecmemeli — daha azi her zaman daha guvenli.", source:"WHO", url:"https://www.who.int/"},
+            {text:"Glisemik indeksi dusuk beslenme (yulaf, mercimek, tam tahil) tokluk kan sekerini ve trigliseridi dusurur.", source:"AHA Scientific Statement", url:"https://www.ahajournals.org/"},
+            {text:"Sebze ve meyveyi taze, dondurulmus veya kuru tuketmek de saglik faydasi saglar; islenmis meyve suyu yerine butun meyve tercih edin.", source:"Harvard T.H. Chan", url:"https://www.hsph.harvard.edu/nutritionsource/"},
+            {text:"Tatlandiricilarin uzun vadeli kullanimi konusunda kanitlar net degil; su, sade kahve ve bitki cayi tercih edilmelidir.", source:"WHO 2023 Guideline", url:"https://www.who.int/news/item/15-05-2023-who-advises-not-to-use-non-sugar-sweeteners-for-weight-control"},
+            {text:"Lif alimi gunde 25-35 g hedeflenmeli; her 7 g lif artisi koroner olay riskini %9 azaltir.", source:"BMJ Meta-analiz", url:"https://www.bmj.com/"},
+            {text:"Yagli kirmizi et ve islenmis et tuketimini sinirlandirmak kolorektal kanser ve KVH riskini azaltir.", source:"IARC/WHO", url:"https://www.iarc.who.int/"},
+            {text:"Magnezyum eksikligi kas kramplari, aritmi ve hipertansiyona neden olabilir; yesil yaprakli sebzeler ve kuruyemis iyi kaynaklardir.", source:"NIH Office of Dietary Supplements", url:"https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/"},
+
+            // ── Genel ──
+            {text:"Otururken her 30 dakikada bir 2-3 dakika ayaga kalkmak postprandiyal kan sekerini ve trigliseridi azaltir.", source:"Diabetes Care", url:"https://diabetesjournals.org/care"},
+            {text:"Hava kirliligi PM2.5 her 10 µg/m³ artisinda kardiyovaskuler olum riski %11 artar; spor saatini hava kalitesine gore secin.", source:"ESC 2024 Environmental Cardiology", url:"https://www.escardio.org/"},
+            {text:"Gunde 7000-10000 adim yuruyus tum nedenli olum riskini belirgin azaltir; 8000 adimin ustu plato olusturur.", source:"JAMA 2023", url:"https://jamanetwork.com/"},
+            {text:"Diyabet, hipertansiyon ve dislipidemi olan hastalarda yillik goz fundus muayenesi onerilir.", source:"ADA / AAO", url:"https://www.aao.org/"},
+            {text:"Stres yonetimi (mindfulness, nefes egzersizi, terapi) hipertansiyon kontrolune katki saglar.", source:"AHA Scientific Statement 2021", url:"https://www.ahajournals.org/"}
         ],
         en: [
-            {text:"Walking 30 minutes daily can reduce heart disease risk by up to 35%.", source:"American Heart Association", url:"https://www.heart.org/"},
-            {text:"Adults need 7-9 hours of sleep per night. Poor sleep weakens the immune system.", source:"National Sleep Foundation", url:"https://www.sleepfoundation.org/"},
-            {text:"Drinking 2-3 liters of water daily supports kidney health and boosts metabolism.", source:"European J. of Clinical Nutrition", url:"https://www.nature.com/ejcn/"},
-            {text:"150 minutes of moderate exercise per week significantly reduces depression symptoms.", source:"WHO", url:"https://www.who.int/"},
-            {text:"The Mediterranean diet can reduce cardiovascular events by 30%.", source:"NEJM", url:"https://www.nejm.org/"},
-            {text:"One year after quitting smoking, heart attack risk drops by half.", source:"CDC", url:"https://www.cdc.gov/"},
-            {text:"Eating 5 servings of fruits and vegetables daily reduces stroke risk by 26%.", source:"The Lancet", url:"https://www.thelancet.com/"},
-            {text:"Omega-3 fatty acids reduce inflammation and support brain health.", source:"Harvard Medical School", url:"https://www.health.harvard.edu/"}
+            {text:"30 minutes of brisk walking daily can lower cardiovascular mortality by up to 35%.", source:"American Heart Association", url:"https://www.heart.org/"},
+            {text:"Adults need 7-9 hours of sleep per night. Poor sleep raises hypertension and atrial fibrillation risk.", source:"National Sleep Foundation", url:"https://www.sleepfoundation.org/"},
+            {text:"Drinking 2-2.5 L of water daily supports kidney function; heart failure patients should consult their physician.", source:"European J. of Clinical Nutrition", url:"https://www.nature.com/ejcn/"},
+            {text:"150 min moderate or 75 min vigorous activity per week reduces depression and sudden cardiac death risk.", source:"WHO", url:"https://www.who.int/"},
+            {text:"The Mediterranean diet reduces major cardiovascular events by ~30% (PREDIMED trial).", source:"NEJM (PREDIMED)", url:"https://www.nejm.org/doi/full/10.1056/NEJMoa1800389"},
+            {text:"One year after quitting smoking, coronary heart disease risk drops by half.", source:"CDC", url:"https://www.cdc.gov/tobacco/"},
+            {text:"5 servings (~400 g) of fruits and vegetables daily lower stroke risk by 26%.", source:"The Lancet", url:"https://www.thelancet.com/"},
+            {text:"Omega-3 fatty acids from 2 servings of fatty fish per week reduce coronary mortality.", source:"Harvard Medical School", url:"https://www.health.harvard.edu/"},
+            {text:"Keeping daily salt below 5 g lowers systolic BP by ~5 mmHg on average.", source:"WHO", url:"https://www.who.int/"},
+
+            // Cardiac
+            {text:"Home BP monitoring is more reliable than clinic readings; average two morning and two evening measurements.", source:"ESC HTN Guideline 2024", url:"https://www.escardio.org/Guidelines"},
+            {text:"LDL target: <55 mg/dL in very-high-risk patients, <70 mg/dL in high-risk.", source:"ESC Dyslipidemia Guideline", url:"https://www.escardio.org/Guidelines"},
+            {text:"In AF, anticoagulation is recommended if CHA2DS2-VASc >=2 in men, >=3 in women.", source:"ESC AF 2024", url:"https://www.escardio.org/Guidelines"},
+            {text:"After starting a statin, recheck LDL and ask about muscle symptoms at 4-12 weeks.", source:"AHA/ACC Cholesterol Guideline", url:"https://www.ahajournals.org/"},
+            {text:"In stable angina, sublingual nitroglycerin works in 1-3 min; if chest pain persists after 5 min, call EMS.", source:"ESC Chronic CAD Guideline", url:"https://www.escardio.org/Guidelines"},
+            {text:"Heart failure: daily salt <5 g and fluid restriction 1.5-2 L typically advised.", source:"ESC HF 2023", url:"https://www.escardio.org/Guidelines"},
+            {text:"Before QT-prolonging drugs, check 12-lead ECG and K/Mg levels; QTc >500 ms is dangerous.", source:"AHA Scientific Statement", url:"https://www.ahajournals.org/"},
+            {text:"In suspected acute MI, first ECG within 10 min; door-to-balloon target <=90 min in STEMI.", source:"ESC STEMI Guideline", url:"https://www.escardio.org/Guidelines"},
+            {text:"DOAC users: renal function (CrCl) should be checked at least yearly.", source:"ESC AF 2024", url:"https://www.escardio.org/Guidelines"},
+
+            // Nutrition
+            {text:"3 servings of whole grains daily reduce cardiovascular mortality by 15-20%.", source:"Circulation (AHA)", url:"https://www.ahajournals.org/journal/circ"},
+            {text:"Eliminating industrial trans fats lowers LDL and preserves HDL.", source:"WHO REPLACE", url:"https://www.who.int/teams/nutrition-and-food-safety/replace-trans-fat"},
+            {text:"The DASH diet reduces systolic BP by 8-14 mmHg.", source:"NHLBI DASH", url:"https://www.nhlbi.nih.gov/education/dash-eating-plan"},
+            {text:"A daily handful (~30 g) of nuts lowers coronary heart disease risk by 25-30%.", source:"BMC Medicine (2016)", url:"https://bmcmedicine.biomedcentral.com/"},
+            {text:"Reducing sugar-sweetened beverages improves insulin resistance and BP.", source:"Circulation", url:"https://www.ahajournals.org/journal/circ"},
+            {text:"In type 2 diabetes, Mediterranean or low-carb patterns can lower HbA1c by 0.5-1%.", source:"ADA Standards of Care", url:"https://diabetesjournals.org/care"},
+            {text:"Alcohol: up to 2 drinks/day for men, 1 for women — less is always safer.", source:"WHO", url:"https://www.who.int/"},
+            {text:"Aim for 25-35 g of fiber daily; every +7 g lowers coronary events by 9%.", source:"BMJ meta-analysis", url:"https://www.bmj.com/"},
+            {text:"Limit processed and red meat to reduce colorectal cancer and CVD risk.", source:"IARC/WHO", url:"https://www.iarc.who.int/"},
+            {text:"Magnesium deficiency can cause cramps, arrhythmia and hypertension; leafy greens and nuts are good sources.", source:"NIH ODS", url:"https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/"},
+
+            // General
+            {text:"Standing for 2-3 min every 30 min lowers postprandial glucose and triglycerides.", source:"Diabetes Care", url:"https://diabetesjournals.org/care"},
+            {text:"For every 10 µg/m³ PM2.5 increase, cardiovascular mortality rises by 11%.", source:"ESC 2024", url:"https://www.escardio.org/"},
+            {text:"7000-10000 steps/day significantly lowers all-cause mortality; benefit plateaus past 8000.", source:"JAMA 2023", url:"https://jamanetwork.com/"}
         ],
         az: [
             {text:"G\u00fcnd\u0259lik 30 d\u0259qiq\u0259 g\u0259zinti \u00fcr\u0259k x\u0259st\u0259likl\u0259ri riskini 35% azalda bil\u0259r.", source:"AHA", url:"https://www.heart.org/"},
