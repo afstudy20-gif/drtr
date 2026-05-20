@@ -92,7 +92,26 @@
     .error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;font-size:.85rem;color:#B91C1C;margin-top:14px;display:none}
     .error-box.visible{display:block}
 
-    @media(max-width:600px){.hero h1{font-size:1.35rem}#map{height:280px}.nobetci-links{flex-direction:column}.ext-btn{justify-content:center}}
+    /* Manual selector */
+    .manual-picker{margin-top:18px;padding-top:18px;border-top:1px dashed var(--border)}
+    .manual-picker .picker-title{font-size:.85rem;font-weight:700;color:var(--text-primary);margin-bottom:10px}
+    .picker-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .picker-row select{flex:1;min-width:160px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font:inherit;font-size:.9rem;color:var(--text-primary);outline:none;cursor:pointer}
+    .picker-row select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .picker-row select:disabled{background:#F8FAFC;color:var(--text-faint);cursor:not-allowed}
+    .picker-go{background:var(--teal);color:#fff;border:none;padding:9px 18px;border-radius:8px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer}
+    .picker-go:hover{background:var(--teal-dark)}
+    .picker-go:disabled{background:#94A3B8;cursor:not-allowed}
+
+    /* Embed */
+    .embed-section{margin-top:24px;display:none}
+    .embed-section.visible{display:block}
+    .embed-frame{width:100%;height:560px;border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
+    .embed-credit{font-size:.74rem;color:var(--text-muted);margin-top:8px;text-align:right}
+    .embed-credit a{color:var(--teal);text-decoration:none}
+    .embed-credit a:hover{text-decoration:underline}
+
+    @media(max-width:600px){.hero h1{font-size:1.35rem}#map{height:280px}.nobetci-links{flex-direction:column}.ext-btn{justify-content:center}.embed-frame{height:480px}}
   </style>
 </head>
 <body>
@@ -111,7 +130,7 @@
   <div class="hero">
     <div class="hero-badge">Eczane</div>
     <h1>Nöbetçi Eczane Bul</h1>
-    <p>Konumunuzu paylaşın, ilinize ait nöbetçi eczane listesine doğrudan ulaşın ve haritada yakın eczaneleri görüntüleyin.</p>
+    <p>Konumunuzu paylaşın veya il/ilçe seçin: güncel nöbetçi eczane listesi sayfaya gömülü olarak gösterilir, ek olarak çevredeki tüm eczaneler haritada listelenir. Veri kaynağı: eczaneler.gen.tr (Türk Eczacıları Birliği).</p>
   </div>
 
   <!-- Location card -->
@@ -139,17 +158,40 @@
     <div class="nobetci-links" id="nobetciLinks">
       <a id="tebLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-primary">
         <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        Nöbetçi Eczane Listesi
+        Resmi Nöbetçi Listesi
+      </a>
+      <a id="districtLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-outline" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 14 8 14s8-8.75 8-14a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+        İlçe Listesi
       </a>
       <a id="mapsLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-outline">
         <svg viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-        Google Haritalar'da Göster
+        Google Haritalar
       </a>
       <a id="yandexLink" href="#" target="_blank" rel="noopener" class="ext-btn ext-btn-outline">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 14 8 14s8-8.75 8-14a8 8 0 0 0-8-8z"/></svg>
         Yandex Haritalar
       </a>
     </div>
+
+    <div class="manual-picker">
+      <div class="picker-title">Konum izni vermeden manuel seç</div>
+      <div class="picker-row">
+        <select id="cityPick"><option value="">İl seçin…</option></select>
+        <select id="distPick" disabled><option value="">İlçe (opsiyonel)</option></select>
+        <button class="picker-go" id="pickGo" disabled>Listele</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded official list -->
+  <div class="embed-section" id="embedSection">
+    <div class="section-title">
+      Güncel Nöbetçi Eczane Listesi
+      <span class="section-badge" style="background:#DCFCE7;color:#15803D;border-color:#86EFAC">Resmi</span>
+    </div>
+    <iframe id="embedFrame" class="embed-frame" loading="lazy" title="Nöbetçi eczane listesi"></iframe>
+    <div class="embed-credit">Kaynak: <a id="embedSrc" href="#" target="_blank" rel="noopener">eczaneler.gen.tr</a> · Türk Eczacıları Birliği verileri</div>
   </div>
 
   <!-- Map + pharmacy list -->
@@ -199,13 +241,43 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 var map, userMarker, pharmMarkers = [];
-var userLat, userLng, detectedCity, detectedSlug;
+var userLat, userLng, detectedCity, detectedSlug, detectedDistrictSlug;
+
+// 81 il + KKTC
+var TR_CITIES = ['Adana','Adıyaman','Afyonkarahisar','Ağrı','Aksaray','Amasya','Ankara','Antalya','Ardahan','Artvin','Aydın','Balıkesir','Bartın','Batman','Bayburt','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Düzce','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkari','Hatay','Iğdır','Isparta','İstanbul','İzmir','Kahramanmaraş','Karabük','Karaman','Kars','Kastamonu','Kayseri','Kilis','Kırıkkale','Kırklareli','Kırşehir','Kocaeli','Konya','Kütahya','Malatya','Manisa','Mardin','Mersin','Muğla','Muş','Nevşehir','Niğde','Ordu','Osmaniye','Rize','Sakarya','Samsun','Şanlıurfa','Siirt','Sinop','Sivas','Şırnak','Tekirdağ','Tokat','Trabzon','Tunceli','Uşak','Van','Yalova','Yozgat','Zonguldak'];
+
+// Major districts (only most-searched; site itself supports all). Empty list = city-only.
+var TR_DISTRICTS = {
+  'istanbul':['Adalar','Arnavutköy','Ataşehir','Avcılar','Bağcılar','Bahçelievler','Bakırköy','Başakşehir','Bayrampaşa','Beşiktaş','Beykoz','Beylikdüzü','Beyoğlu','Büyükçekmece','Çatalca','Çekmeköy','Esenler','Esenyurt','Eyüpsultan','Fatih','Gaziosmanpaşa','Güngören','Kadıköy','Kağıthane','Kartal','Küçükçekmece','Maltepe','Pendik','Sancaktepe','Sarıyer','Silivri','Sultanbeyli','Sultangazi','Şile','Şişli','Tuzla','Ümraniye','Üsküdar','Zeytinburnu'],
+  'ankara':['Akyurt','Altındağ','Ayaş','Bala','Beypazarı','Çamlıdere','Çankaya','Çubuk','Elmadağ','Etimesgut','Evren','Gölbaşı','Güdül','Haymana','Kahramankazan','Kalecik','Keçiören','Kızılcahamam','Mamak','Nallıhan','Polatlı','Pursaklar','Sincan','Şereflikoçhisar','Yenimahalle'],
+  'izmir':['Aliağa','Balçova','Bayındır','Bayraklı','Bergama','Beydağ','Bornova','Buca','Çeşme','Çiğli','Dikili','Foça','Gaziemir','Güzelbahçe','Karabağlar','Karaburun','Karşıyaka','Kemalpaşa','Kınık','Kiraz','Konak','Menderes','Menemen','Narlıdere','Ödemiş','Seferihisar','Selçuk','Tire','Torbalı','Urla'],
+  'bursa':['Büyükorhan','Gemlik','Gürsu','Harmancık','İnegöl','İznik','Karacabey','Keles','Kestel','Mudanya','Mustafakemalpaşa','Nilüfer','Orhaneli','Orhangazi','Osmangazi','Yenişehir','Yıldırım'],
+  'antalya':['Akseki','Aksu','Alanya','Demre','Döşemealtı','Elmalı','Finike','Gazipaşa','Gündoğmuş','İbradı','Kaş','Kemer','Kepez','Konyaaltı','Korkuteli','Kumluca','Manavgat','Muratpaşa','Serik'],
+  'adana':['Aladağ','Ceyhan','Çukurova','Feke','İmamoğlu','Karaisalı','Karataş','Kozan','Pozantı','Saimbeyli','Sarıçam','Seyhan','Tufanbeyli','Yumurtalık','Yüreğir'],
+  'gaziantep':['Araban','İslahiye','Karkamış','Nizip','Nurdağı','Oğuzeli','Şahinbey','Şehitkamil','Yavuzeli'],
+  'konya':['Akşehir','Beyşehir','Bozkır','Cihanbeyli','Çumra','Ereğli','Karatay','Meram','Selçuklu','Seydişehir'],
+  'mersin':['Akdeniz','Anamur','Aydıncık','Bozyazı','Çamlıyayla','Erdemli','Gülnar','Mezitli','Mut','Silifke','Tarsus','Toroslar','Yenişehir'],
+  'kayseri':['Bünyan','Develi','Felahiye','Hacılar','İncesu','Kocasinan','Melikgazi','Pınarbaşı','Sarıoğlan','Sarız','Talas','Tomarza','Yahyalı','Yeşilhisar'],
+  'eskisehir':['Alpu','Beylikova','Çifteler','Günyüzü','Han','İnönü','Mahmudiye','Mihalgazi','Mihalıççık','Odunpazarı','Sarıcakaya','Seyitgazi','Sivrihisar','Tepebaşı'],
+  'kocaeli':['Başiskele','Çayırova','Darıca','Derince','Dilovası','Gebze','Gölcük','İzmit','Kandıra','Karamürsel','Kartepe','Körfez'],
+  'sakarya':['Adapazarı','Akyazı','Arifiye','Erenler','Ferizli','Geyve','Hendek','Karapürçek','Karasu','Kaynarca','Kocaali','Pamukova','Sapanca','Serdivan','Söğütlü','Taraklı'],
+  'samsun':['19 Mayıs','Alaçam','Asarcık','Atakum','Ayvacık','Bafra','Canik','Çarşamba','Havza','İlkadım','Kavak','Ladik','Salıpazarı','Tekkeköy','Terme','Vezirköprü','Yakakent'],
+  'trabzon':['Akçaabat','Araklı','Arsin','Beşikdüzü','Çarşıbaşı','Çaykara','Dernekpazarı','Düzköy','Hayrat','Köprübaşı','Maçka','Of','Ortahisar','Sürmene','Şalpazarı','Tonya','Vakfıkebir','Yomra'],
+  'denizli':['Acıpayam','Babadağ','Baklan','Bekilli','Beyağaç','Bozkurt','Buldan','Çal','Çameli','Çardak','Çivril','Güney','Honaz','Kale','Merkezefendi','Pamukkale','Sarayköy','Serinhisar','Tavas'],
+  'sanliurfa':['Akçakale','Birecik','Bozova','Ceylanpınar','Eyyübiye','Halfeti','Haliliye','Harran','Hilvan','Karaköprü','Siverek','Suruç','Viranşehir'],
+  'diyarbakir':['Bağlar','Bismil','Çermik','Çınar','Çüngüş','Dicle','Eğil','Ergani','Hani','Hazro','Kayapınar','Kocaköy','Kulp','Lice','Silvan','Sur','Yenişehir'],
+  'malatya':['Akçadağ','Arapgir','Arguvan','Battalgazi','Darende','Doğanşehir','Doğanyol','Hekimhan','Kale','Kuluncak','Pütürge','Yazıhan','Yeşilyurt']
+};
 
 function cityToSlug(name) {
   return (name || '').toLowerCase()
     .replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s')
     .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ç/g,'c')
     .replace(/İ/g,'i').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+function buildOfficialUrl(citySlug, distSlug) {
+  if(distSlug) return 'https://www.eczaneler.gen.tr/nobetci-' + citySlug + '-' + distSlug;
+  return 'https://www.eczaneler.gen.tr/nobetci-' + citySlug;
 }
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -264,6 +336,7 @@ async function findLocation() {
     detectedCity = addr.province || addr.state || addr.city || addr.county || 'Bilinmiyor';
     var district = addr.county || addr.town || addr.suburb || addr.village || '';
     detectedSlug = cityToSlug(detectedCity);
+    detectedDistrictSlug = district && district !== detectedCity ? cityToSlug(district) : '';
 
     // Show city
     document.getElementById('cityName').textContent = detectedCity + (district && district !== detectedCity ? ' / ' + district : '');
@@ -271,10 +344,11 @@ async function findLocation() {
     document.getElementById('cityResult').classList.add('visible');
 
     // External links
-    document.getElementById('tebLink').href = 'https://www.eczaneler.gen.tr/nobetci/' + detectedSlug;
+    updateExternalLinks(detectedSlug, detectedDistrictSlug);
     document.getElementById('mapsLink').href = 'https://www.google.com/maps/search/nöbetçi+eczane/@' + userLat + ',' + userLng + ',14z';
     document.getElementById('yandexLink').href = 'https://yandex.com.tr/harita/?text=nöbetçi eczane&ll=' + userLng + ',' + userLat + '&z=14';
     document.getElementById('nobetciLinks').classList.add('visible');
+    showEmbed(detectedSlug, detectedDistrictSlug);
 
     // Init map
     setStatus('Yakın eczaneler haritaya yükleniyor...', true);
@@ -407,6 +481,79 @@ function renderPharmacies(pharmacies) {
     map.fitBounds(bounds, {padding:[30,30], maxZoom:15});
   }
 }
+
+// ── Embed + external link helpers ──
+function updateExternalLinks(citySlug, distSlug) {
+  document.getElementById('tebLink').href = buildOfficialUrl(citySlug, null);
+  var dl = document.getElementById('districtLink');
+  if(distSlug) {
+    dl.href = buildOfficialUrl(citySlug, distSlug);
+    dl.style.display = '';
+  } else {
+    dl.style.display = 'none';
+  }
+}
+function showEmbed(citySlug, distSlug) {
+  var url = buildOfficialUrl(citySlug, distSlug);
+  var sec = document.getElementById('embedSection');
+  document.getElementById('embedFrame').src = url;
+  document.getElementById('embedSrc').href = url;
+  document.getElementById('embedSrc').textContent = url.replace('https://','');
+  sec.classList.add('visible');
+}
+
+// ── Manual picker ──
+(function initPicker(){
+  var cityPick = document.getElementById('cityPick');
+  var distPick = document.getElementById('distPick');
+  var pickGo = document.getElementById('pickGo');
+
+  TR_CITIES.forEach(function(c){
+    var o = document.createElement('option');
+    o.value = cityToSlug(c);
+    o.textContent = c;
+    o.dataset.name = c;
+    cityPick.appendChild(o);
+  });
+
+  cityPick.addEventListener('change', function(){
+    distPick.innerHTML = '<option value="">İlçe (opsiyonel)</option>';
+    var slug = cityPick.value;
+    pickGo.disabled = !slug;
+    if(!slug){distPick.disabled=true;return}
+    var districts = TR_DISTRICTS[slug] || [];
+    if(districts.length){
+      districts.forEach(function(d){
+        var o=document.createElement('option');
+        o.value=cityToSlug(d);o.textContent=d;
+        distPick.appendChild(o);
+      });
+      distPick.disabled = false;
+    } else {
+      distPick.disabled = true;
+    }
+  });
+
+  pickGo.addEventListener('click', function(){
+    var citySlug = cityPick.value;
+    if(!citySlug)return;
+    var distSlug = distPick.value || '';
+    var cityName = cityPick.options[cityPick.selectedIndex].dataset.name;
+    var distName = distSlug ? distPick.options[distPick.selectedIndex].textContent : '';
+
+    detectedSlug = citySlug;
+    detectedDistrictSlug = distSlug;
+    document.getElementById('cityName').textContent = cityName + (distName ? ' / ' + distName : '');
+    document.getElementById('cityCoords').textContent = 'Manuel seçim';
+    document.getElementById('cityResult').classList.add('visible');
+    updateExternalLinks(citySlug, distSlug);
+    document.getElementById('mapsLink').href = 'https://www.google.com/maps/search/' + encodeURIComponent('nöbetçi eczane ' + cityName + (distName?' '+distName:''));
+    document.getElementById('yandexLink').href = 'https://yandex.com.tr/harita/?text=' + encodeURIComponent('nöbetçi eczane ' + cityName + (distName?' '+distName:''));
+    document.getElementById('nobetciLinks').classList.add('visible');
+    showEmbed(citySlug, distSlug);
+    document.getElementById('embedSection').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+})();
 </script>
 <script src="/ads.js"></script>
 </body>
