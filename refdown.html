@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RefDown — Tek Tıkla Atıf Üretici Tarayıcı Eklentisi — DrTR Tools</title>
+  <meta name="description" content="RefDown: Chrome/Edge tarayıcı eklentisi. Herhangi bir web sayfası, DOI, ISBN, PubMed veya arXiv ID için tek tıkla atıf üretir. Local-first, kayıt yok.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/refdown.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root{
+      --bg:#F8FAFC;--surface:#FFFFFF;
+      --text-primary:#0F172A;--text-secondary:#334155;--text-muted:#64748B;--text-faint:#94A3B8;
+      --border:#E2E8F0;--teal:#0F766E;--teal-bg:#F0FDFA;--teal-dark:#0D5F59;
+      --blue:#1D4ED8;--blue-bg:#EFF6FF;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh;line-height:1.6}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:920px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:920px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{display:flex;gap:20px;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap}
+    .hero-icon{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#0F766E,#0D9488);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;flex-shrink:0;box-shadow:0 8px 24px rgba(15,118,110,.25)}
+    .hero-text{flex:1;min-width:240px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+    .hero h1{font-size:1.8rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.95rem;color:var(--text-muted);max-width:680px}
+
+    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:.92rem;font-weight:600;padding:10px 20px;border-radius:9px;border:none;cursor:pointer;text-decoration:none;transition:all .15s}
+    .btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:var(--teal-dark)}
+    .btn-secondary{background:#fff;color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:#F1F5F9}
+
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:30px}
+    .feat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+    .feat h3{font-size:.92rem;font-weight:700;color:var(--text-primary);margin-bottom:6px}
+    .feat p{font-size:.85rem;color:var(--text-muted)}
+
+    .section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .section h2{font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+    .section h2 .num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+    ol.steps{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:14px}
+    ol.steps li{counter-increment:step;display:flex;gap:14px;padding-left:0}
+    ol.steps li::before{content:counter(step);width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--teal-bg);color:var(--teal);font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+    ol.steps li .step-body{flex:1}
+    ol.steps li b{color:var(--text-primary);font-weight:600}
+    ol.steps li code,.section code{background:#F1F5F9;padding:2px 7px;border-radius:5px;font-size:.84rem;font-family:'SF Mono',Monaco,Consolas,monospace;color:var(--text-primary)}
+
+    .browser-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+    .btab{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;font:inherit;font-size:.85rem;font-weight:600;color:var(--text-muted);cursor:pointer}
+    .btab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .bpanel{display:none}.bpanel.active{display:block}
+
+    .note{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:12px 16px;font-size:.85rem;color:#92400E;margin-top:14px}
+    .note b{color:#78350F}
+
+    .id-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
+    .id-card{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.85rem}
+    .id-card b{color:var(--text-primary);display:block;margin-bottom:2px}
+    .id-card span{color:var(--text-muted);font-family:'SF Mono',Monaco,Consolas,monospace;font-size:.78rem}
+
+    .styles-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .style-chip{background:var(--teal-bg);color:var(--teal);border:1px solid #CCFBF1;padding:4px 12px;border-radius:14px;font-size:.78rem;font-weight:600}
+
+    @media(max-width:600px){.hero h1{font-size:1.4rem}.hero-icon{width:56px;height:56px;font-size:1.2rem}.section{padding:18px}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon">Rd</div>
+    <div class="hero-text">
+      <span class="hero-badge">Tarayıcı Eklentisi · Chrome / Edge</span>
+      <h1>RefDown — Tek Tıkla Atıf Üretici</h1>
+      <p>Açtığınız herhangi bir web sayfasından — makale, kitap, gazete, PubMed/arXiv/DOI/ISBN linki — tek tıkla atıf üretir. Tüm formatlama tarayıcınızda yapılır; hesap yok, sunucuya veri gitmez. APA, Vancouver, AMA, MLA, Chicago, Harvard ve daha fazlasını destekler.</p>
+      <div class="cta">
+        <a href="#install" class="btn btn-primary">📥 Kurulum Adımları</a>
+        <a href="https://github.com/" target="_blank" rel="noopener" class="btn btn-secondary">GitHub Reposu</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <h3>📚 Yaygın Atıf Stilleri</h3>
+      <p>APA 7, Vancouver, AMA, MLA, Chicago Author-Date, Chicago Notes, Harvard, IEEE.</p>
+    </div>
+    <div class="feat">
+      <h3>🔍 Otomatik ID Tanıma</h3>
+      <p>DOI, PMID, arXiv ID, ISBN otomatik algılanır; Crossref / PubMed / OpenLibrary / arXiv API ile bilgiler tamamlanır.</p>
+    </div>
+    <div class="feat">
+      <h3>🔒 Local-first</h3>
+      <p>Veriler tarayıcınızda kalır. Üyelik, hesap veya bulut senkronizasyonu gerekmez.</p>
+    </div>
+    <div class="feat">
+      <h3>📤 Çoklu Export</h3>
+      <p>Panoya kopyala, BibTeX (.bib), RIS (.ris) veya düz metin olarak indirin.</p>
+    </div>
+  </div>
+
+  <div class="section" id="install">
+    <h2><span class="num">📥</span> Kurulum</h2>
+    <div class="browser-tabs">
+      <button class="btab active" data-b="chrome">Chrome / Brave / Opera</button>
+      <button class="btab" data-b="edge">Microsoft Edge</button>
+      <button class="btab" data-b="firefox">Firefox</button>
+    </div>
+
+    <div class="bpanel active" id="b-chrome">
+      <ol class="steps">
+        <li><div class="step-body"><b>Repoyu indirin:</b> GitHub sayfasından <code>Code → Download ZIP</code> ile ZIP olarak indirip açın <i>veya</i> <code>git clone</code> ile klonlayın.</div></li>
+        <li><div class="step-body"><b>Eklenti sayfasını açın:</b> Adres çubuğuna <code>chrome://extensions</code> yazın ve Enter.</div></li>
+        <li><div class="step-body"><b>Geliştirici modunu açın:</b> Sağ üstteki <b>Developer mode</b> / <b>Geliştirici modu</b> anahtarını aktif edin.</div></li>
+        <li><div class="step-body"><b>Eklentiyi yükleyin:</b> <b>Load unpacked</b> / <b>Paketlenmemiş öğe yükle</b> düğmesine basın ve indirdiğiniz <code>refdown</code> klasörünü seçin.</div></li>
+        <li><div class="step-body"><b>Araç çubuğuna sabitleyin:</b> Tarayıcı sağ üstteki puzzle (🧩) simgesinden RefDown'u bulun ve raptiye simgesine basarak sabitleyin.</div></li>
+        <li><div class="step-body"><b>Kullanmaya başlayın:</b> Herhangi bir makale sayfasına gidin, RefDown simgesine tıklayın, stil seçin, <b>Cite this page</b>.</div></li>
+      </ol>
+    </div>
+
+    <div class="bpanel" id="b-edge">
+      <ol class="steps">
+        <li><div class="step-body">Repoyu ZIP olarak indirip açın.</div></li>
+        <li><div class="step-body">Adres çubuğuna <code>edge://extensions</code> yazın.</div></li>
+        <li><div class="step-body">Sol altta <b>Geliştirici modu</b> anahtarını açın.</div></li>
+        <li><div class="step-body"><b>Paketlenmemiş öğeyi yükle</b> → <code>refdown</code> klasörünü seçin.</div></li>
+        <li><div class="step-body">Araç çubuğundaki uzantı simgesinden RefDown'u sabitleyin.</div></li>
+      </ol>
+    </div>
+
+    <div class="bpanel" id="b-firefox">
+      <ol class="steps">
+        <li><div class="step-body">Repoyu indirin (kalıcı kurulum için Firefox uyumlu sürüm beklenmektedir — v1.0 yol haritasında).</div></li>
+        <li><div class="step-body">Geçici test için <code>about:debugging#/runtime/this-firefox</code> → <b>Load Temporary Add-on</b> → <code>manifest.json</code> seçin.</div></li>
+        <li><div class="step-body">Geçici eklentiler Firefox kapatıldığında silinir. Kalıcı kurulum için resmi sürümü bekleyin.</div></li>
+      </ol>
+    </div>
+
+    <div class="note">
+      <b>Not:</b> RefDown geliştirme aşamasındadır ve henüz Chrome Web Store / Edge Add-ons üzerinden yayınlanmamıştır. <b>Developer mode</b> ile yükleme şu an için tek seçenektir. Tarayıcı her açılışta kısa bir "Geliştirici modu uzantısı kullanılıyor" uyarısı gösterebilir — bu normaldir.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="num">⚡</span> Nasıl Çalışır?</h2>
+    <ol class="steps">
+      <li><div class="step-body"><b>Sayfa taraması:</b> İçerik script'i (<code>content/scraper.js</code>) açık sekmedeki meta verileri okur:
+        <ul style="margin-top:6px;padding-left:20px;font-size:.86rem;color:var(--text-muted)">
+          <li>Highwire etiketleri (<code>citation_*</code>) — PubMed, dergiler</li>
+          <li>OpenGraph + Dublin Core</li>
+          <li>JSON-LD: <code>Article</code> / <code>ScholarlyArticle</code> / <code>Book</code></li>
+          <li>DOI / ISBN / PMID / arXiv ID otomatik algısı</li>
+        </ul>
+      </div></li>
+      <li><div class="step-body"><b>API zenginleştirme:</b> Arka plan service worker, bulduğu ID'yi ilgili API'ye gönderir:
+        <div class="id-grid">
+          <div class="id-card"><b>DOI</b><span>api.crossref.org</span></div>
+          <div class="id-card"><b>PMID</b><span>NCBI E-utilities</span></div>
+          <div class="id-card"><b>arXiv</b><span>export.arxiv.org/api</span></div>
+          <div class="id-card"><b>ISBN</b><span>openlibrary.org</span></div>
+        </div>
+      </div></li>
+      <li><div class="step-body"><b>Stil seçimi:</b> Popup penceresinde istediğiniz stili seçin.</div></li>
+      <li><div class="step-body"><b>Export:</b> Panoya kopyala, <code>.bib</code>, <code>.ris</code> veya düz metin.</div></li>
+    </ol>
+    <div class="styles-list">
+      <span class="style-chip">APA 7</span>
+      <span class="style-chip">Vancouver</span>
+      <span class="style-chip">AMA</span>
+      <span class="style-chip">MLA</span>
+      <span class="style-chip">Chicago Author-Date</span>
+      <span class="style-chip">Chicago Notes</span>
+      <span class="style-chip">Harvard</span>
+      <span class="style-chip">IEEE</span>
+      <span class="style-chip" style="background:#FEF3C7;color:#92400E;border-color:#FDE68A">+ Custom CSL (yakında)</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="num">🛠</span> Sürüm ve Yol Haritası</h2>
+    <p style="margin-bottom:10px"><b>Geçerli sürüm:</b> v0.1 — temel atıf üretimi, 8 stil, ID tanıma, BibTeX/RIS export.</p>
+    <ol class="steps" style="margin-top:10px">
+      <li><div class="step-body"><b>v0.2:</b> citeproc-js entegrasyonu + 10.000+ CSL stilini arama</div></li>
+      <li><div class="step-body"><b>v0.3:</b> Klasörler / koleksiyonlar, toplu export</div></li>
+      <li><div class="step-body"><b>v0.4:</b> PDF metadata çıkarımı</div></li>
+      <li><div class="step-body"><b>v0.5:</b> Zotero connector protokol uyumu</div></li>
+      <li><div class="step-body"><b>v1.0:</b> Firefox MV3 portu, opsiyonlar sayfası, varsayılan stil ve dil</div></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2><span class="num">🔒</span> Gizlilik</h2>
+    <p>RefDown <b>local-first</b> tasarlanmıştır. Hiçbir kullanıcı verisi, atıf geçmişi veya analitik bilgi DrTR sunucularına gönderilmez. Eklenti yalnızca aşağıdaki dış servislere doğrudan istek gönderir (atıf metadatasını tamamlamak için):</p>
+    <ul style="margin-top:8px;padding-left:22px;font-size:.88rem">
+      <li><code>api.crossref.org</code> — DOI çözümlemesi</li>
+      <li><code>eutils.ncbi.nlm.nih.gov</code> — PubMed kayıtları</li>
+      <li><code>export.arxiv.org</code> — arXiv kayıtları</li>
+      <li><code>openlibrary.org</code> — ISBN çözümlemesi</li>
+    </ul>
+    <p style="margin-top:10px;font-size:.86rem;color:var(--text-muted)">Bu istekler standart HTTP GET isteğidir; kişisel bilgi (e-posta, IP, geçmiş) iletilmez — yalnızca tarama yapılan DOI/PMID/ISBN/arXiv ID gönderilir.</p>
+  </div>
+
+  <p style="text-align:center;color:var(--text-muted);font-size:.85rem;margin-top:30px">
+    Açık kaynak · MIT lisansı · <a href="https://github.com/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;font-weight:600">Katkıda bulunun</a>
+  </p>
+</div>
+
+<script>
+document.querySelectorAll('.btab').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.btab').forEach(function(x){x.classList.remove('active')});
+    document.querySelectorAll('.bpanel').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    document.getElementById('b-'+b.dataset.b).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
