@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF / Görsel → Excel / CSV Dönüştürücü — DrTR Tools</title>
+  <meta name="description" content="PDF veya görsellerden tabloları otomatik çıkar; Excel veya CSV olarak indir. Tarayıcıda çalışır, sunucuya veri gönderilmez. OCR destekli.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/pdf-csv.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg:#F8FAFC; --surface:#FFFFFF;
+      --text-primary:#0F172A; --text-secondary:#334155; --text-muted:#64748B; --text-faint:#94A3B8;
+      --border:#E2E8F0; --teal:#0F766E; --teal-bg:#F0FDFA; --teal-dark:#0D5F59;
+      --red:#DC2626; --red-bg:#FEF2F2;
+      --green:#15803D; --green-bg:#F0FDF4;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{margin-bottom:18px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.6;max-width:720px}
+
+    .drop-zone{background:var(--surface);border:2px dashed var(--border);border-radius:14px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px}
+    .drop-zone:hover,.drop-zone.dragover{border-color:var(--teal);background:var(--teal-bg)}
+    .drop-zone .icon{font-size:2.5rem;margin-bottom:10px}
+    .drop-zone h3{font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:6px}
+    .drop-zone p{font-size:.85rem;color:var(--text-muted)}
+    .drop-zone .types{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .type-chip{font-size:.72rem;font-weight:700;background:#F1F5F9;color:var(--text-muted);padding:3px 9px;border-radius:10px}
+
+    .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .ctrl-group{display:flex;flex-direction:column;gap:5px}
+    .ctrl-group label{font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .ctrl-group select,.ctrl-group input{font:inherit;font-size:.86rem;padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text-primary);outline:none}
+    .ctrl-group select:focus,.ctrl-group input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .btn{font:inherit;font-size:.86rem;font-weight:600;padding:8px 18px;border-radius:7px;border:none;cursor:pointer;transition:all .15s}
+    .btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:var(--teal-dark)}
+    .btn-secondary{background:#fff;color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:#F1F5F9}
+    .btn-danger{background:#fff;color:var(--red);border:1px solid #FECACA}.btn-danger:hover{background:var(--red-bg)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+
+    .progress{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:none}
+    .progress.visible{display:block}
+    .progress-bar{height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden;margin-top:8px}
+    .progress-fill{height:100%;background:var(--teal);transition:width .25s;width:0%}
+    .progress-text{font-size:.84rem;color:var(--text-secondary);display:flex;justify-content:space-between;gap:10px}
+
+    .results{display:none}
+    .results.visible{display:block}
+    .pages-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+    .page-tab{padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;font:inherit;font-size:.82rem;font-weight:600;color:var(--text-muted);cursor:pointer}
+    .page-tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .page-tab .badge{font-size:.7rem;background:rgba(255,255,255,.25);padding:1px 6px;border-radius:8px;margin-left:4px}
+
+    .preview{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px;overflow:auto;max-height:60vh}
+    .preview table{border-collapse:collapse;width:100%;font-size:.84rem;font-family:'SF Mono',Monaco,Consolas,monospace}
+    .preview th,.preview td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;white-space:pre-wrap;word-break:break-word}
+    .preview th{background:#F1F5F9;font-weight:700;color:var(--text-primary);position:sticky;top:0}
+    .preview td[contenteditable="true"]:focus{outline:2px solid var(--teal);background:#FFFBEB}
+    .preview-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+    .preview-toolbar .meta{font-size:.78rem;color:var(--text-muted);margin-left:auto}
+
+    .export-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--green-bg);border:1px solid #BBF7D0;border-radius:10px;padding:14px 16px}
+    .export-row .label{font-size:.85rem;color:var(--green);font-weight:700}
+
+    .info{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;font-size:.86rem;color:var(--text-secondary);line-height:1.7}
+    .info h4{color:var(--text-primary);font-size:.95rem;margin-bottom:8px;margin-top:14px}
+    .info h4:first-child{margin-top:0}
+    .info ul{padding-left:22px;margin-top:4px}
+    .info code{background:#F1F5F9;padding:1px 6px;border-radius:4px;font-size:.82rem}
+
+    .error-box{background:var(--red-bg);border:1px solid #FECACA;border-radius:10px;padding:14px 16px;font-size:.85rem;color:#B91C1C;margin-bottom:14px;display:none}
+    .error-box.visible{display:block}
+
+    @media(max-width:600px){.hero h1{font-size:1.35rem}.drop-zone{padding:24px}.preview{max-height:50vh}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-badge">PDF / Görsel → Tablo</span>
+    <h1>PDF & Görsel → Excel / CSV Dönüştürücü</h1>
+    <p>PDF sayfalarından veya görsellerden (JPG/PNG) tabloları otomatik çıkarır; Excel (.xlsx) veya CSV olarak indirir. Metin tabanlı PDF'ler için doğrudan çıkarma, taranmış belgeler/görseller için tarayıcı içi OCR (Tesseract.js) kullanır. <b>Tüm işlem tarayıcınızda yapılır</b> — dosyalarınız sunucuya gönderilmez.</p>
+  </div>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="icon">📄</div>
+    <h3>Dosya seçmek için tıklayın veya sürükleyin</h3>
+    <p>PDF, JPG, PNG, BMP, TIFF, WebP</p>
+    <div class="types">
+      <span class="type-chip">PDF</span>
+      <span class="type-chip">JPG</span>
+      <span class="type-chip">PNG</span>
+      <span class="type-chip">WebP</span>
+      <span class="type-chip">TIFF</span>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,image/*" style="display:none">
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <label for="extractMode">Çıkarma yöntemi</label>
+      <select id="extractMode">
+        <option value="auto">Otomatik (önce metin, gerekirse OCR)</option>
+        <option value="text">Sadece PDF metin katmanı</option>
+        <option value="ocr">Her zaman OCR</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label for="ocrLang">OCR dili</label>
+      <select id="ocrLang">
+        <option value="tur+eng">Türkçe + İngilizce</option>
+        <option value="tur">Türkçe</option>
+        <option value="eng">İngilizce</option>
+        <option value="ara">Arapça</option>
+        <option value="deu">Almanca</option>
+        <option value="fra">Fransızca</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label for="pageRange">Sayfa aralığı</label>
+      <input id="pageRange" type="text" placeholder="ör. 1-5, 8" style="width:120px">
+    </div>
+    <div class="ctrl-group">
+      <label for="dec">Sayı formatı</label>
+      <select id="dec">
+        <option value="comma">1.234,56 (TR)</option>
+        <option value="dot">1,234.56 (US)</option>
+        <option value="raw">Ham metin (dokunma)</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary" id="resetBtn" style="margin-left:auto" disabled>Sıfırla</button>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="progress" id="progress">
+    <div class="progress-text">
+      <span id="progressLabel">Hazırlanıyor…</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="pages-list" id="pagesList"></div>
+
+    <div class="preview" id="preview">
+      <div class="preview-toolbar">
+        <button class="btn btn-secondary" id="addRowBtn">+ Satır</button>
+        <button class="btn btn-secondary" id="addColBtn">+ Sütun</button>
+        <button class="btn btn-secondary" id="delEmptyBtn">Boş satır/sütun sil</button>
+        <button class="btn btn-secondary" id="firstRowHeaderBtn">İlk satır = başlık</button>
+        <span class="meta" id="previewMeta">—</span>
+      </div>
+      <div id="tableContainer"></div>
+    </div>
+
+    <div class="export-row">
+      <div class="label">📥 İndir:</div>
+      <button class="btn btn-primary" id="exportXlsx">Excel (.xlsx)</button>
+      <button class="btn btn-primary" id="exportCsvComma">CSV (virgül)</button>
+      <button class="btn btn-primary" id="exportCsvSemi">CSV (noktalı virgül)</button>
+      <button class="btn btn-primary" id="exportTsv">TSV (Tab)</button>
+      <button class="btn btn-secondary" id="copyClip">Panoya kopyala</button>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>Nasıl çalışır?</h4>
+    <ul>
+      <li><b>Metin tabanlı PDF</b>: pdf.js ile sayfa metin akışı okunur; sütunlar X-koordinatına göre kümelenir.</li>
+      <li><b>Taranmış PDF / Görsel</b>: Tesseract.js ile OCR; tespit edilen satır kutuları analiz edilip tablo grid'i çıkarılır.</li>
+      <li><b>Otomatik mod</b>: önce metin katmanı denenir; sayfada metin yoksa veya çok az kelime varsa otomatik OCR'a geçer.</li>
+      <li><b>Sayı formatı</b>: tablo değerleri TR / US biçimine normalize edilebilir.</li>
+    </ul>
+    <h4>İpuçları</h4>
+    <ul>
+      <li>OCR ilk açılışta dil paketini indirir (~1-5 MB / dil), sonraki kullanımlarda cache'lenir.</li>
+      <li>Çok sayfa için <code>1-5, 8, 12</code> gibi aralık girin.</li>
+      <li>Hücreleri çift tıklayıp düzenleyebilir, satır/sütun ekleyebilirsiniz.</li>
+      <li>Karmaşık çok sütunlu (footnote'lu) PDF'lerde sonuç manuel düzeltme gerektirebilir.</li>
+    </ul>
+    <h4>Gizlilik</h4>
+    <ul>
+      <li>Hiçbir dosya sunucuya gönderilmez. pdf.js + Tesseract.js tarayıcınızda çalışır.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script type="module">
+import * as pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs';
+pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.worker.min.mjs';
+window.__pdfjs = pdfjs;
+</script>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const dropZone = $('dropZone'), fileInput = $('fileInput');
+  const progress = $('progress'), progressFill = $('progressFill'), progressLabel = $('progressLabel'), progressPct = $('progressPct');
+  const results = $('results'), pagesList = $('pagesList'), tableContainer = $('tableContainer'), previewMeta = $('previewMeta');
+  const errorBox = $('errorBox');
+
+  let pages = []; // [{idx, rows: [[c,c],[c,c]], source:'text'|'ocr'}]
+  let activePageIdx = 0;
+
+  // ── UI helpers ──
+  function setProgress(pct, label){
+    progress.classList.add('visible');
+    progressFill.style.width = Math.round(pct) + '%';
+    progressPct.textContent = Math.round(pct) + '%';
+    if(label) progressLabel.textContent = label;
+  }
+  function hideProgress(){ progress.classList.remove('visible') }
+  function showError(msg){ errorBox.textContent = msg; errorBox.classList.add('visible') }
+  function clearError(){ errorBox.classList.remove('visible'); errorBox.textContent = '' }
+  function reset(){
+    pages = []; activePageIdx = 0;
+    results.classList.remove('visible');
+    pagesList.innerHTML = ''; tableContainer.innerHTML = '';
+    clearError(); hideProgress();
+    $('resetBtn').disabled = true;
+    fileInput.value = '';
+  }
+  $('resetBtn').addEventListener('click', reset);
+
+  // ── Drop zone ──
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover') });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('dragover');
+    if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => { if(e.target.files.length) handleFile(e.target.files[0]) });
+
+  // ── Page range parser ──
+  function parseRange(str, max){
+    if(!str || !str.trim()) return Array.from({length:max}, (_,i) => i+1);
+    const out = new Set();
+    str.split(',').forEach(part => {
+      part = part.trim();
+      if(!part) return;
+      const m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      if(m){
+        let a=+m[1], b=+m[2];
+        if(a>b) [a,b]=[b,a];
+        for(let i=a;i<=b;i++) if(i>=1&&i<=max) out.add(i);
+      } else {
+        const n = parseInt(part);
+        if(n>=1 && n<=max) out.add(n);
+      }
+    });
+    return [...out].sort((a,b)=>a-b);
+  }
+
+  // ── Number normalization ──
+  function normNum(cell){
+    const mode = $('dec').value;
+    if(mode === 'raw') return cell;
+    const trimmed = String(cell).trim();
+    if(!/^[\-+]?[\d.,\s]+%?$/.test(trimmed)) return cell;
+    const pct = trimmed.endsWith('%');
+    const raw = trimmed.replace(/%$/,'').replace(/\s/g,'');
+    // Detect format: if both . and , — last separator is decimal
+    let num;
+    if(raw.indexOf('.') >= 0 && raw.indexOf(',') >= 0){
+      const lastDot = raw.lastIndexOf('.'), lastComma = raw.lastIndexOf(',');
+      if(lastComma > lastDot){
+        num = raw.replace(/\./g,'').replace(',','.');
+      } else {
+        num = raw.replace(/,/g,'');
+      }
+    } else if(raw.indexOf(',') >= 0){
+      // Heuristic: if comma followed by exactly 3 digits AND multiple commas → thousands; else decimal
+      const parts = raw.split(',');
+      if(parts.length > 2 || (parts.length === 2 && parts[1].length === 3 && raw.indexOf('.') < 0 && /^\d+$/.test(parts[1]))){
+        num = raw.replace(/,/g,'');
+      } else {
+        num = raw.replace(',','.');
+      }
+    } else {
+      num = raw;
+    }
+    const n = parseFloat(num);
+    if(isNaN(n)) return cell;
+    if(mode === 'comma') return n.toLocaleString('tr-TR', {maximumFractionDigits:8}) + (pct?'%':'');
+    if(mode === 'dot')   return n.toLocaleString('en-US', {maximumFractionDigits:8}) + (pct?'%':'');
+    return cell;
+  }
+
+  // ── Main handler ──
+  async function handleFile(file){
+    clearError();
+    if(!file) return;
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    const isImg = file.type.startsWith('image/') || /\.(jpe?g|png|bmp|tiff?|webp|gif)$/i.test(file.name);
+    if(!isPdf && !isImg){ showError('Desteklenmeyen dosya türü: ' + (file.type||file.name)); return }
+
+    pages = []; pagesList.innerHTML = ''; tableContainer.innerHTML = '';
+    results.classList.remove('visible');
+    $('resetBtn').disabled = false;
+    setProgress(0, 'Dosya hazırlanıyor…');
+
+    try {
+      if(isPdf){
+        await processPdf(file);
+      } else {
+        await processImage(file);
+      }
+    } catch(err){
+      console.error(err);
+      showError('Hata: ' + (err.message || err));
+      hideProgress();
+      return;
+    }
+
+    hideProgress();
+    if(pages.length){
+      renderPagesList();
+      renderActivePage();
+      results.classList.add('visible');
+    } else {
+      showError('Veri çıkarılamadı. Sayfa aralığını veya OCR modunu deneyin.');
+    }
+  }
+
+  // ── PDF processing ──
+  async function processPdf(file){
+    if(!window.__pdfjs){
+      // wait briefly for module
+      await new Promise(r => setTimeout(r, 300));
+    }
+    const pdfjs = window.__pdfjs;
+    if(!pdfjs) throw new Error('PDF kütüphanesi yüklenemedi');
+
+    const buf = await file.arrayBuffer();
+    setProgress(5, 'PDF açılıyor…');
+    const pdf = await pdfjs.getDocument({data: buf}).promise;
+    const total = pdf.numPages;
+    const indices = parseRange($('pageRange').value, total);
+    if(!indices.length) throw new Error('Geçerli sayfa aralığı yok');
+
+    const mode = $('extractMode').value;
+    for(let i=0; i<indices.length; i++){
+      const pn = indices[i];
+      const baseProg = 5 + (i / indices.length) * 90;
+      setProgress(baseProg, `Sayfa ${pn} (${i+1}/${indices.length}) işleniyor…`);
+      const page = await pdf.getPage(pn);
+
+      let rows = null;
+      let source = 'text';
+      if(mode === 'text' || mode === 'auto'){
+        rows = await extractTextRows(page);
+        // Heuristic: if mode==auto and too few cells, fallback to OCR
+        if(mode === 'auto' && (!rows || rows.length < 2 || rows.flat().join('').trim().length < 20)){
+          setProgress(baseProg + 5, `Sayfa ${pn} — metin az, OCR'a geçiliyor…`);
+          rows = await ocrPdfPage(page);
+          source = 'ocr';
+        }
+      } else {
+        rows = await ocrPdfPage(page);
+        source = 'ocr';
+      }
+      if(rows && rows.length) pages.push({idx: pn, rows, source});
+    }
+    setProgress(100, 'Tamamlandı');
+  }
+
+  // Build rows from PDF text items using X-clustering
+  async function extractTextRows(page){
+    const tc = await page.getTextContent();
+    if(!tc.items.length) return null;
+    // group by Y (with tolerance)
+    const items = tc.items.map(it => ({
+      text: it.str,
+      x: it.transform[4],
+      y: it.transform[5],
+      w: it.width || 0
+    })).filter(it => it.text && it.text.trim());
+    if(!items.length) return null;
+
+    items.sort((a,b) => b.y - a.y || a.x - b.x);
+    const yTol = 3;
+    const lines = [];
+    let cur = [], curY = null;
+    for(const it of items){
+      if(curY === null || Math.abs(it.y - curY) <= yTol){
+        cur.push(it);
+        curY = curY === null ? it.y : curY;
+      } else {
+        if(cur.length) lines.push(cur);
+        cur = [it]; curY = it.y;
+      }
+    }
+    if(cur.length) lines.push(cur);
+
+    // Detect column X-positions across all lines (multimodal X clustering)
+    const allX = [];
+    lines.forEach(l => l.forEach(it => allX.push(it.x)));
+    allX.sort((a,b)=>a-b);
+    const cols = clusterColumns(allX, 12);
+    if(cols.length < 2) return null;
+
+    const rows = lines.map(line => {
+      const row = new Array(cols.length).fill('');
+      line.sort((a,b) => a.x - b.x);
+      for(const it of line){
+        let ci = 0, best = Infinity;
+        cols.forEach((cx, i) => {
+          const d = Math.abs(it.x - cx);
+          if(d < best){ best = d; ci = i }
+        });
+        row[ci] = (row[ci] ? row[ci] + ' ' : '') + it.text.trim();
+      }
+      return row;
+    }).filter(r => r.some(c => c && c.trim()));
+
+    return rows;
+  }
+
+  function clusterColumns(xs, gap){
+    if(!xs.length) return [];
+    const cols = [];
+    let group = [xs[0]];
+    for(let i=1;i<xs.length;i++){
+      if(xs[i] - group[group.length-1] <= gap){
+        group.push(xs[i]);
+      } else {
+        cols.push(group.reduce((a,b)=>a+b,0)/group.length);
+        group = [xs[i]];
+      }
+    }
+    if(group.length) cols.push(group.reduce((a,b)=>a+b,0)/group.length);
+    return cols;
+  }
+
+  // OCR a PDF page by rendering to canvas
+  async function ocrPdfPage(page){
+    const viewport = page.getViewport({scale: 2.0});
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport}).promise;
+    return await ocrCanvas(canvas);
+  }
+
+  // ── Image processing ──
+  async function processImage(file){
+    setProgress(5, 'Görsel hazırlanıyor…');
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error('Görsel yüklenemedi'));
+      img.src = url;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    setProgress(15, 'OCR başlıyor…');
+    const rows = await ocrCanvas(canvas);
+    if(rows && rows.length) pages.push({idx: 1, rows, source: 'ocr'});
+    setProgress(100, 'Tamamlandı');
+  }
+
+  async function ocrCanvas(canvas){
+    if(typeof Tesseract === 'undefined') throw new Error('OCR kütüphanesi yüklenmedi');
+    const lang = $('ocrLang').value;
+    const worker = await Tesseract.createWorker(lang, 1, {
+      logger: m => {
+        if(m.status === 'recognizing text'){
+          const cur = parseFloat(progressPct.textContent) || 20;
+          const target = 20 + m.progress * 75;
+          if(target > cur) setProgress(target, 'OCR: ' + Math.round(m.progress*100) + '%');
+        } else if(m.status){
+          progressLabel.textContent = 'OCR: ' + m.status;
+        }
+      }
+    });
+    const { data } = await worker.recognize(canvas, {}, {blocks: true, hocr: false, tsv: false});
+    await worker.terminate();
+    return rowsFromOcrData(data);
+  }
+
+  function rowsFromOcrData(data){
+    // Use word-level bboxes from blocks→paragraphs→lines→words
+    if(!data || !data.blocks) {
+      // Fallback to plain text split
+      return (data && data.text ? data.text : '').split(/\r?\n/).filter(l=>l.trim()).map(l => l.split(/\s{2,}|\t/).map(s=>s.trim()));
+    }
+    const words = [];
+    for(const blk of data.blocks){
+      for(const para of (blk.paragraphs||[])){
+        for(const line of (para.lines||[])){
+          for(const w of (line.words||[])){
+            if(!w.text || !w.bbox) continue;
+            words.push({
+              text: w.text,
+              x0: w.bbox.x0, y0: w.bbox.y0, x1: w.bbox.x1, y1: w.bbox.y1,
+              cx: (w.bbox.x0 + w.bbox.x1)/2,
+              cy: (w.bbox.y0 + w.bbox.y1)/2
+            });
+          }
+        }
+      }
+    }
+    if(!words.length) return null;
+
+    // Group by line via Y proximity
+    words.sort((a,b) => a.cy - b.cy);
+    const heights = words.map(w => w.y1 - w.y0).sort((a,b)=>a-b);
+    const medH = heights[Math.floor(heights.length/2)] || 12;
+    const yTol = Math.max(6, medH * 0.6);
+    const lines = [];
+    let cur = [], curY = null;
+    for(const w of words){
+      if(curY === null || Math.abs(w.cy - curY) <= yTol){
+        cur.push(w);
+        curY = curY === null ? w.cy : (curY*0.7 + w.cy*0.3);
+      } else {
+        if(cur.length) lines.push(cur);
+        cur = [w]; curY = w.cy;
+      }
+    }
+    if(cur.length) lines.push(cur);
+
+    // Cluster columns by word center X across all lines
+    const allCx = words.map(w => w.cx).sort((a,b)=>a-b);
+    const colGap = medH * 2;
+    const cols = clusterColumns(allCx, colGap);
+    if(cols.length < 1) return null;
+
+    const rows = lines.map(line => {
+      const row = new Array(cols.length).fill('');
+      line.sort((a,b) => a.cx - b.cx);
+      for(const w of line){
+        let ci = 0, best = Infinity;
+        cols.forEach((cx, i) => {
+          const d = Math.abs(w.cx - cx);
+          if(d < best){ best = d; ci = i }
+        });
+        row[ci] = (row[ci] ? row[ci] + ' ' : '') + w.text;
+      }
+      return row;
+    }).filter(r => r.some(c => c && c.trim()));
+
+    return rows;
+  }
+
+  // ── Render ──
+  function renderPagesList(){
+    pagesList.innerHTML = '';
+    pages.forEach((p, i) => {
+      const b = document.createElement('button');
+      b.className = 'page-tab' + (i === activePageIdx ? ' active' : '');
+      b.innerHTML = `Sayfa ${p.idx} <span class="badge">${p.source.toUpperCase()}</span>`;
+      b.onclick = () => { activePageIdx = i; renderPagesList(); renderActivePage() };
+      pagesList.appendChild(b);
+    });
+    if(pages.length > 1){
+      const all = document.createElement('button');
+      all.className = 'page-tab';
+      all.textContent = 'Tümünü birleştir';
+      all.onclick = () => { activePageIdx = -1; renderPagesList(); renderActivePage() };
+      if(activePageIdx === -1) all.classList.add('active');
+      pagesList.appendChild(all);
+    }
+  }
+
+  function activeRows(){
+    if(activePageIdx === -1){
+      const out = [];
+      pages.forEach(p => p.rows.forEach(r => out.push(r.slice())));
+      return normalizeWidths(out);
+    }
+    return normalizeWidths(pages[activePageIdx].rows.map(r => r.slice()));
+  }
+
+  function normalizeWidths(rows){
+    const w = rows.reduce((m,r) => Math.max(m, r.length), 0);
+    return rows.map(r => { const c = r.slice(); while(c.length < w) c.push(''); return c });
+  }
+
+  function renderActivePage(){
+    const rows = activeRows();
+    if(!rows.length){ tableContainer.innerHTML = '<p style="padding:20px;color:#94A3B8">Veri yok</p>'; previewMeta.textContent=''; return }
+    const normRows = rows.map(r => r.map(normNum));
+    const t = document.createElement('table');
+    const thead = document.createElement('thead');
+    const trh = document.createElement('tr');
+    normRows[0].forEach((_, i) => {
+      const th = document.createElement('th');
+      th.textContent = colName(i);
+      trh.appendChild(th);
+    });
+    thead.appendChild(trh);
+    t.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    normRows.forEach((row) => {
+      const tr = document.createElement('tr');
+      row.forEach((c) => {
+        const td = document.createElement('td');
+        td.contentEditable = 'true';
+        td.textContent = c;
+        td.addEventListener('input', () => updateActiveRows());
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    t.appendChild(tbody);
+    tableContainer.innerHTML = '';
+    tableContainer.appendChild(t);
+    previewMeta.textContent = `${normRows.length} satır × ${normRows[0].length} sütun`;
+  }
+
+  function updateActiveRows(){
+    const trs = tableContainer.querySelectorAll('tbody tr');
+    const rows = [...trs].map(tr => [...tr.querySelectorAll('td')].map(td => td.textContent));
+    if(activePageIdx === -1){
+      // Re-split into pages? Easier: collapse into single "merged" page
+      pages = [{idx: 0, rows, source: 'edit'}];
+      activePageIdx = 0;
+      renderPagesList();
+    } else {
+      pages[activePageIdx].rows = rows;
+    }
+  }
+
+  function colName(i){
+    let s = '';
+    do { s = String.fromCharCode(65 + (i%26)) + s; i = Math.floor(i/26) - 1 } while(i >= 0);
+    return s;
+  }
+
+  // ── Edit buttons ──
+  $('addRowBtn').addEventListener('click', () => {
+    const tbody = tableContainer.querySelector('tbody');
+    if(!tbody) return;
+    const cols = tbody.querySelector('tr')?.children.length || 1;
+    const tr = document.createElement('tr');
+    for(let i=0;i<cols;i++){
+      const td = document.createElement('td');
+      td.contentEditable = 'true';
+      td.addEventListener('input', updateActiveRows);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+    updateActiveRows();
+  });
+  $('addColBtn').addEventListener('click', () => {
+    const trs = tableContainer.querySelectorAll('tr');
+    trs.forEach((tr, i) => {
+      const el = document.createElement(i === 0 && tr.parentElement.tagName === 'THEAD' ? 'th' : 'td');
+      if(el.tagName === 'TD') { el.contentEditable = 'true'; el.addEventListener('input', updateActiveRows) }
+      if(el.tagName === 'TH') el.textContent = colName(tr.children.length);
+      tr.appendChild(el);
+    });
+    updateActiveRows();
+  });
+  $('delEmptyBtn').addEventListener('click', () => {
+    const rows = activeRows();
+    const cleaned = rows.filter(r => r.some(c => c && c.trim()));
+    // remove empty columns
+    if(cleaned.length){
+      const colEmpty = cleaned[0].map((_,j) => cleaned.every(r => !r[j] || !r[j].trim()));
+      const filtered = cleaned.map(r => r.filter((_,j) => !colEmpty[j]));
+      if(activePageIdx === -1){
+        pages = [{idx:0, rows: filtered, source:'edit'}];
+        activePageIdx = 0;
+      } else {
+        pages[activePageIdx].rows = filtered;
+      }
+      renderPagesList(); renderActivePage();
+    }
+  });
+  $('firstRowHeaderBtn').addEventListener('click', () => {
+    const rows = activeRows();
+    if(rows.length < 2) return;
+    const t = tableContainer.querySelector('table');
+    const thead = t.querySelector('thead tr');
+    const tbody = t.querySelector('tbody');
+    const firstTr = tbody.querySelector('tr');
+    if(!firstTr) return;
+    [...firstTr.children].forEach((td, i) => { thead.children[i].textContent = td.textContent });
+    firstTr.remove();
+    updateActiveRows();
+    previewMeta.textContent = `${tbody.children.length} satır × ${thead.children.length} sütun`;
+  });
+
+  // ── Export ──
+  function getAOA(){
+    const rows = activeRows();
+    return rows.map(r => r.map(normNum));
+  }
+  function makeCsv(aoa, sep){
+    return aoa.map(row => row.map(cell => {
+      const s = String(cell == null ? '' : cell);
+      if(s.indexOf(sep) >= 0 || s.indexOf('"') >= 0 || /[\r\n]/.test(s)){
+        return '"' + s.replace(/"/g,'""') + '"';
+      }
+      return s;
+    }).join(sep)).join('\r\n');
+  }
+  function downloadBlob(blob, name){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  }
+
+  $('exportXlsx').addEventListener('click', () => {
+    if(typeof XLSX === 'undefined'){ showError('Excel kütüphanesi yüklenmedi'); return }
+    const wb = XLSX.utils.book_new();
+    if(activePageIdx === -1 || pages.length === 1){
+      const ws = XLSX.utils.aoa_to_sheet(getAOA());
+      XLSX.utils.book_append_sheet(wb, ws, 'Sayfa1');
+    } else {
+      pages.forEach(p => {
+        const ws = XLSX.utils.aoa_to_sheet(p.rows.map(r => r.map(normNum)));
+        XLSX.utils.book_append_sheet(wb, ws, ('Sayfa_' + p.idx).slice(0,31));
+      });
+    }
+    XLSX.writeFile(wb, 'tablo.xlsx');
+  });
+  $('exportCsvComma').addEventListener('click', () => {
+    const csv = makeCsv(getAOA(), ',');
+    downloadBlob(new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'}), 'tablo.csv');
+  });
+  $('exportCsvSemi').addEventListener('click', () => {
+    const csv = makeCsv(getAOA(), ';');
+    downloadBlob(new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'}), 'tablo.csv');
+  });
+  $('exportTsv').addEventListener('click', () => {
+    const tsv = makeCsv(getAOA(), '\t');
+    downloadBlob(new Blob([tsv], {type:'text/tab-separated-values'}), 'tablo.tsv');
+  });
+  $('copyClip').addEventListener('click', async () => {
+    const tsv = makeCsv(getAOA(), '\t');
+    try { await navigator.clipboard.writeText(tsv); const b=$('copyClip'); const o=b.textContent; b.textContent='✓ Kopyalandı'; setTimeout(()=>b.textContent=o,1400) }
+    catch(e){ showError('Kopyalama başarısız: ' + e.message) }
+  });
+})();
+</script>
+</body>
+</html>
