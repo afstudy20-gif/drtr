@@ -356,6 +356,70 @@
         .cat-academic .tool-card:hover { background: #EFF6FF; border-color: #3B82F6; border-left-color: #3B82F6; }
         .cat-productivity .tool-card:hover { background: #F5F3FF; border-color: #7C3AED; border-left-color: #7C3AED; }
 
+        .tool-card-group {
+            grid-column: 1 / -1;
+            align-items: flex-start;
+        }
+
+        .tool-card-group:hover {
+            transform: none;
+        }
+
+        .tool-info-wide {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tool-sub-links {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tool-sub-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 9px 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tool-sub-link:hover {
+            border-color: #0F766E;
+            background: #ECFDF5;
+            color: #0F766E;
+        }
+
+        .tool-sub-link strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.86rem;
+            line-height: 1.25;
+            margin-bottom: 2px;
+        }
+
+        .tool-sub-link span:first-child {
+            min-width: 0;
+        }
+
+        .tool-sub-link small {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            line-height: 1.3;
+        }
+
+        .tool-sub-link .tool-arrow {
+            margin-left: 0;
+        }
+
         .tool-icon {
             width: 38px; height: 38px; border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
@@ -366,8 +430,10 @@
         .cat-academic .tool-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
         .cat-productivity .tool-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
 
-        .tool-info h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
-        .tool-info p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
+        .tool-info h4,
+        .tool-info-wide h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+        .tool-info p,
+        .tool-info-wide p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
 
         .tool-arrow { margin-left: auto; color: var(--text-faint); font-size: 1.1rem; flex-shrink: 0; }
 
@@ -440,6 +506,7 @@
             .topbar-inner { flex-direction: column; gap: 10px; }
             .topbar-right { flex-direction: column; gap: 6px; }
             .tools-grid { grid-template-columns: 1fr; }
+            .tool-sub-links { grid-template-columns: 1fr; }
             .hero h2 { font-size: 1.25rem; }
         }
     </style>
@@ -504,83 +571,55 @@
                 <h3 data-i18n="cat_clinical">Klinik Araçlar</h3>
             </div>
             <div class="tools-grid">
-                <a href="/varf/" class="tool-card">
-                    <div class="tool-icon">Wx</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t1_title">Varfarin Doz Asistanı</h4>
-                        <p data-i18n="t1_desc">INR değerine göre haftalık doz önerisi</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="hesaplamalar.html" class="tool-card">
-                    <div class="tool-icon">Fx</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t7_title">Tıbbi Hesaplamalar</h4>
-                        <p data-i18n="t7_desc">eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve daha fazlası</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="persantil.html" class="tool-card">
-                    <div class="tool-icon">Pz</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t8_title">Çocuk Büyüme Persantilleri</h4>
-                        <p data-i18n="t8_desc">Boy, kilo, VKİ, baş çevresi — Neyzi 2008 Türk referans verileri</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="antikoagulan.html" class="tool-card">
+                <div class="tool-card tool-card-group">
                     <div class="tool-icon">Ac</div>
-                    <div class="tool-info">
+                    <div class="tool-info-wide">
                         <h4>Antikoagülan Rehberi</h4>
-                        <p>DOAC doz ayarı, cerrahi/diş/endoskopi öncesi yönetim</p>
+                        <p>Varfarin, DOAC, etkileşim kontrolü ve klinik kılavuz kaynakları</p>
+                        <div class="tool-sub-links">
+                            <a href="/varf/" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t1_title">Varfarin Doz Asistanı</strong>
+                                    <small data-i18n="t1_desc">INR değerine göre haftalık doz önerisi</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="antikoagulan.html" class="tool-sub-link">
+                                <span>
+                                    <strong>DOAC ve Perioperatif Yönetim</strong>
+                                    <small>Doz ayarı, cerrahi/diş/endoskopi öncesi yönetim</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="antikoagulan-etkilesim.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t17_title">Antikoagülan Etkileşim Kontrolü</strong>
+                                    <small data-i18n="t17_desc">Warfarin/DOAC ve eşlik eden ilaçlarla etkileşim risk taraması</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="antikoagulan-etkilesim-rehber.html" class="tool-sub-link">
+                                <span>
+                                    <strong>Antikoagülan Etkileşim Kullanım Rehberi</strong>
+                                    <small>Risk yorumlama ve izlem kontrol listesi</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="kaynaklar.html#guidelines" class="tool-sub-link">
+                                <span>
+                                    <strong>Klinik Kılavuzlar</strong>
+                                    <small>ESC, AHA/ACC, NICE, WHO ve Türk Kardiyoloji Derneği</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                        </div>
                     </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="kilavuz-karsilastirici.html" class="tool-card">
-                    <div class="tool-icon">Gx</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t16_title">Kılavuz Karşılaştırıcı</h4>
-                        <p data-i18n="t16_desc">ESC, AHA/ACC ve NICE önerilerini aynı ekranda karşılaştırın</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="antikoagulan-etkilesim.html" class="tool-card">
-                    <div class="tool-icon">Rx</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t17_title">Antikoagülan Etkileşim Kontrolü</h4>
-                        <p data-i18n="t17_desc">Warfarin/DOAC ve eşlik eden ilaçlarla etkileşim risk taraması</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="kilavuz-karsilastirici-rehber.html" class="tool-card">
-                    <div class="tool-icon">Rg</div>
-                    <div class="tool-info">
-                        <h4>Kılavuz Karşılaştırıcı Kullanım Rehberi</h4>
-                        <p>ESC, AHA/ACC ve NICE farklarını klinik senaryolarla adım adım yorumlayın</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="antikoagulan-etkilesim-rehber.html" class="tool-card">
-                    <div class="tool-icon">Ig</div>
-                    <div class="tool-info">
-                        <h4>Antikoagülan Etkileşim Kullanım Rehberi</h4>
-                        <p>Warfarin/DOAC etkileşim riskini güvenli yorumlama ve izlem kontrol listesi</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
+                </div>
                 <a href="sozluk.html" class="tool-card">
                     <div class="tool-icon">Sz</div>
                     <div class="tool-info">
                         <h4>Tıp Sözlüğü</h4>
                         <p>Türkçe-İngilizce 60+ klinik terim, arama ve kategori filtreli</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="kaynaklar.html#guidelines" class="tool-card">
-                    <div class="tool-icon">Kg</div>
-                    <div class="tool-info">
-                        <h4>Klinik Kılavuzlar</h4>
-                        <p>ESC, AHA/ACC, NICE, WHO ve Türk Kardiyoloji Derneği kılavuzları</p>
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
@@ -600,6 +639,110 @@
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
+            </div>
+        </section>
+
+        <section class="category cat-general">
+            <div class="category-header">
+                <div class="category-icon">≡</div>
+                <h3>Hesaplama Araçları</h3>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card tool-card-group">
+                    <div class="tool-icon">Fx</div>
+                    <div class="tool-info-wide">
+                        <h4 data-i18n="t7_title">Tıbbi Hesaplamalar</h4>
+                        <p data-i18n="t7_desc">BMI, eGFR, QTc, CHA₂DS₂-VASc ve daha fazlası</p>
+                        <div class="tool-sub-links">
+                            <a href="/hesaplamalar.html" class="tool-sub-link">
+                                <span>
+                                    <strong>Tüm Tıbbi Hesaplamalar</strong>
+                                    <small>eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve diğerleri</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#bmi" class="tool-sub-link">
+                                <span>
+                                    <strong>BMI / Vücut Kitle İndeksi</strong>
+                                    <small>Boy, kilo, bel ve kalça ölçülerine göre değerlendirme</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/persantil.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t8_title">Çocuk Büyüme Persantilleri</strong>
+                                    <small data-i18n="t8_desc">Boy, kilo, VKİ, baş çevresi — Neyzi 2008 Türk referans verileri</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#balthazard" class="tool-sub-link">
+                                <span>
+                                    <strong>Balthazard Formülü</strong>
+                                    <small>Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card tool-card-group">
+                    <div class="tool-icon">±</div>
+                    <div class="tool-info-wide">
+                        <h4>Genel Hesaplamalar</h4>
+                        <p>Formül, tarih, yaş, metin ve tablo dönüştürme araçları</p>
+                        <div class="tool-sub-links">
+                            <a href="/hesap.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_calc_title">Hesap Makinesi & Mini Formüller</strong>
+                                    <small data-i18n="t_calc_desc">Bilimsel hesap makinesi ve Excel benzeri formül tablosu</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#datediff" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_datediff_title">Tarih Farkı</strong>
+                                    <small data-i18n="t_datediff_desc">İki tarih arasındaki gün, hafta, ay ve yıl farkı</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#age" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_age_title">Yaş Hesaplama</strong>
+                                    <small data-i18n="t_age_desc">Doğum tarihinden yaş, ay ve gün hesabı</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#wordcount" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_wordcount_title">Kelime Sayacı</strong>
+                                    <small data-i18n="t_wordcount_desc">Kelime, karakter, cümle ve paragraf sayımı</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/excel-tarih.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_excel_tarih_title">Excel Tarih Düzeltici</strong>
+                                    <small data-i18n="t_excel_tarih_desc">Karışık formattaki tarihleri Excel'in tanıyacağı tek formata çevirir</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/tarih-gun-ekle.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_gunekle_title">Tarihe Gün Ekle / Çıkar</strong>
+                                    <small data-i18n="t_gunekle_desc">Bir tarihten N gün önce veya sonrasını hesaplar — tekli ya da toplu</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/pdf-csv.html" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_pdfcsv_title">PDF / Görsel → Excel / CSV</strong>
+                                    <small data-i18n="t_pdfcsv_desc">PDF veya görsellerden tabloları otomatik çıkar; Excel/CSV indir. Metin katmanı + OCR (Tesseract.js)</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -742,86 +885,6 @@
             </div>
         </section>
 
-        <section class="category cat-general">
-            <div class="category-header">
-                <div class="category-icon">≡</div>
-                <h3 data-i18n="cat_general">Genel Hesaplama Araçları</h3>
-            </div>
-            <div class="tools-grid">
-                <a href="/hesap.html" class="tool-card">
-                    <div class="tool-icon">±</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_calc_title">Hesap Makinesi & Mini Formüller</h4>
-                        <p data-i18n="t_calc_desc">Bilimsel hesap makinesi ve Excel benzeri formül tablosu</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/hesaplamalar.html#bmi" class="tool-card">
-                    <div class="tool-icon">Bm</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_bmi_title">BMI / Vücut Kitle İndeksi</h4>
-                        <p data-i18n="t_bmi_desc">Boy, kilo, bel ve kalça ölçülerine göre detaylı değerlendirme</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/hesaplamalar.html#datediff" class="tool-card">
-                    <div class="tool-icon">📅</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_datediff_title">Tarih Farkı</h4>
-                        <p data-i18n="t_datediff_desc">İki tarih arasındaki gün, hafta, ay ve yıl farkı</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/hesaplamalar.html#age" class="tool-card">
-                    <div class="tool-icon">🎂</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_age_title">Yaş Hesaplama</h4>
-                        <p data-i18n="t_age_desc">Doğum tarihinden yaş, ay ve gün hesabı</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/hesaplamalar.html#wordcount" class="tool-card">
-                    <div class="tool-icon">Wc</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_wordcount_title">Kelime Sayacı</h4>
-                        <p data-i18n="t_wordcount_desc">Kelime, karakter, cümle ve paragraf sayımı</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/hesaplamalar.html#balthazard" class="tool-card">
-                    <div class="tool-icon">🦴</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_balthazard_title">Balthazard Formülü</h4>
-                        <p data-i18n="t_balthazard_desc">Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/excel-tarih.html" class="tool-card">
-                    <div class="tool-icon">📆</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_excel_tarih_title">Excel Tarih Düzeltici</h4>
-                        <p data-i18n="t_excel_tarih_desc">Karışık formattaki tarihleri Excel'in tanıyacağı tek formata çevirir</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/tarih-gun-ekle.html" class="tool-card">
-                    <div class="tool-icon">➕</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_gunekle_title">Tarihe Gün Ekle / Çıkar</h4>
-                        <p data-i18n="t_gunekle_desc">Bir tarihten N gün önce veya sonrasını hesaplar — tekli ya da toplu</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-                <a href="/pdf-csv.html" class="tool-card">
-                    <div class="tool-icon">📊</div>
-                    <div class="tool-info">
-                        <h4 data-i18n="t_pdfcsv_title">PDF / Görsel → Excel / CSV</h4>
-                        <p data-i18n="t_pdfcsv_desc">PDF veya görsellerden tabloları otomatik çıkar; Excel/CSV indir. Metin katmanı + OCR (Tesseract.js)</p>
-                    </div>
-                    <span class="tool-arrow">&rsaquo;</span>
-                </a>
-            </div>
-        </section>
     </main>
 
     <section class="about-container main">
