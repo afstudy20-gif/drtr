@@ -304,6 +304,7 @@
         .cat-academic .category-header { border-bottom-color: #BFDBFE; }
         .cat-productivity .category-header { border-bottom-color: #DDD6FE; }
         .cat-general .category-header { border-bottom-color: #FDE68A; }
+        .cat-downloads .category-header { border-bottom-color: #FDA4AF; }
 
         .category-icon {
             width: 32px; height: 32px;
@@ -316,6 +317,7 @@
         .cat-academic .category-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
         .cat-productivity .category-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
         .cat-general .category-icon { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #B45309; }
+        .cat-downloads .category-icon { background: linear-gradient(135deg, #FFE4E6, #FDA4AF); color: #BE123C; }
 
         .category-header h3 {
             font-size: 0.85rem; font-weight: 700;
@@ -327,6 +329,7 @@
         .cat-academic .category-header h3 { color: #2563EB; }
         .cat-productivity .category-header h3 { color: #6D28D9; }
         .cat-general .category-header h3 { color: #B45309; }
+        .cat-downloads .category-header h3 { color: #BE123C; }
 
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -346,6 +349,7 @@
         .cat-clinical .tool-card { border-left-color: #0F766E; }
         .cat-academic .tool-card { border-left-color: #3B82F6; }
         .cat-productivity .tool-card { border-left-color: #7C3AED; }
+        .cat-downloads .tool-card { border-left-color: #BE123C; }
 
         .tool-card:hover {
             transform: translateY(-2px);
@@ -355,6 +359,7 @@
         .cat-clinical .tool-card:hover { background: #F0FDFA; border-color: #0F766E; border-left-color: #0F766E; }
         .cat-academic .tool-card:hover { background: #EFF6FF; border-color: #3B82F6; border-left-color: #3B82F6; }
         .cat-productivity .tool-card:hover { background: #F5F3FF; border-color: #7C3AED; border-left-color: #7C3AED; }
+        .cat-downloads .tool-card:hover { background: #FFF1F2; border-color: #BE123C; border-left-color: #BE123C; }
 
         .tool-card-group {
             grid-column: 1 / -1;
@@ -420,6 +425,20 @@
             margin-left: 0;
         }
 
+        .download-links { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .download-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #0F766E;
+            text-decoration: none;
+            padding: 4px 0;
+        }
+        .download-links a:hover { text-decoration: underline; }
+        .cat-downloads .download-links a { color: #BE123C; }
+
         .tool-icon {
             width: 38px; height: 38px; border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
@@ -429,6 +448,7 @@
         .cat-clinical .tool-icon { background: linear-gradient(135deg, #CCFBF1, #99F6E4); color: #0F766E; }
         .cat-academic .tool-icon { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #2563EB; }
         .cat-productivity .tool-icon { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6D28D9; }
+        .cat-downloads .tool-icon { background: linear-gradient(135deg, #FFE4E6, #FDA4AF); color: #BE123C; }
 
         .tool-info h4,
         .tool-info-wide h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
@@ -656,15 +676,43 @@
                         <div class="tool-sub-links">
                             <a href="/hesaplamalar.html" class="tool-sub-link">
                                 <span>
-                                    <strong>Tüm Tıbbi Hesaplamalar</strong>
-                                    <small>eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve diğerleri</small>
+                                    <strong data-i18n="t_all_clinical_title">Tüm Tıbbi Hesaplamalar</strong>
+                                    <small data-i18n="t_all_clinical_desc">eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve diğerleri</small>
                                 </span>
                                 <span class="tool-arrow">&rsaquo;</span>
                             </a>
                             <a href="/hesaplamalar.html#bmi" class="tool-sub-link">
                                 <span>
-                                    <strong>BMI / Vücut Kitle İndeksi</strong>
-                                    <small>Boy, kilo, bel ve kalça ölçülerine göre değerlendirme</small>
+                                    <strong data-i18n="t_bmi_title">BMI / Vücut Kitle İndeksi</strong>
+                                    <small data-i18n="t_bmi_desc">Boy, kilo, bel ve kalça ölçülerine göre detaylı değerlendirme</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#ldl" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_ldl_title">LDL Kolesterol</strong>
+                                    <small data-i18n="t_ldl_desc">Friedewald ve Martin-Hopkins yöntemleriyle LDL hesabı</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#gfr" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_gfr_title">eGFR (Böbrek Fonksiyonu)</strong>
+                                    <small data-i18n="t_gfr_desc">CKD-EPI 2021 formülü ile böbrek süzme hızı hesabı</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#qtc" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_qtc_title">QTc Hesaplayıcı</strong>
+                                    <small data-i18n="t_qtc_desc">Bazett, Fridericia, Framingham ve Hodges formülleri</small>
+                                </span>
+                                <span class="tool-arrow">&rsaquo;</span>
+                            </a>
+                            <a href="/hesaplamalar.html#chadsvasc" class="tool-sub-link">
+                                <span>
+                                    <strong data-i18n="t_chadsvasc_title">CHA₂DS₂-VASc & HAS-BLED</strong>
+                                    <small data-i18n="t_chadsvasc_desc">Atriyal fibrilasyonda inme ve kanama risk tayini</small>
                                 </span>
                                 <span class="tool-arrow">&rsaquo;</span>
                             </a>
@@ -677,8 +725,8 @@
                             </a>
                             <a href="/hesaplamalar.html#balthazard" class="tool-sub-link">
                                 <span>
-                                    <strong>Balthazard Formülü</strong>
-                                    <small>Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji</small>
+                                    <strong data-i18n="t_balthazard_title">Balthazard Formülü</strong>
+                                    <small data-i18n="t_balthazard_desc">Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji</small>
                                 </span>
                                 <span class="tool-arrow">&rsaquo;</span>
                             </a>
@@ -885,6 +933,37 @@
             </div>
         </section>
 
+        <section class="category cat-downloads">
+            <div class="category-header">
+                <div class="category-icon">⬇</div>
+                <h3 data-i18n="cat_downloads">Tarayıcı Eklentileri</h3>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">Sc</div>
+                    <div class="tool-info">
+                        <h4 data-i18n="dl_sc_title">ScrollDown</h4>
+                        <p data-i18n="dl_sc_desc">Tam sayfa ekran görüntüsü ve kırpma aracı</p>
+                        <div class="download-links">
+                            <a href="downloads/scrolldown-extension.zip" download data-i18n="dl_ext">Chrome Eklentisi (ZIP)</a>
+                            <a href="downloads/scrolldown-windows-setup.zip" download data-i18n="dl_setup">Windows Setup (ZIP)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">Vi</div>
+                    <div class="tool-info">
+                        <h4 data-i18n="dl_vd_title">Vidown</h4>
+                        <p data-i18n="dl_vd_desc">Video stream algılama ve indirme aracı</p>
+                        <div class="download-links">
+                            <a href="downloads/vidown-extension.zip" download data-i18n="dl_ext">Chrome Eklentisi (ZIP)</a>
+                            <a href="downloads/vidown-windows-setup.zip" download data-i18n="dl_setup">Windows Setup (ZIP)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <section class="about-container main">
@@ -961,7 +1040,7 @@
             brand_sub:"Klinik, Akademik & Verimlilik Araçları",
             hero_title:"Sağlık profesyonelleri ve araştırmacılar için ücretsiz dijital araçlar",
             hero_desc:"DrTR Tools; klinik karar destek, akademik atıf yönetimi ve doküman işleme araçlarını tek bir platformda sunar. Tüm araçlarımız ücretsizdir, kayıt gerektirmez ve 6 dilde kullanılabilir.",
-            cat_clinical:"Klinik Araçlar", cat_academic:"Akademik Araçlar", cat_productivity:"Verimlilik Araçları", cat_docentlik:"Doçentlik Araçları", cat_general:"Genel Hesaplama Araçları",
+            cat_clinical:"Klinik Araçlar", cat_academic:"Akademik Araçlar", cat_productivity:"Verimlilik Araçları", cat_docentlik:"Doçentlik Araçları", cat_general:"Genel Hesaplama Araçları", cat_downloads:"Tarayıcı Eklentileri",
             t_ecg_title:"EKG Dijital Kaliper", t_ecg_desc:"EKG görüntüsü yükleyin; kağıt kalibrasyonu, R-pik işaretleme ve dalga parametre ölçümü",
             t_neodw_title:"NeoDW — DICOM İş İstasyonu", t_neodw_desc:"Tarayıcıda çalışan evrensel DICOM görüntüleyici ve tıbbi görüntü analiz aracı",
             t_ustat_title:"uSTAT — İstatistik Platformu", t_ustat_desc:"SPSS'e tarayıcı tabanlı ücretsiz alternatif; tanımlayıcı, regresyon, sağkalım analizleri",
@@ -973,9 +1052,15 @@
             t_age_title:"Yaş Hesaplama", t_age_desc:"Doğum tarihinden yaş, ay ve gün hesabı",
             t_wordcount_title:"Kelime Sayacı", t_wordcount_desc:"Kelime, karakter, cümle ve paragraf sayımı",
             t_balthazard_title:"Balthazard Formülü", t_balthazard_desc:"Kemik uzunluğundan boy tahmini — adli tıp ve antropoloji",
+            t_all_clinical_title:"Tüm Tıbbi Hesaplamalar", t_all_clinical_desc:"eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX ve diğerleri",
+            t_ldl_title:"LDL Kolesterol", t_ldl_desc:"Friedewald ve Martin-Hopkins yöntemleriyle LDL hesabı",
+            t_gfr_title:"eGFR (Böbrek Fonksiyonu)", t_gfr_desc:"CKD-EPI 2021 formülü ile böbrek süzme hızı hesabı",
+            t_qtc_title:"QTc Hesaplayıcı", t_qtc_desc:"Bazett, Fridericia, Framingham ve Hodges formülleri",
+            t_chadsvasc_title:"CHA₂DS₂-VASc & HAS-BLED", t_chadsvasc_desc:"Atriyal fibrilasyonda inme ve kanama risk tayini",
             t_excel_tarih_title:"Excel Tarih Düzeltici", t_excel_tarih_desc:"Karışık formattaki tarihleri Excel'in tanıyacağı tek formata çevirir",
             t_gunekle_title:"Tarihe Gün Ekle / Çıkar", t_gunekle_desc:"Bir tarihten N gün önce veya sonrasını hesaplar — tekli ya da toplu",
             t_pdfcsv_title:"PDF / Görsel → Excel / CSV", t_pdfcsv_desc:"PDF veya görsellerden tabloları otomatik çıkar; Excel/CSV indir. Metin katmanı + OCR (Tesseract.js)",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"Tam sayfa ekran görüntüsü ve kırpma aracı", dl_vd_title:"Vidown", dl_vd_desc:"Video stream algılama ve indirme aracı", dl_ext:"Chrome Eklentisi (ZIP)", dl_setup:"Windows Setup (ZIP)",
             t1_title:"Varfarin Doz Asistanı", t1_desc:"INR değerine göre haftalık doz önerisi",
             t2_title:"PDF Çevirmen", t2_desc:"Belgeleri İngilizce–Türkçe çevirin",
             t3_title:"Kelime, Atasözü, Deyim Oyunu", t3_desc:"Türkçe kelime, atasözü ve deyimlerle eğlenceli dil oyunları",
@@ -1025,6 +1110,11 @@
             t_age_title:"Ya\u015f Hesablama", t_age_desc:"Do\u011fum tarixind\u0259n ya\u015f, ay v\u0259 g\u00fcn hesab\u0131",
             t_wordcount_title:"S\u00f6z Say\u011fac\u0131", t_wordcount_desc:"S\u00f6z, simvol, c\u00fcml\u0259 v\u0259 paraqraf say\u0131m\u0131",
             t_balthazard_title:"Balthazard D\u00fcsturu", t_balthazard_desc:"S\u00fcm\u00fck uzunlu\u011fundan boy tahmin \u2014 m\u0259hk\u0259m\u0259 tibbi v\u0259 antropologiya",
+            t_all_clinical_title:"Bütün Tibbi Hesablamalar", t_all_clinical_desc:"eGFR, QTc, CHA2DS2-VASc, PREVENT, SYNTAX və digərləri",
+            t_ldl_title:"LDL Xolesterol", t_ldl_desc:"Friedewald və Martin-Hopkins metodları ilə LDL hesablanması",
+            t_gfr_title:"eGFR (Böyrək Funksiyası)", t_gfr_desc:"CKD-EPI 2021 düsturu ilə böyrək süzülmə sürətinin hesabı",
+            t_qtc_title:"QTc Hesablayıcı", t_qtc_desc:"Bazett, Fridericia, Framingham və Hodges düsturları",
+            t_chadsvasc_title:"CHA2DS2-VASc & HAS-BLED", t_chadsvasc_desc:"Atrial fibrilyasiyada insult və qanaxma riskinin təyini",
             t_excel_tarih_title:"Excel Tarix D\u00fcz\u0259ldicisi", t_excel_tarih_desc:"Qar\u0131\u015f\u0131q formatdak\u0131 tarixl\u0259ri Excel-in tan\u0131d\u0131\u011f\u0131 t\u0259k formata \u00e7evirir",
             t_gunekle_title:"Tarix\u0259 G\u00fcn \u018flav\u0259 Et / \u00c7\u0131xar", t_gunekle_desc:"Bir tarixd\u0259n N g\u00fcn \u0259vv\u0259l v\u0259 ya sonra \u2014 t\u0259kli v\u0259 ya toplu",
             t_pdfcsv_title:"PDF / \u015e\u0259kil \u2192 Excel / CSV", t_pdfcsv_desc:"PDF v\u0259 ya \u015f\u0259kill\u0259rd\u0259n c\u0259dv\u0259ll\u0259ri avtomatik \u00e7\u0131xar; Excel/CSV y\u00fckl\u0259. M\u0259tn qat\u0131 + OCR (Tesseract.js)",
@@ -1060,13 +1150,17 @@
             why_drtr_title:"Niy\u0259 DrTR Tools?",
             why_drtr_desc:"DrTR Tools klinik praktikada tez-tez ehtiyac duyulan m\u00f6vzulara sad\u0259 v\u0259 s\u00fcr\u0259tli \u00e7\u0131x\u0131\u015f t\u0259min etm\u0259k m\u0259qs\u0259dil\u0259 haz\u0131rlanm\u0131\u015f \u015f\u0259xsi al\u0259t d\u0259stidir. Hesablamalar brauzerinizd\u0259 i\u015fl\u0259yir; daxil etdiyiniz he\u00e7 bir m\u0259lumat he\u00e7 bir server\u0259 g\u00f6nd\u0259rilmir. M\u0259qs\u0259d kardiologiya, antikoagulant idar\u0259etm\u0259si v\u0259 g\u00fcnd\u0259lik i\u015f ax\u0131n\u0131nda h\u0259mkarlara ki\u00e7ik, lakin faydal\u0131 d\u0259st\u0259k t\u0259qdim etm\u0259kdir.",
             professional_reliability_title:"Pe\u015f\u0259kar Etibarl\u0131l\u0131q",
-            professional_reliability_desc:"M\u0259zmun; k\u0131lavuz m\u00fcqayis\u0259l\u0259ri, antikoagulant t\u0259hl\u00fck\u0259sizliyi, risk skorlar\u0131 v\u0259 s\u0131x istifad\u0259 edil\u0259n klinik hesablamalar kimi ba\u015fl\u0131qlara asan \u00e7\u0131x\u0131\u015f\u0131 t\u0259min ed\u0259c\u0259k \u015f\u0259kild\u0259 qurulub. Al\u0259tl\u0259r yaln\u0131z m\u0259lumat \u00fc\u00e7\u00fcnd\u00fcr; q\u0259rar h\u0259mi\u015f\u0259 sizin v\u0259 x\u0259st\u0259nizl\u0259 birlikd\u0259 verdiyiniz qiym\u0259tl\u0259ndirm\u0259y\u0259 aiddir."
+            professional_reliability_desc:"M\u0259zmun; k\u0131lavuz m\u00fcqayis\u0259l\u0259ri, antikoagulant t\u0259hl\u00fck\u0259sizliyi, risk skorlar\u0131 v\u0259 s\u0131x istifad\u0259 edil\u0259n klinik hesablamalar kimi ba\u015fl\u0131qlara asan \u00e7\u0131x\u0131\u015f\u0131 t\u0259min ed\u0259c\u0259k \u015f\u0259kild\u0259 qurulub. Al\u0259tl\u0259r yaln\u0131z m\u0259lumat \u00fc\u00e7\u00fcnd\u00fcr; q\u0259rar h\u0259mi\u015f\u0259 sizin v\u0259 x\u0259st\u0259nizl\u0259 birlikd\u0259 verdiyiniz qiym\u0259tl\u0259ndirm\u0259y\u0259 aiddir.",
+            cat_downloads:"Brauzer Uzantıları",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"Tam səhifə ekran görüntüsü və kəsmə aləti",
+            dl_vd_title:"Vidown", dl_vd_desc:"Video axınını aşkarlama və yükləmə aləti",
+            dl_ext:"Chrome Uzantısı (ZIP)", dl_setup:"Windows Setup (ZIP)"
         },
         en: {
             brand_sub:"Clinical, Research & Productivity Tools",
             hero_title:"Free digital tools for healthcare professionals and researchers",
             hero_desc:"DrTR Tools brings clinical decision support, academic citation management, and document processing together in one platform. All tools are free, require no registration, and available in 6 languages.",
-            cat_clinical:"Clinical Tools", cat_academic:"Academic Tools", cat_productivity:"Productivity Tools", cat_docentlik:"Associate Professorship Tools", cat_general:"General Calculation Tools",
+            cat_clinical:"Clinical Tools", cat_academic:"Academic Tools", cat_productivity:"Productivity Tools", cat_docentlik:"Associate Professorship Tools", cat_general:"General Calculation Tools", cat_downloads:"Browser Extensions",
             t_ecg_title:"ECG Digital Caliper", t_ecg_desc:"Upload an ECG image; paper calibration, R-peak marking and waveform parameter measurement",
             t_neodw_title:"NeoDW — DICOM Workstation", t_neodw_desc:"Browser-based universal DICOM viewer and medical image analysis tool",
             t_ustat_title:"uSTAT — Statistics Platform", t_ustat_desc:"Free browser-based alternative to SPSS; descriptive, regression and survival analyses",
@@ -1078,9 +1172,15 @@
             t_age_title:"Age Calculator", t_age_desc:"Age, months and days from a birth date",
             t_wordcount_title:"Word Counter", t_wordcount_desc:"Counts words, characters, sentences and paragraphs",
             t_balthazard_title:"Balthazard Formula", t_balthazard_desc:"Stature estimation from bone length — forensics and anthropology",
+            t_all_clinical_title:"All Medical Calculations", t_all_clinical_desc:"eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX and others",
+            t_ldl_title:"LDL Cholesterol", t_ldl_desc:"LDL estimation using Friedewald and Martin-Hopkins equations",
+            t_gfr_title:"eGFR (Kidney Function)", t_gfr_desc:"Glomerular filtration rate using CKD-EPI 2021 formula",
+            t_qtc_title:"QTc Calculator", t_qtc_desc:"Bazett, Fridericia, Framingham, and Hodges methods",
+            t_chadsvasc_title:"CHA₂DS₂-VASc & HAS-BLED", t_chadsvasc_desc:"Stroke and bleeding risk assessment in atrial fibrillation",
             t_excel_tarih_title:"Excel Date Fixer", t_excel_tarih_desc:"Converts mixed-format dates into a single Excel-recognized format",
             t_gunekle_title:"Add / Subtract Days", t_gunekle_desc:"Date N days before or after a starting date — single or bulk",
             t_pdfcsv_title:"PDF / Image → Excel / CSV", t_pdfcsv_desc:"Extract tables from PDFs or images; download as Excel/CSV. Text layer + OCR (Tesseract.js)",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"Full-page screenshot and crop tool", dl_vd_title:"Vidown", dl_vd_desc:"Video stream detector and downloader", dl_ext:"Chrome Extension (ZIP)", dl_setup:"Windows Setup (ZIP)",
             t1_title:"Warfarin Dose Assistant", t1_desc:"Weekly dosing based on INR values",
             t2_title:"PDF Translator", t2_desc:"Translate documents between English and Turkish",
             t3_title:"Word & Process", t3_desc:"Text and word processing tool",
@@ -1130,6 +1230,11 @@
             t_age_title:"\u062d\u0627\u0633\u0628\u0629 \u0627\u0644\u0639\u0645\u0631", t_age_desc:"\u0627\u0644\u0639\u0645\u0631 \u0628\u0627\u0644\u0623\u064a\u0627\u0645 \u0648\u0627\u0644\u0623\u0634\u0647\u0631 \u0648\u0627\u0644\u0633\u0646\u0648\u0627\u062a \u0645\u0646 \u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0645\u064a\u0644\u0627\u062f",
             t_wordcount_title:"\u0639\u062f\u0627\u062f \u0627\u0644\u0643\u0644\u0645\u0627\u062a", t_wordcount_desc:"\u0639\u062f \u0627\u0644\u0643\u0644\u0645\u0627\u062a \u0648\u0627\u0644\u0623\u062d\u0631\u0641 \u0648\u0627\u0644\u062c\u0645\u0644 \u0648\u0627\u0644\u0641\u0642\u0631\u0627\u062a",
             t_balthazard_title:"\u0645\u0639\u0627\u062f\u0644\u0629 \u0628\u0627\u0644\u062a\u0627\u0632\u0627\u0631\u062f", t_balthazard_desc:"\u062a\u0642\u062f\u064a\u0631 \u0627\u0644\u0637\u0648\u0644 \u0645\u0646 \u0637\u0648\u0644 \u0627\u0644\u0639\u0638\u0645 \u2014 \u0627\u0644\u0637\u0628 \u0627\u0644\u0634\u0631\u0639\u064a \u0648\u0627\u0644\u0623\u0646\u062b\u0631\u0648\u0628\u0648\u0644\u0648\u062c\u064a\u0627",
+            t_all_clinical_title:"جميع الحسابات الطبية", t_all_clinical_desc:"eGFR، QTc، CHA₂DS₂-VASc، PREVENT، SYNTAX وغيرها",
+            t_ldl_title:"كوليسترول LDL", t_ldl_desc:"حساب LDL باستخدام معادلات فريدوالد ومارتن-هوبكنز",
+            t_gfr_title:"eGFR (وظائف الكلى)", t_gfr_desc:"معدل الترشيح الكبيبي باستخدام صيغة CKD-EPI 2021",
+            t_qtc_title:"حاسبة QTc", t_qtc_desc:"طرق بازيت، فريدريسيا، فرامينغهام، وهودجز",
+            t_chadsvasc_title:"CHA₂DS₂-VASc و HAS-BLED", t_chadsvasc_desc:"تقييم مخاطر السكتة الدماغية والنزيف في الرجفان الأذيني",
             t_excel_tarih_title:"\u0645\u0635\u062d\u062d \u062a\u0648\u0627\u0631\u064a\u062e Excel", t_excel_tarih_desc:"\u062a\u062d\u0648\u064a\u0644 \u0627\u0644\u062a\u0648\u0627\u0631\u064a\u062e \u0628\u0635\u064a\u063a \u0645\u062e\u062a\u0644\u0637\u0629 \u0625\u0644\u0649 \u0635\u064a\u063a\u0629 \u0645\u0648\u062d\u062f\u0629 \u064a\u062a\u0639\u0631\u0641 \u0639\u0644\u064a\u0647\u0627 Excel",
             t_gunekle_title:"\u0625\u0636\u0627\u0641\u0629 / \u0637\u0631\u062d \u0623\u064a\u0627\u0645", t_gunekle_desc:"\u062a\u0627\u0631\u064a\u062e N \u064a\u0648\u0645\u064b\u0627 \u0642\u0628\u0644 \u0623\u0648 \u0628\u0639\u062f \u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0628\u062f\u0627\u064a\u0629 \u2014 \u0645\u0641\u0631\u062f \u0623\u0648 \u062f\u0641\u0639\u064a",
             t_pdfcsv_title:"PDF / \u0635\u0648\u0631\u0629 \u2192 Excel / CSV", t_pdfcsv_desc:"\u0627\u0633\u062a\u062e\u0631\u0627\u062c \u0627\u0644\u062c\u062f\u0627\u0648\u0644 \u0645\u0646 PDF \u0623\u0648 \u0627\u0644\u0635\u0648\u0631 \u062a\u0644\u0642\u0627\u0626\u064a\u064b\u0627\u061b \u062a\u0646\u0632\u064a\u0644 Excel/CSV. \u0637\u0628\u0642\u0629 \u0646\u0635 + OCR (Tesseract.js)",
@@ -1164,7 +1269,11 @@
             why_drtr_title:"لماذا DrTR Tools؟",
             why_drtr_desc:"DrTR Tools مجموعة أدوات شخصية تهدف إلى وصول سريع وبسيط للمواضيع التي تتكرر في الممارسة السريرية. تُجرى الحسابات في متصفحك؛ لا تُرسل أي بيانات تدخلها إلى أي خادم. الهدف تقديم دعم صغير ومفيد للزملاء في أمراض القلب وإدارة مضادات التخثر وسير العمل اليومي.",
             professional_reliability_title:"الموثوقية المهنية",
-            professional_reliability_desc:"رُتب المحتوى لتسهيل الوصول إلى مقارنات الإرشادات وفحوصات سلامة مضادات التخثر ودرجات المخاطر والحسابات السريرية الشائعة. الأدوات لأغراض إعلامية فقط؛ القرار يعود دائمًا إليك ولتقييمك المشترك مع المريض."
+            professional_reliability_desc:"رُتب المحتوى لتسهيل الوصول إلى مقارنات الإرشادات وفحوصات سلامة مضادات التخثر ودرجات المخاطر والحسابات السريرية الشائعة. الأدوات لأغراض إعلامية فقط؛ القرار يعود دائمًا إليك ولتقييمك المشترك مع المريض.",
+            cat_downloads:"إضافات المتصفح",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"أداة تصوير الشاشة الكاملة وقصها",
+            dl_vd_title:"Vidown", dl_vd_desc:"أداة كشف وتنزيل بث الفيديو",
+            dl_ext:"إضافة كروم (ZIP)", dl_setup:"تثبيت ويندوز (ZIP)"
         },
         zh: {
             brand_sub:"\u4e34\u5e8a\u3001\u7814\u7a76\u4e0e\u751f\u4ea7\u529b\u5de5\u5177",
@@ -1182,6 +1291,11 @@
             t_age_title:"\u5e74\u9f84\u8ba1\u7b97\u5668", t_age_desc:"\u4ece\u51fa\u751f\u65e5\u671f\u8ba1\u7b97\u5e74\u9f84\u3001\u6708\u4efd\u548c\u5929\u6570",
             t_wordcount_title:"\u5b57\u6570\u7edf\u8ba1", t_wordcount_desc:"\u7edf\u8ba1\u5b57\u6570\u3001\u5b57\u7b26\u3001\u53e5\u5b50\u548c\u6bb5\u843d",
             t_balthazard_title:"Balthazard\u516c\u5f0f", t_balthazard_desc:"\u4ece\u9aa8\u957f\u4f30\u7b97\u8eab\u9ad8 \u2014 \u6cd5\u533b\u5b66\u548c\u4eba\u7c7b\u5b66",
+            t_all_clinical_title:"所有医学计算", t_all_clinical_desc:"eGFR、QTc、CHA₂DS₂-VASc、PREVENT、SYNTAX 等",
+            t_ldl_title:"LDL 胆固醇", t_ldl_desc:"使用 Friedewald 和 Martin-Hopkins 公式计算 LDL",
+            t_gfr_title:"eGFR (肾功能)", t_gfr_desc:"使用 CKD-EPI 2021 公式计算肾小球滤过率",
+            t_qtc_title:"QTc 计算器", t_qtc_desc:"Bazett、Fridericia、Framingham 和 Hodges 方法",
+            t_chadsvasc_title:"CHA₂DS₂-VASc 和 HAS-BLED", t_chadsvasc_desc:"心房颤动脑卒中和出血风险评估",
             t_excel_tarih_title:"Excel\u65e5\u671f\u4fee\u6b63\u5668", t_excel_tarih_desc:"\u5c06\u6df7\u5408\u683c\u5f0f\u7684\u65e5\u671f\u8f6c\u6362\u4e3aExcel\u8bc6\u522b\u7684\u7edf\u4e00\u683c\u5f0f",
             t_gunekle_title:"\u65e5\u671f\u52a0 / \u51cf\u5929\u6570", t_gunekle_desc:"\u8d77\u59cb\u65e5\u671f\u4e4b\u524d\u6216\u4e4b\u540eN\u5929 \u2014 \u5355\u6761\u6216\u6279\u91cf",
             t_pdfcsv_title:"PDF / \u56fe\u50cf \u2192 Excel / CSV", t_pdfcsv_desc:"\u4ecePDF\u6216\u56fe\u50cf\u81ea\u52a8\u63d0\u53d6\u8868\u683c\uff1b\u4e0b\u8f7d\u4e3aExcel/CSV\u3002\u6587\u672c\u5c42 + OCR (Tesseract.js)",
@@ -1216,7 +1330,11 @@
             why_drtr_title:"为何选择 DrTR Tools？",
             why_drtr_desc:"DrTR Tools 是一个个人工具集，旨在为临床实践中常见话题提供简洁快速的访问。计算在您的浏览器中进行；输入的任何信息都不会发送到任何服务器。目标是在心脏病学、抗凝管理和日常工作流程方面为同行提供小而实用的支持。",
             professional_reliability_title:"专业可靠性",
-            professional_reliability_desc:"内容围绕指南比较、抗凝安全检查、风险评分和常用临床计算的便捷访问而组织。工具仅供参考；决策始终属于您和您与患者共同做出的评估。"
+            professional_reliability_desc:"内容围绕指南比较、抗凝安全检查、风险评分和常用临床计算的便捷访问而组织。工具仅供参考；决策始终属于您和您与患者共同做出的评估。",
+            cat_downloads:"浏览器扩展",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"全网页截图与裁剪工具",
+            dl_vd_title:"Vidown", dl_vd_desc:"视频流检测与下载工具",
+            dl_ext:"Chrome 扩展 (ZIP)", dl_setup:"Windows 安装包 (ZIP)"
         },
         hi: {
             brand_sub:"\u0928\u0948\u0926\u093e\u0928\u093f\u0915, \u0936\u094b\u0927 \u0914\u0930 \u0909\u0924\u094d\u092a\u093e\u0926\u0915\u0924\u093e \u0909\u092a\u0915\u0930\u0923",
@@ -1234,6 +1352,11 @@
             t_age_title:"\u0906\u092f\u0941 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930", t_age_desc:"\u091c\u0928\u094d\u092e \u0924\u093f\u0925\u093f \u0938\u0947 \u0935\u0930\u094d\u0937, \u092e\u093e\u0939 \u0914\u0930 \u0926\u093f\u0928 \u0915\u0940 \u0906\u092f\u0941",
             t_wordcount_title:"\u0936\u092c\u094d\u0926 \u0917\u093f\u0928\u0924\u0940", t_wordcount_desc:"\u0936\u092c\u094d\u0926, \u0905\u0915\u094d\u0937\u0930, \u0935\u093e\u0915\u094d\u092f \u0914\u0930 \u0905\u0928\u0941\u091a\u094d\u091b\u0947\u0926 \u0915\u0940 \u0917\u093f\u0928\u0924\u0940",
             t_balthazard_title:"\u092c\u093e\u0932\u094d\u0925\u093e\u091c\u093c\u093e\u0930\u094d\u0921 \u0938\u0942\u0924\u094d\u0930", t_balthazard_desc:"\u0939\u0921\u094d\u0921\u0940 \u0915\u0940 \u0932\u0902\u092c\u093e\u0908 \u0938\u0947 \u0915\u0926 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u2014 \u092b\u0949\u0930\u0947\u0902\u0938\u093f\u0915 \u0914\u0930 \u0928\u0943\u0935\u093f\u091c\u094d\u091e\u093e\u0928",
+            t_all_clinical_title:"सभी चिकित्सा गणनाएँ", t_all_clinical_desc:"eGFR, QTc, CHA₂DS₂-VASc, PREVENT, SYNTAX और अन्य",
+            t_ldl_title:"एलडीएल कोलेस्ट्रॉल", t_ldl_desc:"फ्राइडवाल्ड और मार्टिन-होपकिंस समीकरणों का उपयोग करके एलडीएल अनुमान",
+            t_gfr_title:"eGFR (किडनी कार्यप्रणाली)", t_gfr_desc:"CKD-EPI 2021 फॉर्मूला का उपयोग करके ग्लोमेरुलर निस्पंदन दर",
+            t_qtc_title:"QTc कैलकुलेटर", t_qtc_desc:"बाज़ेट, फ्रिडरिशिया, फ्रेमिंगहम और हॉजेस तरीके",
+            t_chadsvasc_title:"CHA₂DS₂-VASc और HAS-BLED", t_chadsvasc_desc:"एट्रियल फाइब्रिलेशन में स्ट्रोक और रक्तस्राव जोखिम का आकलन",
             t_excel_tarih_title:"Excel \u0924\u093e\u0930\u0940\u0916 \u0938\u0941\u0927\u093e\u0930\u0915", t_excel_tarih_desc:"\u092e\u093f\u0936\u094d\u0930\u093f\u0924 \u092a\u094d\u0930\u093e\u0930\u0942\u092a \u0915\u0940 \u0924\u093e\u0930\u0940\u0916\u094b\u0902 \u0915\u094b \u090f\u0915\u0932 Excel-\u0938\u0902\u0917\u0924 \u092a\u094d\u0930\u093e\u0930\u0942\u092a \u092e\u0947\u0902 \u092c\u0926\u0932\u0924\u093e \u0939\u0948",
             t_gunekle_title:"\u0926\u093f\u0928 \u091c\u094b\u0921\u093c\u0947\u0902 / \u0918\u091f\u093e\u090f\u0901", t_gunekle_desc:"\u092a\u094d\u0930\u093e\u0930\u0902\u092d \u0924\u093f\u0925\u093f \u0938\u0947 N \u0926\u093f\u0928 \u092a\u0939\u0932\u0947 \u092f\u093e \u092c\u093e\u0926 \u2014 \u090f\u0915\u0932 \u092f\u093e \u092c\u0932\u094d\u0915",
             t_pdfcsv_title:"PDF / \u091b\u0935\u093f \u2192 Excel / CSV", t_pdfcsv_desc:"PDF \u092f\u093e \u091b\u0935\u093f\u092f\u094b\u0902 \u0938\u0947 \u0924\u093e\u0932\u093f\u0915\u093e\u090f\u0901 \u0938\u094d\u0935\u0924\u0903 \u0928\u093f\u0915\u093e\u0932\u0947\u0902; Excel/CSV \u0921\u093e\u0909\u0928\u0932\u094b\u0921\u0964 \u092a\u093e\u0920 \u092a\u0930\u0924 + OCR (Tesseract.js)",
@@ -1268,7 +1391,11 @@
             why_drtr_title:"DrTR Tools क्यों?",
             why_drtr_desc:"DrTR Tools एक व्यक्तिगत उपकरण समूह है जो नैदानिक अभ्यास में अक्सर आने वाले विषयों तक सरल और तेज़ पहुँच का लक्ष्य रखता है। गणनाएँ आपके ब्राउज़र में चलती हैं; दर्ज की गई कोई भी जानकारी किसी सर्वर पर नहीं भेजी जाती। उद्देश्य है कार्डियोलॉजी, एंटीकोएगुलंट प्रबंधन और दैनिक नैदानिक कार्यप्रवाह में सहकर्मियों को छोटी पर उपयोगी सहायता देना।",
             professional_reliability_title:"पेशेवर विश्वसनीयता",
-            professional_reliability_desc:"सामग्री गाइडलाइन तुलना, एंटीकोएगुलंट सुरक्षा जाँच, जोखिम स्कोर और सामान्य नैदानिक कैलकुलेटर तक आसान पहुँच के लिए व्यवस्थित है। उपकरण केवल जानकारी के लिए हैं; निर्णय हमेशा आपका और आपके मरीज़ के साथ किए गए मूल्यांकन का होता है।"
+            professional_reliability_desc:"सामग्री गाइडलाइन तुलना, एंटीकोएगुलंट सुरक्षा जाँच, जोखिम स्कोर और सामान्य नैदानिक कैलकुलेटर तक आसान पहुँच के लिए व्यवस्थित है। उपकरण केवल जानकारी के लिए हैं; निर्णय हमेशा आपका और आपके मरीज़ के साथ किए गए मूल्यांकन का होता है।",
+            cat_downloads:"ब्राउज़र एक्सटेंशन",
+            dl_sc_title:"ScrollDown", dl_sc_desc:"पूर्ण-पृष्ठ स्क्रीनशॉट और क्रॉप टूल",
+            dl_vd_title:"Vidown", dl_vd_desc:"वीडियो स्ट्रीम डिटेक्टर और डाउनलोडर",
+            dl_ext:"क्रोम एक्सटेंशन (ZIP)", dl_setup:"विंडोज सेटअप (ZIP)"
         }
     };
 

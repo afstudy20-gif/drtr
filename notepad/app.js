@@ -411,6 +411,31 @@
     }
   });
 
+  // Refresh app
+  const btnRefreshApp = $('#btnRefreshApp');
+  if (btnRefreshApp) {
+    btnRefreshApp.addEventListener('click', async () => {
+      if (!confirm('Bu uygulamanın önbelleğe alınmış dosyaları temizlensin ve yenilensin mi? Notlarınız korunacak.')) return;
+      btnRefreshApp.classList.add('spinning');
+      btnRefreshApp.disabled = true;
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister().catch(() => null)));
+        }
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k).catch(() => null)));
+        }
+      } catch (err) {
+        console.warn('[refresh]', err);
+      }
+      const url = new URL(location.href);
+      url.searchParams.set('_r', Date.now().toString(36));
+      location.replace(url.toString());
+    });
+  }
+
   // --- Init ---
   loadNotes();
 })();
