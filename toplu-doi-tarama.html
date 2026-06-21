@@ -499,32 +499,64 @@
     }
     .details-links {
       display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 16px;
+      width: 220px;
+      flex-shrink: 0;
     }
     .details-link {
-      font-size: 0.78rem;
-      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.83rem;
+      font-weight: 500;
       text-decoration: none;
-      padding: 5px 12px;
-      border-radius: 6px;
-      background: #F1F5F9;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      transition: all 0.15s ease;
+      padding: 7px 10px;
+      border-radius: 7px;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background 0.12s ease;
+      text-align: left;
+      white-space: nowrap;
     }
     .details-link:hover {
-      background: #E2E8F0;
-      color: var(--text-primary);
+      background: #F1F5F9;
     }
-    .details-link.primary {
-      background: var(--teal-bg);
-      color: var(--teal-dark);
-      border-color: #CCFBF1;
+    .details-link .dl-icon {
+      font-size: 1.05rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0;
     }
-    .details-link.primary:hover {
-      background: #CCFBF1;
+    .details-link .dl-label {
+      flex: 1;
+    }
+    .details-link .dl-arrow {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .details-link.disabled {
+      opacity: 0.38;
+      pointer-events: none;
+    }
+    .details-link.scihub {
+      color: #854d0e;
+    }
+    .details-link.scihub:hover {
+      background: #fef9c3;
+    }
+    .details-body {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .details-body-main {
+      flex: 1;
+      min-width: 0;
     }
 
     /* Info Section */
@@ -713,7 +745,7 @@
       <li><b>API Kaynağı:</b> DOI sorgulamaları doğrudan resmi ve açık akademik veri tabanı olan <b>Crossref API</b> (<code>api.crossref.org</code>) üzerinden yapılır.</li>
       <li><b>Eşzamanlı Sorgu:</b> Sistem, tarayıcınızın donmasını önlemek ve API sunucularına aşırı yük bindirmemek için sorguları arka arkaya 3'lü gruplar (concurrency limit) halinde gerçekleştirir.</li>
       <li><b>Gizlilik Politikası:</b> Tüm işlemler tarayıcınızda (istemci tarafında) çalışır. Girdiğiniz DOI listesi veya sorgulanan makaleler hiçbir şekilde üçüncü şahıslarla paylaşılmaz veya DrTR sunucularına gönderilmez.</li>
-      <li><b>Özetlerin Durumu:</b> Bazı yayınevleri telif hakları veya kendi politikaları nedeniyle Crossref'e açık özet (abstract) kaydı girmemektedir. Bu durumlarda özet alanı boş kalır veya Google Scholar/PubMed linkleriyle yayına doğrudan yönlendirme sağlanır.</li>
+      <li><b>Özetlerin Durumu:</b> Özet önce <b>Crossref</b>'ten, bulunamazsa <b>OpenAlex</b>'ten (Elsevier, Springer vb. dahil), yine bulunamazsa <b>PubMed</b>'den çekilir. Tüm kaynaklarda kayıtlı özet yoksa alan boş kalır.</li>
     </ul>
   </div>
 </div>
@@ -978,7 +1010,73 @@
     }
   }
 
-  // Fetch from Crossref API
+  // Reconstruct abstract from OpenAlex inverted index format
+  function reconstructAbstractFromInvertedIndex(inv) {
+    if (!inv || typeof inv !== 'object') return '';
+    const tokens = [];
+    for (const [word, positions] of Object.entries(inv)) {
+      for (const pos of positions) tokens.push({ pos, word });
+    }
+    tokens.sort((a, b) => a.pos - b.pos);
+    return tokens.map(t => t.word).join(' ');
+  }
+
+  // Fetch abstract from OpenAlex by DOI (fallback when Crossref has none)
+  async function fetchOpenAlexAbstract(doi) {
+    try {
+      // OpenAlex expects the DOI in the URL path — do NOT encode slashes (/ must stay as /)
+      // Only encode characters that would break the URL (spaces, #, etc.) but preserve slash
+      const cleanDoi = doi.trim();
+      const url = `https://api.openalex.org/works/doi:${cleanDoi}?mailto=info@drtr.uk`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) return '';
+      const data = await res.json();
+      if (data.abstract_inverted_index) {
+        return reconstructAbstractFromInvertedIndex(data.abstract_inverted_index);
+      }
+      return '';
+    } catch {
+      return '';
+    }
+  }
+
+  // Fetch abstract from PubMed efetch by DOI (second fallback) — returns {abstract, pmid}
+  async function fetchPubmedAbstractByDoi(doi) {
+    try {
+      // Step 1: esearch to find PMID by DOI
+      const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(doi + '[doi]')}&retmode=json&retmax=1`;
+      const searchRes = await fetch(searchUrl, { signal: AbortSignal.timeout(10000) });
+      if (!searchRes.ok) return { abstract: '', pmid: '' };
+      const searchJson = await searchRes.json();
+      const pmid = searchJson?.esearchresult?.idlist?.[0] || '';
+      if (!pmid) return { abstract: '', pmid: '' };
+
+      // Step 2: efetch XML to get abstract text
+      const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmid}&retmode=xml&rettype=abstract`;
+      const fetchRes = await fetch(fetchUrl, { signal: AbortSignal.timeout(12000) });
+      if (!fetchRes.ok) return { abstract: '', pmid };
+      const xml = await fetchRes.text();
+
+      // Parse AbstractText elements (may have multiple labelled sections)
+      const segments = [];
+      const re = /<AbstractText[^>]*?(?:Label="([^"]+)")?[^>]*>([\/\s\S]*?)<\/AbstractText>/g;
+      let m;
+      while ((m = re.exec(xml))) {
+        const label = m[1];
+        const body = m[2]
+          .replace(/<[^>]+>/g, '')
+          .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+          .replace(/\s+/g, ' ').trim();
+        if (!body) continue;
+        segments.push(label ? `${label.toUpperCase()}: ${body}` : body);
+      }
+      return { abstract: segments.join('\n\n'), pmid };
+    } catch {
+      return { abstract: '', pmid: '' };
+    }
+  }
+
+  // Fetch from Crossref API, with OpenAlex + PubMed fallback for abstracts
   async function fetchMetadata(doi, fetchAbstracts) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seconds timeout
@@ -1014,10 +1112,23 @@
       const publisher = data.publisher || '';
       
       let abstract = '';
+      let pmid = '';
       if (fetchAbstracts) {
+        // 1. Try Crossref abstract (may have JATS XML tags)
         abstract = data.abstract || '';
-        // Remove JATS XML markup
         abstract = abstract.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
+        // 2. Fallback: OpenAlex (covers Elsevier, Springer, etc. that skip Crossref abstracts)
+        if (!abstract) {
+          abstract = await fetchOpenAlexAbstract(doi);
+        }
+
+        // 3. Fallback: PubMed efetch (best for biomedical literature, structured sections)
+        if (!abstract) {
+          const pubmedResult = await fetchPubmedAbstractByDoi(doi);
+          abstract = pubmedResult.abstract;
+          pmid = pubmedResult.pmid;
+        }
       }
 
       return {
@@ -1029,7 +1140,8 @@
         issue,
         pages,
         publisher,
-        abstract
+        abstract,
+        pmid
       };
 
     } catch (error) {
@@ -1205,21 +1317,42 @@
           : `<div class="details-abstract-section"><div class="details-abstract-title">Özet / Abstract</div><div style="color:var(--text-muted); font-size:0.82rem; font-style:italic;">Açık özet verisi bulunamadı.</div></div>`;
       }
 
+      const sciHubUrl = `https://sci-hub.se/${item.doi}`;
+      const pubmedDirectUrl = item.pmid
+        ? `https://pubmed.ncbi.nlm.nih.gov/${item.pmid}/`
+        : `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(item.doi)}`;
+      const pubmedDisabled = !item.pmid ? 'disabled' : '';
+
       tdDetails.innerHTML = `
         <div class="details-content">
-          <div class="details-title-full">${escHtml(item.title)}</div>
-          <div style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:8px;">
-            <b>Yazarlar:</b> ${escHtml(item.authors || 'Belirtilmemiş')}
-          </div>
-          <div style="font-size:0.84rem; color:var(--text-muted); margin-bottom:12px;">
-            <b>Dergi:</b> ${escHtml(item.journal || 'Belirtilmemiş')} · <b>Yıl:</b> ${item.year || '—'} · <b>Cilt:</b> ${item.volume || '—'} · <b>Sayı:</b> ${item.issue || '—'} · <b>Sayfa:</b> ${item.pages || '—'} · <b>Yayıncı:</b> ${escHtml(item.publisher || '—')}
-          </div>
-          ${abstractBlock}
-          <div class="details-links">
-            <a class="details-link primary" href="${doiUrl}" target="_blank" rel="noopener">DOI Bağlantısı ↗</a>
-            <a class="details-link" href="${pubmedUrl}" target="_blank" rel="noopener">PubMed Arama</a>
-            <a class="details-link" href="${scholarUrl}" target="_blank" rel="noopener">Google Akademik</a>
-            <button class="details-link" style="cursor:pointer;" onclick="event.stopPropagation(); copySingleReference(${idx})">Atıf Formatında Kopyala</button>
+          <div class="details-body">
+            <div class="details-body-main">
+              <div class="details-title-full">${escHtml(item.title)}</div>
+              <div style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:8px;">
+                <b>Yazarlar:</b> ${escHtml(item.authors || 'Belirtilmemiş')}
+              </div>
+              <div style="font-size:0.84rem; color:var(--text-muted); margin-bottom:12px;">
+                <b>Dergi:</b> ${escHtml(item.journal || 'Belirtilmemiş')} · <b>Yıl:</b> ${item.year || '—'} · <b>Cilt:</b> ${item.volume || '—'} · <b>Sayı:</b> ${item.issue || '—'} · <b>Sayfa:</b> ${item.pages || '—'} · <b>Yayıncı:</b> ${escHtml(item.publisher || '—')}
+              </div>
+              ${abstractBlock}
+            </div>
+            <div class="details-links">
+              <a class="details-link" href="${doiUrl}" target="_blank" rel="noopener">
+                <span class="dl-icon">🔗</span><span class="dl-label">Tam metin (DOI)</span><span class="dl-arrow">↗</span>
+              </a>
+              <a class="details-link scihub" href="${sciHubUrl}" target="_blank" rel="noopener">
+                <span class="dl-icon">🔓</span><span class="dl-label">Sci-Hub</span><span class="dl-arrow">↗</span>
+              </a>
+              <a class="details-link ${pubmedDisabled}" href="${pubmedDirectUrl}" target="_blank" rel="noopener">
+                <span class="dl-icon">🔗</span><span class="dl-label">PubMed</span><span class="dl-arrow">↗</span>
+              </a>
+              <a class="details-link" href="${scholarUrl}" target="_blank" rel="noopener">
+                <span class="dl-icon">🎓</span><span class="dl-label">Google Scholar</span><span class="dl-arrow">↗</span>
+              </a>
+              <button class="details-link" onclick="event.stopPropagation(); copySingleReference(${idx})">
+                <span class="dl-icon">📋</span><span class="dl-label">Atıfı Kopyala</span>
+              </button>
+            </div>
           </div>
         </div>
       `;
