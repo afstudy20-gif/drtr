@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toplu DOI Tarama — DrTR Tools</title>
+  <meta name="description" content="Birden fazla DOI girerek yayın adı, yazarlar, dergi, yıl, cilt ve özet bilgilerini toplu olarak sorgulayın. CSV/Excel olarak dışa aktarın veya atıfları kopyalayın.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/toplu-doi-tarama.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --text-faint: #94A3B8;
+      --border: #E2E8F0;
+      --teal: #0F766E;
+      --teal-bg: #F0FDFA;
+      --teal-dark: #0D5F59;
+      --blue: #1D4ED8;
+      --blue-bg: #EFF6FF;
+      --red: #DC2626;
+      --red-bg: #FEF2F2;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-secondary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    /* Topbar styling */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .nav-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: .65rem;
+      color: #0F766E;
+      flex-shrink: 0;
+    }
+    .nav-back {
+      font-size: .82rem;
+      color: var(--teal);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: var(--teal-bg);
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .nav-back:hover {
+      background: #E0F2FE;
+      color: var(--teal-dark);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* Hero section */
+    .hero {
+      margin-bottom: 28px;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--teal);
+      background: var(--teal-bg);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: .95rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      line-height: 1.6;
+    }
+
+    /* Form & Input Section */
+    .input-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      transition: box-shadow 0.2s ease;
+    }
+    .input-section:focus-within {
+      box-shadow: var(--shadow-md);
+    }
+    .input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .input-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .input-hint {
+      font-size: .78rem;
+      color: var(--text-muted);
+    }
+    textarea.doi-input {
+      width: 100%;
+      height: 150px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+      font-size: .84rem;
+      color: var(--text-primary);
+      background: #FAFBFD;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+      transition: all 0.15s ease;
+    }
+    textarea.doi-input:focus {
+      background: #FFF;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    /* Options and buttons row */
+    .options-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .option-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .option-checkbox input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--teal);
+      cursor: pointer;
+    }
+    .button-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display:inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font: inherit;
+      font-size: .86rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--teal-dark);
+    }
+    .btn-primary:disabled {
+      background: var(--text-faint);
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #FFF;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+    .btn-secondary:disabled {
+      color: var(--text-faint);
+      border-color: var(--border);
+      cursor: not-allowed;
+    }
+    .btn-danger {
+      background: #FFF;
+      color: var(--red);
+      border: 1px solid #FECACA;
+    }
+    .btn-danger:hover:not(:disabled) {
+      background: var(--red-bg);
+      border-color: #FCA5A5;
+    }
+    .btn-danger:disabled {
+      color: var(--text-faint);
+      border-color: var(--border);
+      cursor: not-allowed;
+    }
+
+    /* Progress section */
+    .progress-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: none;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-title {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .progress-percentage {
+      font-size: .9rem;
+      font-weight: 800;
+      color: var(--teal);
+    }
+    .progress-bar-bg {
+      background: #E2E8F0;
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--teal), #0d9488);
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+    .progress-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: .82rem;
+    }
+    .stat-badge {
+      background: #F1F5F9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .stat-badge b {
+      color: var(--text-primary);
+      margin-right: 4px;
+    }
+    .stat-badge.success b { color: #059669; }
+    .stat-badge.error b { color: var(--red); }
+
+    /* Results section & actions */
+    .results-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: none;
+      overflow: hidden;
+    }
+    .results-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: #FAFCFD;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .results-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .results-count {
+      font-size: .75rem;
+      background: #E0F2FE;
+      color: #0369A1;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table.results-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: .84rem;
+    }
+    th {
+      background: #F8FAFC;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 12px 14px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+      user-select: none;
+    }
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    
+    /* Table column widths */
+    .col-check { width: 40px; text-align: center; }
+    .col-num { width: 40px; color: var(--text-muted); text-align: center; }
+    .col-doi { width: 140px; word-break: break-all; font-family: monospace; font-size: 0.78rem; }
+    .col-status { width: 90px; }
+    .col-title { min-width: 200px; font-weight: 600; }
+    .col-authors { min-width: 150px; color: var(--text-secondary); }
+    .col-journal { min-width: 130px; }
+    .col-meta { width: 100px; }
+    .col-abstract { width: 100px; text-align: center; }
+
+    tr.main-row {
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+    tr.main-row:hover {
+      background: #F8FAFC;
+    }
+    tr.main-row.details-open {
+      background: var(--teal-bg) !important;
+    }
+    
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .status-pending { background: #F1F5F9; color: #64748B; border: 1px solid #E2E8F0; }
+    .status-fetching { 
+      background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE;
+      animation: pulse-glow 1.5s infinite ease-in-out;
+    }
+    .status-success { background: #ECFDF5; color: #047857; border: 1px solid #D1FAE5; }
+    .status-error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FEE2E2; }
+    
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .btn-read-abstract {
+      background: #FFF;
+      color: var(--teal);
+      border: 1px solid #CCFBF1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-read-abstract:hover {
+      background: var(--teal-bg);
+      border-color: #99F6E4;
+    }
+
+    /* Details row styling */
+    tr.details-row {
+      background: #FAFCFD;
+    }
+    tr.details-row td {
+      padding: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .details-content {
+      padding: 20px 24px;
+      border-left: 4px solid var(--teal);
+      animation: slide-down 0.2s ease-out;
+    }
+    @keyframes slide-down {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .details-title-full {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .details-abstract-section {
+      margin-top: 12px;
+    }
+    .details-abstract-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .details-abstract-text {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      background: #F1F5F9;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: justify;
+    }
+    .details-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .details-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: #F1F5F9;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+    .details-link:hover {
+      background: #E2E8F0;
+      color: var(--text-primary);
+    }
+    .details-link.primary {
+      background: var(--teal-bg);
+      color: var(--teal-dark);
+      border-color: #CCFBF1;
+    }
+    .details-link.primary:hover {
+      background: #CCFBF1;
+    }
+
+    /* Info Section */
+    .info-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      line-height: 1.65;
+    }
+    .info-section h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .info-section p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .info-section ul {
+      padding-left: 20px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+    .info-section li {
+      margin-bottom: 6px;
+    }
+    .info-section code {
+      background: #F1F5F9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: var(--text-primary);
+    }
+
+    /* Tooltip / Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: #1E293B;
+      color: #FFF;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .options-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .button-group {
+        justify-content: flex-end;
+      }
+      .results-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .results-header .button-group {
+        justify-content: flex-start;
+      }
+      .hero h1 {
+        font-size: 1.45rem;
+      }
+      td, th {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-badge">Akademik Araçlar</span>
+    <h1>Toplu DOI Tarama</h1>
+    <p>Birden fazla DOI numarasını aşağıdaki alana yapıştırın. Sistem her bir DOI için yayın başlığı, yazarlar, dergi adı, yayın yılı, cilt/sayı ve özet bilgilerini Crossref API'si üzerinden toplu olarak sorgular. Sonuçları tablo halinde inceleyebilir, CSV/Excel formatında indirebilir veya atıf listesini panoya kopyalayabilirsiniz.</p>
+  </div>
+
+  <!-- Input Section -->
+  <div class="input-section">
+    <div class="input-header">
+      <label class="input-title" for="doiInput">Sorgulanacak DOI Listesi</label>
+      <span class="input-hint">Her satıra bir DOI (veya tam DOI linki) gelecek şekilde yapıştırın</span>
+    </div>
+    <textarea id="doiInput" class="doi-input" placeholder="Örnek:&#10;10.1016/j.cell.2021.01.001&#10;https://doi.org/10.1109/5.771073&#10;10.1056/NEJMoa2119497"></textarea>
+    
+    <div class="options-bar">
+      <label class="option-checkbox">
+        <input type="checkbox" id="fetchAbstract" checked>
+        <span>Özetleri Çek ve Göster (Açık özet varsa işlenir)</span>
+      </label>
+      
+      <div class="button-group">
+        <button class="btn btn-secondary" id="exBtn">Örnek Yükle</button>
+        <button class="btn btn-danger" id="clearBtn">Temizle</button>
+        <button class="btn btn-primary" id="startBtn">Tarama Başlat</button>
+        <button class="btn btn-danger" id="stopBtn" style="display: none;">Durdur</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Section -->
+  <div class="progress-section" id="progressSection">
+    <div class="progress-header">
+      <span class="progress-title" id="progressTitle">DOI'ler sorgulanıyor...</span>
+      <span class="progress-percentage" id="progressPercent">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+    <div class="progress-stats">
+      <span class="stat-badge">Toplam: <b id="statTotal">0</b></span>
+      <span class="stat-badge success">Başarılı: <b id="statSuccess">0</b></span>
+      <span class="stat-badge error">Hatalı: <b id="statError">0</b></span>
+      <span class="stat-badge">Kalan: <b id="statRemaining">0</b></span>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title">
+        Sorgu Sonuçları <span class="results-count" id="resultsCount">0</span>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-secondary" id="selectAllBtn" onclick="toggleSelectAll(true)">Tümünü Seç</button>
+        <button class="btn btn-secondary" id="deselectAllBtn" onclick="toggleSelectAll(false)">Seçimi Kaldır</button>
+        <button class="btn btn-secondary" id="copyRefsBtn">Atıfları Kopyala</button>
+        <button class="btn btn-primary" id="exportCsvBtn">Excel / CSV İndir</button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th class="col-check" style="text-align: center;"><input type="checkbox" id="masterCheckbox" checked onclick="masterCheckboxClicked(this)"></th>
+            <th class="col-num">#</th>
+            <th class="col-doi">DOI</th>
+            <th class="col-status">Durum</th>
+            <th class="col-title">Yayın Adı</th>
+            <th class="col-authors">Yazarlar</th>
+            <th class="col-journal">Dergi</th>
+            <th class="col-meta">Yıl / Cilt</th>
+            <th class="col-abstract" id="thAbstract">Özet</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTableBody">
+          <!-- Rows will be injected by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <h3>ℹ️ Nasıl Çalışır ve Gizlilik Hakkında</h3>
+    <p>Toplu DOI Tarayıcı, akademik yayınlarınızı listelemeyi kolaylaştıran yerel odaklı (local-first) bir araçtır:</p>
+    <ul>
+      <li><b>API Kaynağı:</b> DOI sorgulamaları doğrudan resmi ve açık akademik veri tabanı olan <b>Crossref API</b> (<code>api.crossref.org</code>) üzerinden yapılır.</li>
+      <li><b>Eşzamanlı Sorgu:</b> Sistem, tarayıcınızın donmasını önlemek ve API sunucularına aşırı yük bindirmemek için sorguları arka arkaya 3'lü gruplar (concurrency limit) halinde gerçekleştirir.</li>
+      <li><b>Gizlilik Politikası:</b> Tüm işlemler tarayıcınızda (istemci tarafında) çalışır. Girdiğiniz DOI listesi veya sorgulanan makaleler hiçbir şekilde üçüncü şahıslarla paylaşılmaz veya DrTR sunucularına gönderilmez.</li>
+      <li><b>Özetlerin Durumu:</b> Bazı yayınevleri telif hakları veya kendi politikaları nedeniyle Crossref'e açık özet (abstract) kaydı girmemektedir. Bu durumlarda özet alanı boş kalır veya Google Scholar/PubMed linkleriyle yayına doğrudan yönlendirme sağlanır.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="toast" id="toast">Atıflar panoya kopyalandı!</div>
+
+<script>
+  // State variables
+  let isRunning = false;
+  let shouldStop = false;
+  let queryQueue = [];
+  let queryResults = [];
+  let nextQueueIndex = 0;
+  let activeConnections = 0;
+  const CONCURRENCY_LIMIT = 3;
+
+  // DOM Elements
+  const doiInput = document.getElementById('doiInput');
+  const fetchAbstractCheckbox = document.getElementById('fetchAbstract');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const exBtn = document.getElementById('exBtn');
+  const progressSection = document.getElementById('progressSection');
+  const progressTitle = document.getElementById('progressTitle');
+  const progressPercent = document.getElementById('progressPercent');
+  const progressBarFill = document.getElementById('progressBarFill');
+  const resultsSection = document.getElementById('resultsSection');
+  const resultsTableBody = document.getElementById('resultsTableBody');
+  const resultsCount = document.getElementById('resultsCount');
+  const thAbstract = document.getElementById('thAbstract');
+  
+  // Stat Counters
+  const statTotal = document.getElementById('statTotal');
+  const statSuccess = document.getElementById('statSuccess');
+  const statError = document.getElementById('statError');
+  const statRemaining = document.getElementById('statRemaining');
+
+  // Export Buttons
+  const copyRefsBtn = document.getElementById('copyRefsBtn');
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+
+  // Event Listeners
+  startBtn.addEventListener('click', startScanning);
+  stopBtn.addEventListener('click', stopScanning);
+  clearBtn.addEventListener('click', clearAll);
+  exBtn.addEventListener('click', loadExample);
+  copyRefsBtn.addEventListener('click', copySelectedReferences);
+  exportCsvBtn.addEventListener('click', exportSelectedCsv);
+
+  // Extract clean DOIs from free text
+  function extractDOIs(text) {
+    if (!text) return [];
+    // Match pattern starting with 10.xxxx/
+    const regex = /(10\.\d{4,15}\/[^\s"\'<>{}|\\^`\[\]]+)/g;
+    const matches = text.match(regex) || [];
+    
+    const cleaned = matches.map(doi => {
+      try {
+        doi = decodeURIComponent(doi);
+      } catch(e) {}
+      
+      let clean = doi.trim();
+      
+      // Clean trailing punctuation marks that could be captured by the regex at the end of word boundaries
+      while (clean.length > 0) {
+        const lastChar = clean[clean.length - 1];
+        if (['.', ',', ';', ':', '?', '!', '"', "'", ')', ']', '>'].includes(lastChar)) {
+          if (lastChar === ')' && clean.includes('(')) break;
+          if (lastChar === ']' && clean.includes('[')) break;
+          if (lastChar === '>' && clean.includes('<')) break;
+          clean = clean.slice(0, -1);
+        } else {
+          break;
+        }
+      }
+      return clean;
+    }).filter(doi => doi.length > 5);
+
+    // Keep unique elements, case insensitive check but preserving case
+    const unique = [];
+    const seen = new Set();
+    for (const d of cleaned) {
+      const lower = d.toLowerCase();
+      if (!seen.has(lower)) {
+        seen.add(lower);
+        unique.push(d);
+      }
+    }
+    return unique;
+  }
+
+  // Load Example DOIs
+  function loadExample() {
+    if (isRunning) return;
+    doiInput.value = [
+      "10.1016/j.cell.2021.01.001",
+      "https://doi.org/10.1109/5.771073",
+      "10.1056/NEJMoa2119497",
+      "10.1038/s41586-020-2003-x",
+      "invalid.doi/does-not-exist"
+    ].join("\n");
+    showToast("Örnek DOI'ler yüklendi.");
+  }
+
+  // Clear inputs & states
+  function clearAll() {
+    if (isRunning) return;
+    doiInput.value = "";
+    queryQueue = [];
+    queryResults = [];
+    progressSection.style.display = "none";
+    resultsSection.style.display = "none";
+    resultsTableBody.innerHTML = "";
+    showToast("Ekran temizlendi.");
+  }
+
+  // Show Toast Notification
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  // Toggle master selection checkbox
+  function masterCheckboxClicked(master) {
+    const checkboxes = resultsTableBody.querySelectorAll('.row-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = master.checked;
+    });
+  }
+
+  function toggleSelectAll(select) {
+    const checkboxes = resultsTableBody.querySelectorAll('.row-checkbox');
+    checkboxes.forEach(cb => cb.checked = select);
+    const master = document.getElementById('masterCheckbox');
+    if (master) master.checked = select;
+  }
+
+  // Start the scan
+  async function startScanning() {
+    if (isRunning) return;
+    
+    const text = doiInput.value;
+    const extracted = extractDOIs(text);
+    
+    if (extracted.length === 0) {
+      showToast("Girdi alanında geçerli bir DOI bulunamadı!");
+      doiInput.focus();
+      return;
+    }
+
+    const fetchAbstracts = fetchAbstractCheckbox.checked;
+
+    // Toggle column visibility
+    thAbstract.style.display = fetchAbstracts ? "" : "none";
+
+    // Setup state
+    queryQueue = extracted;
+    queryResults = extracted.map((doi, idx) => ({
+      index: idx,
+      doi: doi,
+      status: 'pending',
+      title: '',
+      authors: '',
+      journal: '',
+      year: '',
+      volume: '',
+      issue: '',
+      pages: '',
+      publisher: '',
+      abstract: '',
+      error: ''
+    }));
+
+    nextQueueIndex = 0;
+    isRunning = true;
+    shouldStop = false;
+    activeConnections = 0;
+
+    // Update Controls UI
+    startBtn.style.display = "none";
+    stopBtn.style.display = "inline-flex";
+    stopBtn.disabled = false;
+    clearBtn.disabled = true;
+    exBtn.disabled = true;
+    doiInput.disabled = true;
+    fetchAbstractCheckbox.disabled = true;
+
+    // Show Panels
+    progressSection.style.display = "block";
+    resultsSection.style.display = "block";
+    resultsCount.textContent = queryQueue.length;
+    
+    // Render initial empty rows
+    renderTable();
+    updateProgressUI();
+
+    // Start workers
+    const activeWorkers = [];
+    const workerCount = Math.min(CONCURRENCY_LIMIT, queryQueue.length);
+    for (let i = 0; i < workerCount; i++) {
+      activeWorkers.push(runWorker(fetchAbstracts));
+    }
+
+    await Promise.all(activeWorkers);
+    
+    // Scan finished
+    isRunning = false;
+    
+    // Reset controls UI
+    startBtn.style.display = "inline-flex";
+    stopBtn.style.display = "none";
+    clearBtn.disabled = false;
+    exBtn.disabled = false;
+    doiInput.disabled = false;
+    fetchAbstractCheckbox.disabled = false;
+
+    if (shouldStop) {
+      progressTitle.textContent = "Tarama Kullanıcı Tarafından Durduruldu";
+      showToast("Sorgulama durduruldu.");
+    } else {
+      progressTitle.textContent = "Tarama Tamamlandı";
+      showToast("Tüm DOI sorgulamaları tamamlandı!");
+    }
+    updateProgressUI();
+  }
+
+  // Stop the scan
+  function stopScanning() {
+    if (!isRunning) return;
+    shouldStop = true;
+    stopBtn.disabled = true;
+    stopBtn.textContent = "Durduruluyor...";
+  }
+
+  // Worker loop
+  async function runWorker(fetchAbstracts) {
+    while (nextQueueIndex < queryQueue.length && !shouldStop) {
+      const index = nextQueueIndex++;
+      activeConnections++;
+      
+      queryResults[index].status = 'fetching';
+      updateTableRow(index);
+      updateProgressUI();
+
+      try {
+        const metadata = await fetchMetadata(queryResults[index].doi, fetchAbstracts);
+        queryResults[index].status = 'success';
+        queryResults[index] = { ...queryResults[index], ...metadata };
+      } catch (error) {
+        queryResults[index].status = 'error';
+        queryResults[index].error = error.message || 'Hata oluştu';
+      }
+
+      activeConnections--;
+      updateTableRow(index);
+      updateProgressUI();
+    }
+  }
+
+  // Fetch from Crossref API
+  async function fetchMetadata(doi, fetchAbstracts) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seconds timeout
+
+    try {
+      // supply polite mailto contact to API
+      const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}?mailto=info@drtr.uk`;
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          throw new Error('DOI bulunamadı');
+        } else {
+          throw new Error(`Sunucu Hatası (${res.status})`);
+        }
+      }
+
+      const json = await res.json();
+      const data = json.message;
+
+      const title = (data.title && data.title[0]) || '(Başlık yok)';
+      
+      const authors = (data.author || []).slice(0, 5).map(a => {
+        return (a.family || '') + (a.given ? ', ' + a.given : '');
+      }).join(' · ') + ((data.author || []).length > 5 ? ' ve diğerleri' : '');
+
+      const journal = (data['container-title'] && data['container-title'][0]) || '';
+      const year = (data.issued && data.issued['date-parts'] && data.issued['date-parts'][0] && data.issued['date-parts'][0][0]) || '';
+      const volume = data.volume || '';
+      const issue = data.issue || '';
+      const pages = data.page || '';
+      const publisher = data.publisher || '';
+      
+      let abstract = '';
+      if (fetchAbstracts) {
+        abstract = data.abstract || '';
+        // Remove JATS XML markup
+        abstract = abstract.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      }
+
+      return {
+        title,
+        authors,
+        journal,
+        year,
+        volume,
+        issue,
+        pages,
+        publisher,
+        abstract
+      };
+
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Zaman aşımı');
+      }
+      throw error;
+    }
+  }
+
+  // Render initial table rows
+  function renderTable() {
+    resultsTableBody.innerHTML = "";
+    const fetchAbstracts = fetchAbstractCheckbox.checked;
+
+    queryResults.forEach((item, idx) => {
+      // Main row
+      const mainTr = document.createElement('tr');
+      mainTr.className = 'main-row';
+      mainTr.id = `row-main-${idx}`;
+      mainTr.setAttribute('onclick', `toggleDetailsRow(${idx})`);
+      
+      // Checkbox cell
+      const tdCheck = document.createElement('td');
+      tdCheck.className = 'col-check';
+      tdCheck.style.textAlign = 'center';
+      tdCheck.setAttribute('onclick', 'event.stopPropagation()'); // prevent expand toggle on click
+      
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'row-checkbox';
+      cb.id = `cb-${idx}`;
+      cb.checked = true;
+      tdCheck.appendChild(cb);
+      
+      // Index cell
+      const tdNum = document.createElement('td');
+      tdNum.className = 'col-num';
+      tdNum.style.textAlign = 'center';
+      tdNum.textContent = idx + 1;
+      
+      // DOI cell
+      const tdDoi = document.createElement('td');
+      tdDoi.className = 'col-doi';
+      tdDoi.textContent = item.doi;
+      
+      // Status cell
+      const tdStatus = document.createElement('td');
+      tdStatus.className = 'col-status';
+      tdStatus.id = `cell-status-${idx}`;
+      
+      // Title cell
+      const tdTitle = document.createElement('td');
+      tdTitle.className = 'col-title';
+      tdTitle.id = `cell-title-${idx}`;
+      
+      // Authors cell
+      const tdAuthors = document.createElement('td');
+      tdAuthors.className = 'col-authors';
+      tdAuthors.id = `cell-authors-${idx}`;
+      
+      // Journal cell
+      const tdJournal = document.createElement('td');
+      tdJournal.className = 'col-journal';
+      tdJournal.id = `cell-journal-${idx}`;
+      
+      // Year/Volume cell
+      const tdMeta = document.createElement('td');
+      tdMeta.className = 'col-meta';
+      tdMeta.id = `cell-meta-${idx}`;
+      
+      // Abstract cell
+      const tdAbstract = document.createElement('td');
+      tdAbstract.className = 'col-abstract';
+      tdAbstract.id = `cell-abstract-${idx}`;
+      if (!fetchAbstracts) {
+        tdAbstract.style.display = 'none';
+      }
+
+      mainTr.appendChild(tdCheck);
+      mainTr.appendChild(tdNum);
+      mainTr.appendChild(tdDoi);
+      mainTr.appendChild(tdStatus);
+      mainTr.appendChild(tdTitle);
+      mainTr.appendChild(tdAuthors);
+      mainTr.appendChild(tdJournal);
+      mainTr.appendChild(tdMeta);
+      mainTr.appendChild(tdAbstract);
+      
+      resultsTableBody.appendChild(mainTr);
+      
+      // Details row (hidden initially)
+      const detailsTr = document.createElement('tr');
+      detailsTr.className = 'details-row';
+      detailsTr.id = `row-details-${idx}`;
+      detailsTr.style.display = 'none';
+      
+      const detailsTd = document.createElement('td');
+      detailsTd.colSpan = fetchAbstracts ? 9 : 8;
+      detailsTd.id = `cell-details-content-${idx}`;
+      
+      detailsTr.appendChild(detailsTd);
+      resultsTableBody.appendChild(detailsTr);
+
+      updateTableRow(idx);
+    });
+  }
+
+  // Update a single table row dynamically
+  function updateTableRow(idx) {
+    const item = queryResults[idx];
+    const fetchAbstracts = fetchAbstractCheckbox.checked;
+    
+    // Cells
+    const tdStatus = document.getElementById(`cell-status-${idx}`);
+    const tdTitle = document.getElementById(`cell-title-${idx}`);
+    const tdAuthors = document.getElementById(`cell-authors-${idx}`);
+    const tdJournal = document.getElementById(`cell-journal-${idx}`);
+    const tdMeta = document.getElementById(`cell-meta-${idx}`);
+    const tdAbstract = document.getElementById(`cell-abstract-${idx}`);
+    const tdDetails = document.getElementById(`cell-details-content-${idx}`);
+    const cb = document.getElementById(`cb-${idx}`);
+
+    if (!tdStatus) return;
+
+    // Status Badge
+    let statusHtml = '';
+    if (item.status === 'pending') {
+      statusHtml = '<span class="status-badge status-pending">Bekliyor</span>';
+    } else if (item.status === 'fetching') {
+      statusHtml = '<span class="status-badge status-fetching">Aranıyor</span>';
+    } else if (item.status === 'success') {
+      statusHtml = '<span class="status-badge status-success">Başarılı</span>';
+      if (cb) cb.checked = true; // Auto select on success
+    } else if (item.status === 'error') {
+      statusHtml = '<span class="status-badge status-error">Başarısız</span>';
+      if (cb) cb.checked = false; // Auto deselect on failure
+    }
+    tdStatus.innerHTML = statusHtml;
+
+    // Title / Authors / Journal / Meta
+    if (item.status === 'success') {
+      tdTitle.textContent = item.title;
+      tdAuthors.textContent = item.authors || '—';
+      tdJournal.textContent = item.journal || '—';
+      
+      let metaText = item.year || '';
+      if (item.volume) {
+        metaText += ` (Cilt ${item.volume}`;
+        if (item.issue) metaText += `, Sayı ${item.issue}`;
+        metaText += ')';
+      }
+      tdMeta.textContent = metaText || '—';
+
+      if (fetchAbstracts) {
+        if (item.abstract) {
+          tdAbstract.innerHTML = `<button class="btn-read-abstract" onclick="event.stopPropagation(); toggleDetailsRow(${idx})">📄 Özeti Oku</button>`;
+        } else {
+          tdAbstract.innerHTML = `<span style="color:var(--text-faint); font-style:italic;">Yok</span>`;
+        }
+      }
+      
+      // Inject details content
+      const doiUrl = `https://doi.org/${item.doi}`;
+      const scholarUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(item.title)}`;
+      const pubmedUrl = `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(item.doi)}`;
+      
+      let abstractBlock = '';
+      if (fetchAbstracts) {
+        abstractBlock = item.abstract 
+          ? `<div class="details-abstract-section"><div class="details-abstract-title">Özet / Abstract</div><div class="details-abstract-text">${escHtml(item.abstract)}</div></div>`
+          : `<div class="details-abstract-section"><div class="details-abstract-title">Özet / Abstract</div><div style="color:var(--text-muted); font-size:0.82rem; font-style:italic;">Açık özet verisi bulunamadı.</div></div>`;
+      }
+
+      tdDetails.innerHTML = `
+        <div class="details-content">
+          <div class="details-title-full">${escHtml(item.title)}</div>
+          <div style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:8px;">
+            <b>Yazarlar:</b> ${escHtml(item.authors || 'Belirtilmemiş')}
+          </div>
+          <div style="font-size:0.84rem; color:var(--text-muted); margin-bottom:12px;">
+            <b>Dergi:</b> ${escHtml(item.journal || 'Belirtilmemiş')} · <b>Yıl:</b> ${item.year || '—'} · <b>Cilt:</b> ${item.volume || '—'} · <b>Sayı:</b> ${item.issue || '—'} · <b>Sayfa:</b> ${item.pages || '—'} · <b>Yayıncı:</b> ${escHtml(item.publisher || '—')}
+          </div>
+          ${abstractBlock}
+          <div class="details-links">
+            <a class="details-link primary" href="${doiUrl}" target="_blank" rel="noopener">DOI Bağlantısı ↗</a>
+            <a class="details-link" href="${pubmedUrl}" target="_blank" rel="noopener">PubMed Arama</a>
+            <a class="details-link" href="${scholarUrl}" target="_blank" rel="noopener">Google Akademik</a>
+            <button class="details-link" style="cursor:pointer;" onclick="event.stopPropagation(); copySingleReference(${idx})">Atıf Formatında Kopyala</button>
+          </div>
+        </div>
+      `;
+
+    } else if (item.status === 'error') {
+      tdTitle.innerHTML = `<span style="color:var(--red); font-weight: 500;">Hata: ${escHtml(item.error)}</span>`;
+      tdAuthors.textContent = '—';
+      tdJournal.textContent = '—';
+      tdMeta.textContent = '—';
+      if (fetchAbstracts) {
+        tdAbstract.innerHTML = '—';
+      }
+      
+      // Inject failure details
+      tdDetails.innerHTML = `
+        <div class="details-content" style="border-left-color: var(--red);">
+          <div style="font-weight: 700; color: var(--red); margin-bottom: 8px;">DOI Çözümleme Hatası</div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            <code>${escHtml(item.doi)}</code> adresi Crossref API'si üzerinden çözümlenemedi. 
+            Lütfen DOI numarasını kontrol edin veya daha sonra tekrar deneyin.
+          </p>
+          <div class="details-links">
+            <a class="details-link" href="https://doi.org/${item.doi}" target="_blank" rel="noopener">DOI.org Doğrudan Denetle ↗</a>
+          </div>
+        </div>
+      `;
+    } else {
+      // Pending or fetching defaults
+      tdTitle.textContent = '—';
+      tdAuthors.textContent = '—';
+      tdJournal.textContent = '—';
+      tdMeta.textContent = '—';
+      if (fetchAbstracts) {
+        tdAbstract.innerHTML = '—';
+      }
+      tdDetails.innerHTML = '';
+    }
+  }
+
+  // Toggle details row display
+  function toggleDetailsRow(idx) {
+    const detailsRow = document.getElementById(`row-details-${idx}`);
+    const mainRow = document.getElementById(`row-main-${idx}`);
+    if (!detailsRow || queryResults[idx].status === 'pending' || queryResults[idx].status === 'fetching') return;
+
+    if (detailsRow.style.display === 'none') {
+      detailsRow.style.display = '';
+      mainRow.classList.add('details-open');
+    } else {
+      detailsRow.style.display = 'none';
+      mainRow.classList.remove('details-open');
+    }
+  }
+
+  // Update statistics and progress bar UI
+  function updateProgressUI() {
+    const total = queryQueue.length;
+    const successes = queryResults.filter(r => r.status === 'success').length;
+    const errors = queryResults.filter(r => r.status === 'error').length;
+    const completed = successes + errors;
+    const remaining = total - completed;
+    
+    statTotal.textContent = total;
+    statSuccess.textContent = successes;
+    statError.textContent = errors;
+    statRemaining.textContent = remaining;
+
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    progressPercent.textContent = `${percent}%`;
+    progressBarFill.style.width = `${percent}%`;
+
+    if (isRunning) {
+      progressTitle.textContent = `DOI'ler sorgulanıyor... (${completed}/${total})`;
+    }
+  }
+
+  // Copy single reference to clipboard in APA-ish format
+  function copySingleReference(idx) {
+    const item = queryResults[idx];
+    if (!item || item.status !== 'success') return;
+    
+    const formatted = formatAPA(item);
+    navigator.clipboard.writeText(formatted).then(() => {
+      showToast("Seçilen makale atıfı kopyalandı.");
+    });
+  }
+
+  // Copy selected references from table
+  function copySelectedReferences() {
+    const selectedIndexes = [];
+    const checkboxes = resultsTableBody.querySelectorAll('.row-checkbox');
+    
+    checkboxes.forEach((cb, idx) => {
+      if (cb.checked && queryResults[idx].status === 'success') {
+        selectedIndexes.push(idx);
+      }
+    });
+
+    if (selectedIndexes.length === 0) {
+      showToast("Atıf olarak kopyalanacak başarılı bir sorgu seçilmedi!");
+      return;
+    }
+
+    const formattedRefs = selectedIndexes.map(idx => formatAPA(queryResults[idx])).join("\n\n");
+    
+    navigator.clipboard.writeText(formattedRefs).then(() => {
+      showToast(`${selectedIndexes.length} adet atıf panoya kopyalandı!`);
+    });
+  }
+
+  // Format APA reference string
+  function formatAPA(item) {
+    // Authors (Year). Title. Journal, Volume(Issue), pages. https://doi.org/doi
+    let auth = item.authors ? item.authors : 'Yazar Belirtilmemiş';
+    let yr = item.year ? `(${item.year})` : '(n.d.)';
+    let t = item.title.endsWith('.') ? item.title : `${item.title}.`;
+    let j = item.journal ? `${item.journal}` : '';
+    
+    let volIssue = '';
+    if (item.volume) {
+      volIssue = `, ${item.volume}`;
+      if (item.issue) volIssue += `(${item.issue})`;
+    }
+    
+    let pg = item.pages ? `, ${item.pages}` : '';
+    let doiUrl = `https://doi.org/${item.doi}`;
+
+    return `${auth} ${yr}. ${t} ${j}${volIssue}${pg}. ${doiUrl}`;
+  }
+
+  // Export selected rows as CSV with Excel UTF-8 BOM
+  function exportSelectedCsv() {
+    const selectedRows = [];
+    const checkboxes = resultsTableBody.querySelectorAll('.row-checkbox');
+    const fetchAbstracts = fetchAbstractCheckbox.checked;
+    
+    checkboxes.forEach((cb, idx) => {
+      if (cb.checked && queryResults[idx].status === 'success') {
+        selectedRows.push(queryResults[idx]);
+      }
+    });
+
+    if (selectedRows.length === 0) {
+      showToast("Dışa aktarmak için başarılı bir satır seçilmedi!");
+      return;
+    }
+
+    // CSV Headers
+    const headers = ["DOI", "Yayin Basligi", "Yazarlar", "Dergi", "Yil", "Cilt", "Sayi", "Sayfa", "Yayinci"];
+    if (fetchAbstracts) {
+      headers.push("Ozet");
+    }
+
+    const csvLines = [];
+    // Add headers
+    csvLines.push(headers.map(h => `"${h.replace(/"/g, '""')}"`).join(","));
+
+    // Add rows
+    selectedRows.forEach(item => {
+      const line = [
+        item.doi,
+        item.title,
+        item.authors,
+        item.journal,
+        item.year,
+        item.volume,
+        item.issue,
+        item.pages,
+        item.publisher
+      ];
+      if (fetchAbstracts) {
+        line.push(item.abstract);
+      }
+      csvLines.push(line.map(val => {
+        const strVal = String(val || '');
+        return `"${strVal.replace(/"/g, '""')}"`;
+      }).join(","));
+    });
+
+    // Write UTF-8 BOM so Excel decodes Turkish characters correctly
+    const csvContent = "\uFEFF" + csvLines.join("\r\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `drtr_toplu_doi_sonuclari_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("CSV dosyası indirildi.");
+  }
+
+  // HTML escaping helper
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>
+</body>
+</html>
