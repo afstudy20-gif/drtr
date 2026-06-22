@@ -596,6 +596,56 @@
       color: var(--text-primary);
     }
 
+    /* Export Dropdown */
+    .export-dropdown-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .export-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-md);
+      z-index: 50;
+      min-width: 210px;
+      overflow: hidden;
+    }
+    .export-dropdown.show {
+      display: block;
+      animation: slide-down 0.15s ease-out;
+    }
+    .export-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 16px;
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.1s;
+    }
+    .export-dropdown-item:hover {
+      background: #F1F5F9;
+    }
+    .export-dropdown-item:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+    .export-dropdown-item .edi-icon {
+      font-size: 1.05rem;
+      width: 22px;
+      text-align: center;
+    }
+
     /* Tooltip / Toast */
     .toast {
       position: fixed;
@@ -659,16 +709,16 @@
   <div class="hero">
     <span class="hero-badge">Akademik Araçlar</span>
     <h1>Toplu DOI Tarama</h1>
-    <p>Birden fazla DOI numarasını aşağıdaki alana yapıştırın. Sistem her bir DOI için yayın başlığı, yazarlar, dergi adı, yayın yılı, cilt/sayı ve özet bilgilerini Crossref API'si üzerinden toplu olarak sorgular. Sonuçları tablo halinde inceleyebilir, CSV/Excel formatında indirebilir veya atıf listesini panoya kopyalayabilirsiniz.</p>
+    <p>DOI listesini veya DOI içeren referans metnini aşağıdaki alana yapıştırın. Sistem DOI'leri farklı formatlardan (<code>10.xxxx/...</code>, <code>doi:10.xxxx/...</code>, <code>https://doi.org/...</code>) otomatik olarak çıkarır ve her biri için yayın başlığı, yazarlar, dergi adı, yayın yılı, cilt/sayı ve özet bilgilerini sorgular. Sonuçları CSV, Excel veya Markdown formatında dışa aktarabilirsiniz.</p>
   </div>
 
   <!-- Input Section -->
   <div class="input-section">
     <div class="input-header">
       <label class="input-title" for="doiInput">Sorgulanacak DOI Listesi</label>
-      <span class="input-hint">Her satıra bir DOI (veya tam DOI linki) gelecek şekilde yapıştırın</span>
+      <span class="input-hint">DOI listesi veya DOI içeren referans metni yapıştırın — DOI'ler otomatik çıkarılır</span>
     </div>
-    <textarea id="doiInput" class="doi-input" placeholder="Örnek:&#10;10.1016/j.cell.2021.01.001&#10;https://doi.org/10.1109/5.771073&#10;10.1056/NEJMoa2119497"></textarea>
+    <textarea id="doiInput" class="doi-input" placeholder="DOI listesi veya referans metni yapıştırın:&#10;&#10;10.1016/j.cell.2021.01.001&#10;https://doi.org/10.1109/5.771073&#10;doi:10.1056/NEJMoa2119497&#10;&#10;veya referans metni içinden otomatik çıkarır:&#10;Smith J. (2024). Title. Journal. doi:10.1234/example"></textarea>
     
     <div class="options-bar">
       <label class="option-checkbox">
@@ -712,7 +762,14 @@
         <button class="btn btn-secondary" id="selectAllBtn" onclick="toggleSelectAll(true)">Tümünü Seç</button>
         <button class="btn btn-secondary" id="deselectAllBtn" onclick="toggleSelectAll(false)">Seçimi Kaldır</button>
         <button class="btn btn-secondary" id="copyRefsBtn">Atıfları Kopyala</button>
-        <button class="btn btn-primary" id="exportCsvBtn">Excel / CSV İndir</button>
+        <div class="export-dropdown-wrapper">
+          <button class="btn btn-primary" onclick="toggleExportDropdown(event)">Dışa Aktar ▾</button>
+          <div class="export-dropdown" id="exportDropdown">
+            <button class="export-dropdown-item" onclick="exportSelectedCsv()"><span class="edi-icon">📄</span> CSV olarak indir (.csv)</button>
+            <button class="export-dropdown-item" onclick="exportSelectedExcel()"><span class="edi-icon">📊</span> Excel olarak indir (.xls)</button>
+            <button class="export-dropdown-item" onclick="exportSelectedMarkdown()"><span class="edi-icon">📝</span> Markdown olarak indir (.md)</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="table-container">
@@ -786,7 +843,6 @@
 
   // Export Buttons
   const copyRefsBtn = document.getElementById('copyRefsBtn');
-  const exportCsvBtn = document.getElementById('exportCsvBtn');
 
   // Event Listeners
   startBtn.addEventListener('click', startScanning);
@@ -794,11 +850,12 @@
   clearBtn.addEventListener('click', clearAll);
   exBtn.addEventListener('click', loadExample);
   copyRefsBtn.addEventListener('click', copySelectedReferences);
-  exportCsvBtn.addEventListener('click', exportSelectedCsv);
 
   // Extract clean DOIs from free text
   function extractDOIs(text) {
     if (!text) return [];
+    // Pre-process: decode common URL-encoded characters for DOI matching
+    text = text.replace(/%2F/gi, '/').replace(/%3A/gi, ':').replace(/%28/gi, '(').replace(/%29/gi, ')');
     // Match pattern starting with 10.xxxx/
     const regex = /(10\.\d{4,15}\/[^\s"\'<>{}|\\^`\[\]]+)/g;
     const matches = text.match(regex) || [];
@@ -838,17 +895,15 @@
     return unique;
   }
 
-  // Load Example DOIs
+  // Load Example DOIs (mixed format — demonstrates auto-extraction)
   function loadExample() {
     if (isRunning) return;
-    doiInput.value = [
-      "10.1016/j.cell.2021.01.001",
-      "https://doi.org/10.1109/5.771073",
-      "10.1056/NEJMoa2119497",
-      "10.1038/s41586-020-2003-x",
-      "invalid.doi/does-not-exist"
-    ].join("\n");
-    showToast("Örnek DOI'ler yüklendi.");
+    doiInput.value = `1. Androulakis A. E., et al. "Relation of coronary artery ectasia to diabetes mellitus", American Journal of Cardiology, 93(9). doi:10.1016/j.amjcard.2004.01.049
+2. Devabhaktuni S., et al. "Coronary artery ectasia—a review". https://doi.org/10.2174/1573403X12666160504100159
+3. Huang Q. J., et al. "Diabetes to coronary artery ectasia: a meta-analysis". 10.5152/akd.2014.5337
+4. 10.1056/NEJMoa2001017
+5. invalid.doi/does-not-exist`;
+    showToast("Örnek referans listesi yüklendi — DOI'ler otomatik çıkarılacak.");
   }
 
   // Clear inputs & states
@@ -1483,69 +1538,125 @@
     return `${auth} ${yr}. ${t} ${j}${volIssue}${pg}. ${doiUrl}`;
   }
 
-  // Export selected rows as CSV with Excel UTF-8 BOM
-  function exportSelectedCsv() {
-    const selectedRows = [];
+  // --- Export Helpers ---
+  function getExportData() {
+    const items = [];
     const checkboxes = resultsTableBody.querySelectorAll('.row-checkbox');
     const fetchAbstracts = fetchAbstractCheckbox.checked;
-    
     checkboxes.forEach((cb, idx) => {
-      if (cb.checked && queryResults[idx].status === 'success') {
-        selectedRows.push(queryResults[idx]);
+      if (cb.checked && queryResults[idx] && queryResults[idx].status === 'success') {
+        items.push(queryResults[idx]);
       }
     });
-
-    if (selectedRows.length === 0) {
-      showToast("Dışa aktarmak için başarılı bir satır seçilmedi!");
-      return;
-    }
-
-    // CSV Headers
-    const headers = ["DOI", "Yayin Basligi", "Yazarlar", "Dergi", "Yil", "Cilt", "Sayi", "Sayfa", "Yayinci"];
-    if (fetchAbstracts) {
-      headers.push("Ozet");
-    }
-
-    const csvLines = [];
-    // Add headers
-    csvLines.push(headers.map(h => `"${h.replace(/"/g, '""')}"`).join(","));
-
-    // Add rows
-    selectedRows.forEach(item => {
-      const line = [
-        item.doi,
-        item.title,
-        item.authors,
-        item.journal,
-        item.year,
-        item.volume,
-        item.issue,
-        item.pages,
-        item.publisher
-      ];
-      if (fetchAbstracts) {
-        line.push(item.abstract);
-      }
-      csvLines.push(line.map(val => {
-        const strVal = String(val || '');
-        return `"${strVal.replace(/"/g, '""')}"`;
-      }).join(","));
+    const headers = ["DOI", "Yayın Başlığı", "Yazarlar", "Dergi", "Yıl", "Cilt", "Sayı", "Sayfa", "Yayıncı"];
+    if (fetchAbstracts) headers.push("Özet");
+    const rows = items.map(item => {
+      const row = [item.doi, item.title, item.authors, item.journal, item.year, item.volume, item.issue, item.pages, item.publisher];
+      if (fetchAbstracts) row.push(item.abstract);
+      return row;
     });
+    return { headers, rows, items };
+  }
 
-    // Write UTF-8 BOM so Excel decodes Turkish characters correctly
-    const csvContent = "\uFEFF" + csvLines.join("\r\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  function downloadBlob(blob, filename) {
     const url = URL.createObjectURL(blob);
-    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `drtr_toplu_doi_sonuclari_${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast("CSV dosyası indirildi.");
   }
+
+  // Export as CSV with UTF-8 BOM
+  function exportSelectedCsv() {
+    const { headers, rows } = getExportData();
+    if (rows.length === 0) {
+      showToast("Dışa aktarmak için başarılı bir satır seçilmedi!");
+      return;
+    }
+    const csvLines = [];
+    csvLines.push(headers.map(h => `"${h.replace(/"/g, '""')}"`).join(","));
+    rows.forEach(row => {
+      csvLines.push(row.map(val => {
+        const s = String(val || '');
+        return `"${s.replace(/"/g, '""')}"`;
+      }).join(","));
+    });
+    const csvContent = "\uFEFF" + csvLines.join("\r\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    downloadBlob(blob, `drtr_toplu_doi_${new Date().toISOString().slice(0,10)}.csv`);
+    showToast("CSV dosyası indirildi.");
+    closeExportDropdown();
+  }
+
+  // Export as Excel (.xls via HTML table)
+  function exportSelectedExcel() {
+    const { headers, rows } = getExportData();
+    if (rows.length === 0) {
+      showToast("Dışa aktarmak için başarılı bir satır seçilmedi!");
+      return;
+    }
+    let tableHtml = '<table border="1">';
+    tableHtml += '<tr>' + headers.map(h => `<th style="font-weight:bold;background:#E8F0FE;">${escHtml(h)}</th>`).join('') + '</tr>';
+    rows.forEach(row => {
+      tableHtml += '<tr>' + row.map(val => `<td>${escHtml(String(val || ''))}</td>`).join('') + '</tr>';
+    });
+    tableHtml += '</table>';
+    const excelHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>td,th{mso-number-format:'\\@';}</style></head>
+<body>${tableHtml}</body>
+</html>`;
+    const blob = new Blob(['\uFEFF' + excelHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    downloadBlob(blob, `drtr_toplu_doi_${new Date().toISOString().slice(0,10)}.xls`);
+    showToast("Excel dosyası indirildi.");
+    closeExportDropdown();
+  }
+
+  // Export as Markdown (.md — structured list)
+  function exportSelectedMarkdown() {
+    const { items } = getExportData();
+    if (items.length === 0) {
+      showToast("Dışa aktarmak için başarılı bir satır seçilmedi!");
+      return;
+    }
+    const fetchAbstracts = fetchAbstractCheckbox.checked;
+    let md = '# Toplu DOI Tarama Sonuçları\n\n';
+    md += `> Tarih: ${new Date().toLocaleDateString('tr-TR')} · Toplam: ${items.length} kayıt\n\n---\n\n`;
+    items.forEach((item, i) => {
+      md += `## ${i + 1}. ${item.title}\n\n`;
+      md += `- **DOI**: [${item.doi}](https://doi.org/${item.doi})\n`;
+      md += `- **Yazarlar**: ${item.authors || '—'}\n`;
+      md += `- **Dergi**: ${item.journal || '—'}\n`;
+      md += `- **Yıl**: ${item.year || '—'} · **Cilt**: ${item.volume || '—'} · **Sayı**: ${item.issue || '—'} · **Sayfa**: ${item.pages || '—'}\n`;
+      if (item.publisher) md += `- **Yayıncı**: ${item.publisher}\n`;
+      if (fetchAbstracts && item.abstract) {
+        md += `\n> **Özet**: ${item.abstract}\n`;
+      }
+      md += '\n---\n\n';
+    });
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
+    downloadBlob(blob, `drtr_toplu_doi_${new Date().toISOString().slice(0,10)}.md`);
+    showToast("Markdown dosyası indirildi.");
+    closeExportDropdown();
+  }
+
+  // Export dropdown toggle
+  function toggleExportDropdown(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('exportDropdown').classList.toggle('show');
+  }
+  function closeExportDropdown() {
+    const dd = document.getElementById('exportDropdown');
+    if (dd) dd.classList.remove('show');
+  }
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.export-dropdown-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      closeExportDropdown();
+    }
+  });
 
   // HTML escaping helper
   function escHtml(str) {
