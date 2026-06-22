@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Image Converter — Format &amp; DPI | DrTR Tools</title>
+  <meta name="description" content="Convert images to TIFF, PNG, JPEG at 300, 600 or 1200 DPI for academic journal submission (Elsevier, Nature, Wiley, IEEE…). 100% browser-based — your images are never uploaded.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/gorsel-donusturucu.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface2: #F1F5F9;
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --text-faint: #94A3B8;
+      --border: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --teal: #0F766E;
+      --teal-light: #0D9488;
+      --teal-bg: #F0FDFA;
+      --teal-dark: #0D5F59;
+      --indigo: #4F46E5;
+      --indigo-bg: #EEF2FF;
+      --green: #16A34A;
+      --green-bg: #F0FDF4;
+      --amber: #D97706;
+      --amber-bg: #FFFBEB;
+      --red: #DC2626;
+      --red-bg: #FEF2F2;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-secondary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-primary);
+      font-weight: 700; font-size: .95rem;
+    }
+    .nav-logo {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .65rem; color: #0F766E; flex-shrink: 0;
+    }
+    .nav-back {
+      font-size: .82rem; color: var(--teal); text-decoration: none;
+      padding: 5px 12px; border-radius: 6px; background: var(--teal-bg); font-weight: 600;
+      transition: background .15s;
+    }
+    .nav-back:hover { background: #CCFBF1; }
+
+    /* ── Layout ── */
+    .container { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 28px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--teal); background: var(--teal-bg);
+      padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 1.8rem; font-weight: 800; color: var(--text-primary);
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .hero p { font-size: .93rem; color: var(--text-muted); max-width: 680px; }
+
+    /* ── Privacy banner ── */
+    .privacy-banner {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--green-bg); border: 1px solid #86EFAC;
+      border-radius: var(--radius-sm); padding: 10px 16px;
+      font-size: .83rem; color: var(--green); font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .privacy-banner .shield { font-size: 1.1rem; }
+
+    /* ── Upload zone ── */
+    .drop-zone {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 44px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--teal);
+      background: var(--teal-bg);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    }
+    .drop-icon { font-size: 2.8rem; margin-bottom: 12px; display: block; }
+    .drop-zone h2 {
+      font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;
+    }
+    .drop-zone p { font-size: .85rem; color: var(--text-muted); margin-bottom: 14px; }
+    .type-chips { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+    .type-chip {
+      font-size: .72rem; font-weight: 700;
+      background: var(--surface2); color: var(--text-muted);
+      padding: 3px 9px; border-radius: 10px;
+    }
+
+    /* ── Preview original ── */
+    .original-preview {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .original-preview.visible { display: block; }
+    .preview-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .preview-label {
+      font-size: .75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--text-muted);
+    }
+    .clear-btn {
+      font-size: .78rem; color: var(--red); background: none; border: none;
+      cursor: pointer; font-weight: 600; padding: 4px 8px;
+      border-radius: 5px; transition: background .15s;
+    }
+    .clear-btn:hover { background: var(--red-bg); }
+    .preview-img-wrap {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface2); border-radius: 8px; overflow: hidden;
+      min-height: 140px; max-height: 280px;
+    }
+    .preview-img-wrap img {
+      max-width: 100%; max-height: 280px;
+      object-fit: contain; display: block;
+    }
+    .original-meta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-top: 10px; font-size: .8rem; color: var(--text-muted);
+    }
+    .original-meta span strong { color: var(--text-secondary); }
+
+    /* ── Settings card ── */
+    .settings-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .settings-card h3 {
+      font-size: .9rem; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 7px;
+    }
+    .section-icon { font-size: 1rem; }
+
+    /* Preset grid */
+    .preset-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px; margin-bottom: 20px;
+    }
+    .preset-btn {
+      display: flex; flex-direction: column;
+      align-items: flex-start; gap: 2px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      cursor: pointer;
+      transition: all .15s;
+      text-align: left;
+    }
+    .preset-btn:hover {
+      border-color: var(--teal-light); background: var(--teal-bg);
+    }
+    .preset-btn.active {
+      border-color: var(--teal); background: var(--teal-bg);
+      box-shadow: 0 0 0 2px rgba(15,118,110,.15);
+    }
+    .preset-name {
+      font-size: .83rem; font-weight: 700; color: var(--text-primary);
+    }
+    .preset-spec {
+      font-size: .7rem; color: var(--text-muted);
+    }
+    .preset-badge {
+      font-size: .62rem; font-weight: 700; text-transform: uppercase;
+      padding: 1px 6px; border-radius: 6px; margin-top: 3px;
+    }
+    .preset-badge.photo { background: #DBEAFE; color: #1D4ED8; }
+    .preset-badge.lineart { background: #FCE7F3; color: #9D174D; }
+    .preset-badge.combo { background: #FEF3C7; color: #92400E; }
+
+    /* Manual controls */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 16px 0; color: var(--text-faint); font-size: .78rem; font-weight: 600;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .controls-row {
+      display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end;
+    }
+    .ctrl-group { display: flex; flex-direction: column; gap: 5px; }
+    .ctrl-group label {
+      font-size: .72rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+    .ctrl-group select, .ctrl-group input[type="number"] {
+      font: inherit; font-size: .86rem;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff; color: var(--text-primary);
+      outline: none; transition: border-color .15s;
+      min-width: 140px;
+    }
+    .ctrl-group select:focus, .ctrl-group input[type="number"]:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15,118,110,.1);
+    }
+    .dpi-hint {
+      font-size: .72rem; color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Quality slider */
+    .quality-row {
+      margin-top: 14px; display: none;
+    }
+    .quality-row.visible { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .quality-row label { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    input[type="range"] {
+      flex: 1; min-width: 120px; max-width: 200px;
+      accent-color: var(--teal);
+    }
+    .quality-val { font-size: .82rem; font-weight: 700; color: var(--teal); min-width: 32px; }
+
+    /* ── Convert button ── */
+    .convert-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-light));
+      color: #fff; border: none; border-radius: var(--radius-sm);
+      font: inherit; font-size: .95rem; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(15,118,110,.25);
+    }
+    .convert-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      box-shadow: 0 4px 14px rgba(15,118,110,.35);
+      transform: translateY(-1px);
+    }
+    .convert-btn:disabled {
+      opacity: .5; cursor: not-allowed; transform: none;
+    }
+
+    /* ── Progress ── */
+    .progress-bar-wrap {
+      display: none; margin-top: 16px;
+      background: var(--surface2); border-radius: 6px; overflow: hidden; height: 6px;
+    }
+    .progress-bar-wrap.visible { display: block; }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light));
+      width: 0%; transition: width .3s ease;
+      border-radius: 6px;
+    }
+    .progress-text {
+      font-size: .8rem; color: var(--text-muted);
+      margin-top: 6px; display: none; text-align: center;
+    }
+    .progress-text.visible { display: block; }
+
+    /* ── Result ── */
+    .result-card {
+      display: none;
+      background: var(--surface);
+      border: 1.5px solid #86EFAC;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-top: 20px;
+      box-shadow: var(--shadow);
+    }
+    .result-card.visible { display: block; }
+    .result-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px;
+    }
+    .result-header h3 {
+      font-size: .95rem; font-weight: 700; color: #15803D;
+    }
+    .result-preview-wrap {
+      display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 18px;
+    }
+    .result-thumb {
+      flex: 1; min-width: 180px;
+      background: var(--surface2); border-radius: 8px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 120px; max-height: 240px;
+    }
+    .result-thumb img {
+      max-width: 100%; max-height: 240px; object-fit: contain;
+    }
+    .result-meta {
+      flex: 1; min-width: 180px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .meta-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 8px 12px;
+      background: var(--surface2); border-radius: 7px;
+      font-size: .83rem;
+    }
+    .meta-row .meta-key { color: var(--text-muted); }
+    .meta-row .meta-val { font-weight: 700; color: var(--text-primary); }
+    .meta-row .meta-val.ok { color: var(--green); }
+    .download-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px;
+      background: var(--green); color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      font: inherit; font-size: .92rem; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      text-decoration: none;
+    }
+    .download-btn:hover { background: #15803D; transform: translateY(-1px); }
+
+    /* ── Error ── */
+    .error-box {
+      display: none;
+      background: var(--red-bg); border: 1px solid #FECACA;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: .84rem; color: #B91C1C;
+      margin-top: 14px;
+    }
+    .error-box.visible { display: block; }
+
+    /* ── Journal requirements table ── */
+    .info-panel {
+      margin-top: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .info-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 22px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface);
+      transition: background .15s;
+    }
+    .info-toggle:hover { background: var(--surface2); }
+    .info-toggle h3 {
+      font-size: .9rem; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toggle-arrow {
+      font-size: .8rem; color: var(--text-muted); transition: transform .2s;
+    }
+    .toggle-arrow.open { transform: rotate(180deg); }
+    .info-body {
+      display: none; padding: 0 22px 22px;
+    }
+    .info-body.open { display: block; }
+    .req-table {
+      width: 100%; border-collapse: collapse;
+      font-size: .82rem; margin-top: 4px;
+    }
+    .req-table th {
+      background: var(--surface2); text-align: left;
+      padding: 8px 12px; font-weight: 700; color: var(--text-primary);
+      border-bottom: 2px solid var(--border);
+    }
+    .req-table td {
+      padding: 8px 12px; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .req-table tr:last-child td { border-bottom: none; }
+    .req-table tr:hover td { background: var(--surface2); }
+    .dpi-tag {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      padding: 1px 7px; border-radius: 8px;
+      background: var(--teal-bg); color: var(--teal);
+    }
+    .fmt-tag {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 8px;
+      margin: 1px;
+    }
+    .fmt-tiff { background: #DBEAFE; color: #1D4ED8; }
+    .fmt-png  { background: #FCE7F3; color: #9D174D; }
+    .fmt-jpeg { background: #FEF3C7; color: #92400E; }
+    .fmt-eps  { background: #F3E8FF; color: #6B21A8; }
+
+    .how-it-works {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--amber-bg);
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      font-size: .83rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .how-it-works strong { color: var(--amber); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.4rem; }
+      .drop-zone { padding: 28px 16px; }
+      .preset-grid { grid-template-columns: repeat(2, 1fr); }
+      .result-preview-wrap { flex-direction: column; }
+      .container { padding: 20px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Home</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">🎓 Academic Tools</div>
+    <h1>Image Format &amp; DPI Converter</h1>
+    <p>Convert images to the format and resolution required by academic journals — Elsevier, Nature, Wiley, IEEE and more. Runs entirely in your browser.</p>
+  </div>
+
+  <!-- Privacy banner -->
+  <div class="privacy-banner">
+    <span class="shield">🔒</span>
+    <span>100% private — your images are processed locally in your browser and <strong>never uploaded to any server</strong>.</span>
+  </div>
+
+  <!-- Drop zone -->
+  <div class="drop-zone" id="dropZone">
+    <input type="file" id="fileInput" accept="image/*">
+    <span class="drop-icon">🖼️</span>
+    <h2>Drop an image here or click to browse</h2>
+    <p>Supports JPEG, PNG, TIFF, BMP, WEBP, GIF</p>
+    <div class="type-chips">
+      <span class="type-chip">JPEG</span>
+      <span class="type-chip">PNG</span>
+      <span class="type-chip">TIFF</span>
+      <span class="type-chip">BMP</span>
+      <span class="type-chip">WEBP</span>
+      <span class="type-chip">GIF</span>
+    </div>
+  </div>
+
+  <!-- Original preview -->
+  <div class="original-preview" id="originalPreview">
+    <div class="preview-header">
+      <span class="preview-label">📁 Uploaded image</span>
+      <button class="clear-btn" id="clearBtn">✕ Clear</button>
+    </div>
+    <div class="preview-img-wrap">
+      <img id="previewImg" src="" alt="Preview">
+    </div>
+    <div class="original-meta" id="originalMeta"></div>
+  </div>
+
+  <!-- Settings -->
+  <div class="settings-card">
+    <h3><span class="section-icon">⚙️</span> Conversion Settings</h3>
+
+    <!-- Publisher presets -->
+    <div class="preset-grid" id="presetGrid">
+      <button class="preset-btn" data-format="tiff" data-dpi="300" data-quality="92" data-type="Halftone / Photo" id="preset-elsevier">
+        <span class="preset-name">Elsevier</span>
+        <span class="preset-spec">TIFF · 300 DPI</span>
+        <span class="preset-badge photo">Photo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="300" data-quality="92" data-type="Halftone" id="preset-nature">
+        <span class="preset-name">Nature / Springer</span>
+        <span class="preset-spec">TIFF · 300 DPI</span>
+        <span class="preset-badge photo">Photo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="300" data-quality="92" data-type="Halftone" id="preset-wiley">
+        <span class="preset-name">Wiley</span>
+        <span class="preset-spec">TIFF · 300 DPI</span>
+        <span class="preset-badge photo">Photo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="600" data-quality="92" data-type="Line Art" id="preset-ieee">
+        <span class="preset-name">IEEE</span>
+        <span class="preset-spec">TIFF · 600 DPI</span>
+        <span class="preset-badge lineart">Line Art</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="600" data-quality="92" data-type="Combination" id="preset-taylor">
+        <span class="preset-name">Taylor &amp; Francis</span>
+        <span class="preset-spec">TIFF · 600 DPI</span>
+        <span class="preset-badge combo">Combo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="300" data-quality="92" data-type="Halftone" id="preset-cambridge">
+        <span class="preset-name">Cambridge</span>
+        <span class="preset-spec">TIFF · 300 DPI</span>
+        <span class="preset-badge photo">Photo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="300" data-quality="92" data-type="Halftone" id="preset-apa">
+        <span class="preset-name">APA</span>
+        <span class="preset-spec">TIFF · 300 DPI</span>
+        <span class="preset-badge photo">Photo</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="600" data-quality="92" data-type="Line Art" id="preset-acs">
+        <span class="preset-name">ACS</span>
+        <span class="preset-spec">TIFF · 600 DPI</span>
+        <span class="preset-badge lineart">Line Art</span>
+      </button>
+      <button class="preset-btn" data-format="tiff" data-dpi="1200" data-quality="92" data-type="Line Art" id="preset-highres">
+        <span class="preset-name">High Res (1200)</span>
+        <span class="preset-spec">TIFF · 1200 DPI</span>
+        <span class="preset-badge lineart">Line Art</span>
+      </button>
+    </div>
+
+    <div class="divider">or set manually</div>
+
+    <!-- Manual controls -->
+    <div class="controls-row">
+      <div class="ctrl-group">
+        <label for="formatSelect">Output Format</label>
+        <select id="formatSelect">
+          <option value="tiff" selected>TIFF (recommended)</option>
+          <option value="png">PNG</option>
+          <option value="jpeg">JPEG</option>
+          <option value="webp">WEBP</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label for="dpiInput">Target DPI</label>
+        <input type="number" id="dpiInput" min="72" max="1200" step="1" value="300">
+        <div class="dpi-hint" id="dpiHint">Halftone photos → 300 | Line art → 600–1200</div>
+      </div>
+    </div>
+
+    <!-- JPEG quality -->
+    <div class="quality-row" id="qualityRow">
+      <label for="qualitySlider">JPEG Quality</label>
+      <input type="range" id="qualitySlider" min="60" max="100" step="1" value="92">
+      <span class="quality-val" id="qualityVal">92</span>
+    </div>
+
+    <button class="convert-btn" id="convertBtn" disabled>
+      🔄 Convert Image
+    </button>
+    <div class="progress-bar-wrap" id="progressWrap">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">Processing…</div>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-header">
+      <span>✅</span>
+      <h3>Conversion complete</h3>
+    </div>
+    <div class="result-preview-wrap">
+      <div class="result-thumb">
+        <img id="resultImg" src="" alt="Result">
+      </div>
+      <div class="result-meta" id="resultMeta"></div>
+    </div>
+    <a id="downloadLink" class="download-btn" download>
+      ⬇️ Download converted image
+    </a>
+  </div>
+
+  <!-- Journal requirements reference -->
+  <div class="info-panel">
+    <div class="info-toggle" id="infoToggle">
+      <h3>📋 Academic Journal Image Requirements</h3>
+      <span class="toggle-arrow" id="toggleArrow">▼</span>
+    </div>
+    <div class="info-body" id="infoBody">
+      <table class="req-table">
+        <thead>
+          <tr>
+            <th>Publisher</th>
+            <th>Image Type</th>
+            <th>Format</th>
+            <th>Min DPI</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Elsevier</strong></td>
+            <td>Halftone / Color photo</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>RGB for submission; CMYK for print</td>
+          </tr>
+          <tr>
+            <td><strong>Elsevier</strong></td>
+            <td>Line art / Graphs</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-eps">EPS</span></td>
+            <td><span class="dpi-tag">1000 DPI</span></td>
+            <td>Embed fonts / convert to outlines</td>
+          </tr>
+          <tr>
+            <td><strong>Elsevier</strong></td>
+            <td>Combination</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">500 DPI</span></td>
+            <td>Line art + halftone combined</td>
+          </tr>
+          <tr>
+            <td><strong>Nature / Springer</strong></td>
+            <td>Photo / Color</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>sRGB color space</td>
+          </tr>
+          <tr>
+            <td><strong>Nature / Springer</strong></td>
+            <td>Line art</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-eps">EPS</span></td>
+            <td><span class="dpi-tag">600 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Wiley</strong></td>
+            <td>Halftone / Photo</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>RGB preferred</td>
+          </tr>
+          <tr>
+            <td><strong>Wiley</strong></td>
+            <td>Line art</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">800 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>IEEE</strong></td>
+            <td>Photos (grayscale / color)</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-jpeg">JPEG</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>IEEE</strong></td>
+            <td>Line art / Graphs</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">600 DPI</span></td>
+            <td>Min 0.5 pt line weight</td>
+          </tr>
+          <tr>
+            <td><strong>Taylor &amp; Francis</strong></td>
+            <td>Photos</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Taylor &amp; Francis</strong></td>
+            <td>Combination</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">600 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Cambridge Univ. Press</strong></td>
+            <td>Halftone</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Cambridge Univ. Press</strong></td>
+            <td>Line art</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span></td>
+            <td><span class="dpi-tag">1200 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>ACS (Am. Chem. Soc.)</strong></td>
+            <td>All</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-eps">EPS</span></td>
+            <td><span class="dpi-tag">600 DPI</span></td>
+            <td>Color: CMYK or RGB</td>
+          </tr>
+          <tr>
+            <td><strong>APA</strong></td>
+            <td>All figures</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-png">PNG</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>NIH / PMC</strong></td>
+            <td>Photos</td>
+            <td><span class="fmt-tag fmt-tiff">TIFF</span> <span class="fmt-tag fmt-jpeg">JPEG</span></td>
+            <td><span class="dpi-tag">300 DPI</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="how-it-works" style="margin-top: 16px;">
+        <strong>💡 Important note on DPI in raster images:</strong>
+        DPI (dots per inch) metadata in a raster image does not add pixels — it only tells the printer how large to print the image. If your source image is low-resolution (few actual pixels), no DPI setting will compensate for that. For best results, use original high-resolution source images.
+        <br><br>
+        <strong>DPI metadata support:</strong> PNG output uses the <code>pHYs</code> chunk; JPEG uses the JFIF APP0 header; TIFF uses the XResolution/YResolution IFD tags. All are written client-side.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+/* ═══════════════════════════════════════════
+   Academic Image Converter — DrTR Tools
+   100% client-side. No server contact.
+   ═══════════════════════════════════════════ */
+
+const $ = id => document.getElementById(id);
+
+// DOM refs
+const dropZone    = $('dropZone');
+const fileInput   = $('fileInput');
+const origPreview = $('originalPreview');
+const previewImg  = $('previewImg');
+const origMeta    = $('originalMeta');
+const clearBtn    = $('clearBtn');
+const formatSel   = $('formatSelect');
+const dpiInput    = $('dpiInput');
+const dpiHint     = $('dpiHint');
+const qualRow     = $('qualityRow');
+const qualSlider  = $('qualitySlider');
+const qualVal     = $('qualityVal');
+const convertBtn  = $('convertBtn');
+const progressWrap = $('progressWrap');
+const progressFill = $('progressFill');
+const progressText = $('progressText');
+const errorBox    = $('errorBox');
+const resultCard  = $('resultCard');
+const resultImg   = $('resultImg');
+const resultMeta  = $('resultMeta');
+const downloadLink = $('downloadLink');
+const infoToggle  = $('infoToggle');
+const infoBody    = $('infoBody');
+const toggleArrow = $('toggleArrow');
+
+let sourceFile = null;
+let sourceBitmap = null;
+let outputBlob = null;
+let outputExt = 'tiff';
+
+// ── Info panel toggle ──────────────────────
+infoToggle.addEventListener('click', () => {
+  const open = infoBody.classList.toggle('open');
+  toggleArrow.classList.toggle('open', open);
+});
+
+// ── Presets ───────────────────────────────
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    formatSel.value = btn.dataset.format;
+    dpiInput.value  = btn.dataset.dpi;
+    qualSlider.value = btn.dataset.quality || 92;
+    qualVal.textContent = qualSlider.value;
+    onFormatChange();
+  });
+});
+
+// ── Format / quality controls ─────────────
+formatSel.addEventListener('change', onFormatChange);
+function onFormatChange() {
+  const fmt = formatSel.value;
+  qualRow.classList.toggle('visible', fmt === 'jpeg' || fmt === 'webp');
+  updateDpiHint();
+}
+
+dpiInput.addEventListener('input', updateDpiHint);
+function updateDpiHint() {
+  const dpi = parseInt(dpiInput.value, 10);
+  if (dpi <= 300)      dpiHint.textContent = 'Suitable for halftone / color photos';
+  else if (dpi <= 600) dpiHint.textContent = 'Suitable for combination figures & line art';
+  else                 dpiHint.textContent = 'High-res line art (graphs, charts, text)';
+}
+
+qualSlider.addEventListener('input', () => {
+  qualVal.textContent = qualSlider.value;
+});
+
+// ── File input ────────────────────────────
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadFile(file);
+  else showError('Please drop an image file (JPEG, PNG, TIFF, etc.)');
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) loadFile(fileInput.files[0]);
+});
+clearBtn.addEventListener('click', clearAll);
+
+function clearAll() {
+  sourceFile = null; sourceBitmap = null; outputBlob = null;
+  previewImg.src = '';
+  origPreview.classList.remove('visible');
+  resultCard.classList.remove('visible');
+  errorBox.classList.remove('visible');
+  convertBtn.disabled = true;
+  fileInput.value = '';
+  if (outputBlob) URL.revokeObjectURL(downloadLink.href);
+}
+
+async function loadFile(file) {
+  clearError();
+  resultCard.classList.remove('visible');
+  sourceFile = file;
+
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = async e => {
+    previewImg.src = e.target.result;
+    origPreview.classList.add('visible');
+
+    // Get image dimensions via bitmap
+    try {
+      if (typeof createImageBitmap !== 'undefined') {
+        sourceBitmap = await createImageBitmap(file);
+        origMeta.innerHTML = `
+          <span><strong>File:</strong> ${file.name}</span>
+          <span><strong>Size:</strong> ${formatBytes(file.size)}</span>
+          <span><strong>Dimensions:</strong> ${sourceBitmap.width} × ${sourceBitmap.height} px</span>
+          <span><strong>Type:</strong> ${file.type || 'image'}</span>`;
+      } else {
+        origMeta.innerHTML = `<span><strong>File:</strong> ${file.name}</span>
+          <span><strong>Size:</strong> ${formatBytes(file.size)}</span>`;
+      }
+    } catch(_) {}
+    convertBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Convert ───────────────────────────────
+convertBtn.addEventListener('click', runConversion);
+
+async function runConversion() {
+  if (!sourceFile) return;
+  clearError();
+  resultCard.classList.remove('visible');
+  convertBtn.disabled = true;
+  showProgress(5, 'Loading image…');
+
+  try {
+    // Load source into canvas
+    const img = await loadImageElement(sourceFile);
+    showProgress(25, 'Rendering…');
+
+    const fmt     = formatSel.value;
+    const dpi     = Math.max(72, Math.min(1200, parseInt(dpiInput.value, 10) || 300));
+    const quality = parseInt(qualSlider.value, 10) / 100;
+
+    const canvas  = document.createElement('canvas');
+    canvas.width  = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx     = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    showProgress(50, 'Encoding…');
+
+    let blob;
+    if (fmt === 'tiff') {
+      blob = await encodeAsTIFF(canvas, dpi);
+      outputExt = 'tiff';
+    } else if (fmt === 'png') {
+      blob = await encodeAsPNG(canvas, dpi);
+      outputExt = 'png';
+    } else if (fmt === 'jpeg') {
+      blob = await encodeAsJPEG(canvas, dpi, quality);
+      outputExt = 'jpg';
+    } else if (fmt === 'webp') {
+      blob = await canvas.convertToBlob
+              ? canvas.convertToBlob({ type: 'image/webp', quality })
+              : new Promise(res => canvas.toBlob(res, 'image/webp', quality));
+      outputExt = 'webp';
+    }
+
+    showProgress(90, 'Preparing download…');
+    outputBlob = blob;
+
+    // Build download
+    const url = URL.createObjectURL(blob);
+    const baseName = (sourceFile.name.replace(/\.[^.]+$/, '') || 'image');
+    downloadLink.href = url;
+    downloadLink.download = `${baseName}_${dpi}dpi.${outputExt}`;
+
+    // Result preview (only for non-TIFF since browser may not preview TIFF)
+    if (fmt !== 'tiff') {
+      resultImg.src = url;
+      resultImg.style.display = 'block';
+    } else {
+      resultImg.style.display = 'none';
+    }
+
+    // Meta
+    resultMeta.innerHTML = `
+      <div class="meta-row"><span class="meta-key">Format</span><span class="meta-val ok">${fmt.toUpperCase()}</span></div>
+      <div class="meta-row"><span class="meta-key">DPI (metadata)</span><span class="meta-val ok">${dpi} DPI</span></div>
+      <div class="meta-row"><span class="meta-key">Dimensions</span><span class="meta-val">${canvas.width} × ${canvas.height} px</span></div>
+      <div class="meta-row"><span class="meta-key">File size</span><span class="meta-val">${formatBytes(blob.size)}</span></div>
+      <div class="meta-row"><span class="meta-key">Privacy</span><span class="meta-val ok">🔒 Local only</span></div>
+    `;
+
+    showProgress(100, 'Done!');
+    setTimeout(() => {
+      progressWrap.classList.remove('visible');
+      progressText.classList.remove('visible');
+      resultCard.classList.add('visible');
+      convertBtn.disabled = false;
+    }, 400);
+
+  } catch (err) {
+    hideProgress();
+    showError('Conversion failed: ' + (err.message || err));
+    convertBtn.disabled = false;
+  }
+}
+
+// ── Encoders ──────────────────────────────
+
+/** TIFF encoder with DPI metadata (XResolution, YResolution, ResolutionUnit) */
+async function encodeAsTIFF(canvas, dpi) {
+  const ctx = canvas.getContext('2d');
+  const { width, height } = canvas;
+  const imgData = ctx.getImageData(0, 0, width, height);
+  const pixels  = imgData.data; // RGBA, 8bpp
+
+  // Convert RGBA → RGB strips
+  const rowsPerStrip = 8;
+  const strips = [];
+  for (let y = 0; y < height; y += rowsPerStrip) {
+    const rowCount = Math.min(rowsPerStrip, height - y);
+    const strip = new Uint8Array(rowCount * width * 3);
+    let si = 0;
+    for (let r = 0; r < rowCount; r++) {
+      const base = ((y + r) * width) * 4;
+      for (let x = 0; x < width; x++) {
+        strip[si++] = pixels[base + x * 4];
+        strip[si++] = pixels[base + x * 4 + 1];
+        strip[si++] = pixels[base + x * 4 + 2];
+      }
+    }
+    strips.push(strip);
+  }
+
+  // Build TIFF IFD
+  // Little-endian TIFF
+  const numStrips = strips.length;
+
+  // Compute strip byte counts
+  const stripByteCounts = strips.map(s => s.length);
+  const totalImageBytes = stripByteCounts.reduce((a, b) => a + b, 0);
+
+  // IFD entries (sorted by tag)
+  // Tags we write:
+  // 256 ImageWidth, 257 ImageLength, 258 BitsPerSample, 259 Compression (1=none)
+  // 262 PhotometricInterpretation (2=RGB)
+  // 273 StripOffsets, 278 RowsPerStrip, 279 StripByteCounts
+  // 282 XResolution, 283 YResolution, 296 ResolutionUnit (2=inch)
+  // 284 PlanarConfiguration (1=chunky)
+  // 277 SamplesPerPixel
+
+  const NUM_IFD = 12;
+  // Header: 8 bytes
+  // IFD: 2 + NUM_IFD*12 + 4 = 2 + 144 + 4 = 150 bytes  (starts at offset 8)
+  const ifdOffset = 8;
+  const ifdSize = 2 + NUM_IFD * 12 + 4;
+  // Extra data (rational values, strip offsets array, strip byte counts array)
+  const extraOffset = ifdOffset + ifdSize;
+
+  // Rationals: 8 bytes each (numerator + denominator, uint32 each)
+  // XResolution at extraOffset
+  // YResolution at extraOffset + 8
+  const xResOff = extraOffset;
+  const yResOff = extraOffset + 8;
+
+  // Strip offsets array: numStrips * 4 bytes
+  const stripOffsetsArrOff = yResOff + 8;
+
+  // Strip byte counts array: numStrips * 4 bytes
+  const stripByteCountsArrOff = stripOffsetsArrOff + numStrips * 4;
+
+  // BitsPerSample values (3 values × 2 bytes = 6 bytes) - stored inline if ≤4 bytes, else in extra
+  // We have 3 values (8,8,8), needs 6 bytes → external
+  const bpsOff = stripByteCountsArrOff + numStrips * 4;
+
+  // Image data starts after all extra data
+  const imageDataStart = bpsOff + 6;
+
+  // Compute actual strip offsets
+  const stripOffsets = [];
+  let off = imageDataStart;
+  for (let i = 0; i < numStrips; i++) {
+    stripOffsets.push(off);
+    off += strips[i].length;
+  }
+
+  const totalSize = off;
+  const buf = new ArrayBuffer(totalSize);
+  const dv  = new DataView(buf);
+  const le  = true; // little-endian
+
+  let p = 0;
+  // Header
+  dv.setUint16(p, 0x4949, le); p += 2; // 'II' little-endian
+  dv.setUint16(p, 42, le); p += 2;     // TIFF magic
+  dv.setUint32(p, ifdOffset, le); p += 4; // IFD offset
+
+  // IFD entry count
+  dv.setUint16(p, NUM_IFD, le); p += 2;
+
+  function writeIFD(tag, type, count, value) {
+    dv.setUint16(p, tag, le); p += 2;
+    dv.setUint16(p, type, le); p += 2;
+    dv.setUint32(p, count, le); p += 4;
+    // value/offset: 4 bytes
+    if (typeof value === 'number') {
+      dv.setUint32(p, value, le);
+    } else {
+      // offset
+      dv.setUint32(p, value, le);
+    }
+    p += 4;
+  }
+
+  // Types: SHORT=3, LONG=4, RATIONAL=5
+  writeIFD(256, 4, 1, width);               // ImageWidth
+  writeIFD(257, 4, 1, height);              // ImageLength
+  writeIFD(258, 3, 3, bpsOff);             // BitsPerSample (offset)
+  writeIFD(259, 3, 1, 1);                  // Compression: none
+  writeIFD(262, 3, 1, 2);                  // PhotometricInterpretation: RGB
+  writeIFD(273, 4, numStrips, numStrips === 1 ? stripOffsets[0] : stripOffsetsArrOff); // StripOffsets
+  writeIFD(277, 3, 1, 3);                  // SamplesPerPixel
+  writeIFD(278, 4, 1, rowsPerStrip);       // RowsPerStrip
+  writeIFD(279, 4, numStrips, numStrips === 1 ? stripByteCounts[0] : stripByteCountsArrOff); // StripByteCounts
+  writeIFD(282, 5, 1, xResOff);            // XResolution
+  writeIFD(283, 5, 1, yResOff);            // YResolution
+  writeIFD(296, 3, 1, 2);                  // ResolutionUnit: inch
+
+  // Next IFD offset = 0 (no more IFDs)
+  dv.setUint32(p, 0, le); p += 4;
+
+  // Extra data
+  // XResolution rational (dpi / 1)
+  dv.setUint32(xResOff, dpi, le);
+  dv.setUint32(xResOff + 4, 1, le);
+  // YResolution rational
+  dv.setUint32(yResOff, dpi, le);
+  dv.setUint32(yResOff + 4, 1, le);
+
+  // Strip offsets array (if >1 strip)
+  if (numStrips > 1) {
+    for (let i = 0; i < numStrips; i++) {
+      dv.setUint32(stripOffsetsArrOff + i * 4, stripOffsets[i], le);
+    }
+  }
+
+  // Strip byte counts array (if >1 strip)
+  if (numStrips > 1) {
+    for (let i = 0; i < numStrips; i++) {
+      dv.setUint32(stripByteCountsArrOff + i * 4, stripByteCounts[i], le);
+    }
+  }
+
+  // BitsPerSample values: 8,8,8
+  const bpsView = new Uint8Array(buf, bpsOff, 6);
+  // As uint16 LE each
+  bpsView[0] = 8; bpsView[1] = 0;
+  bpsView[2] = 8; bpsView[3] = 0;
+  bpsView[4] = 8; bpsView[5] = 0;
+
+  // Image strips
+  let imgOff = imageDataStart;
+  for (const strip of strips) {
+    new Uint8Array(buf, imgOff, strip.length).set(strip);
+    imgOff += strip.length;
+  }
+
+  return new Blob([buf], { type: 'image/tiff' });
+}
+
+/** PNG encoder with pHYs chunk for DPI */
+async function encodeAsPNG(canvas, dpi) {
+  // Get raw PNG from canvas
+  const pngBlob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+  const pngBuf  = await pngBlob.arrayBuffer();
+  return injectPNGpHYs(pngBuf, dpi);
+}
+
+function injectPNGpHYs(pngBuf, dpi) {
+  // pHYs chunk: pixels per unit X (4B) + pixels per unit Y (4B) + unit (1B: 1=metre)
+  // DPI → pixels per metre: ppm = dpi * 39.3701
+  const ppm = Math.round(dpi * 39.3701);
+
+  const phys = new Uint8Array(9);
+  const pdv  = new DataView(phys.buffer);
+  pdv.setUint32(0, ppm, false); // X
+  pdv.setUint32(4, ppm, false); // Y
+  phys[8] = 1;                  // unit = metre
+
+  const physChunk = buildPNGChunk('pHYs', phys);
+
+  // Insert pHYs after PNG signature (8 bytes) + IHDR chunk (4+4+13+4 = 25 bytes)
+  // i.e., at offset 33
+  const insertAt = 33;
+  const original = new Uint8Array(pngBuf);
+  const output   = new Uint8Array(original.length + physChunk.length);
+  output.set(original.slice(0, insertAt));
+  output.set(physChunk, insertAt);
+  output.set(original.slice(insertAt), insertAt + physChunk.length);
+
+  return new Blob([output], { type: 'image/png' });
+}
+
+function buildPNGChunk(type, data) {
+  // chunk: length(4) + type(4) + data + crc(4)
+  const typeBytes = new TextEncoder().encode(type);
+  const chunk = new Uint8Array(4 + 4 + data.length + 4);
+  const dv    = new DataView(chunk.buffer);
+  dv.setUint32(0, data.length, false); // length big-endian
+  chunk.set(typeBytes, 4);
+  chunk.set(data, 8);
+  const crc = crc32(chunk.slice(4, 8 + data.length));
+  dv.setInt32(8 + data.length, crc, false);
+  return chunk;
+}
+
+// CRC-32 for PNG
+function crc32(buf) {
+  let crc = 0xFFFFFFFF;
+  for (let i = 0; i < buf.length; i++) {
+    crc ^= buf[i];
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 1) ? (0xEDB88320 ^ (crc >>> 1)) : (crc >>> 1);
+    }
+  }
+  return (crc ^ 0xFFFFFFFF) | 0;
+}
+
+/** JPEG encoder with DPI in JFIF APP0 header */
+async function encodeAsJPEG(canvas, dpi, quality) {
+  const jpegBlob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+  const jpegBuf  = await jpegBlob.arrayBuffer();
+  return patchJPEGDensity(jpegBuf, dpi);
+}
+
+function patchJPEGDensity(jpegBuf, dpi) {
+  const buf = new Uint8Array(jpegBuf.slice(0));
+  // JFIF APP0: starts at byte 2 (after FFD8)
+  // APP0 marker = FF E0, then 2-byte length, then 'JFIF\0'(5), version(2), units(1), Xdensity(2), Ydensity(2)
+  // units offset from start of APP0 data = 7 (relative to marker start=2, +2 length +5 JFIF\0 = offset 9 from buf[0])
+  // Absolute offsets: buf[2]=FF, buf[3]=E0 → APP0 marker
+  // buf[4..5] = length (big-endian)
+  // buf[6..10] = 'JFIF\0'
+  // buf[11..12] = version
+  // buf[13] = units (0=no units, 1=DPI, 2=DPcm)
+  // buf[14..15] = Xdensity (big-endian)
+  // buf[16..17] = Ydensity (big-endian)
+  if (buf[2] === 0xFF && buf[3] === 0xE0 &&
+      buf[6] === 0x4A && buf[7] === 0x46 && buf[8] === 0x49 && buf[9] === 0x46) {
+    buf[13] = 1; // DPI
+    buf[14] = (dpi >> 8) & 0xFF;
+    buf[15] = dpi & 0xFF;
+    buf[16] = (dpi >> 8) & 0xFF;
+    buf[17] = dpi & 0xFF;
+  }
+  return new Blob([buf], { type: 'image/jpeg' });
+}
+
+// ── Utilities ─────────────────────────────
+function loadImageElement(file) {
+  return new Promise((resolve, reject) => {
+    const img  = new Image();
+    const url  = URL.createObjectURL(file);
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Cannot load image')); };
+    img.src = url;
+  });
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function showProgress(pct, msg) {
+  progressWrap.classList.add('visible');
+  progressText.classList.add('visible');
+  progressFill.style.width = pct + '%';
+  progressText.textContent = msg;
+}
+
+function hideProgress() {
+  progressWrap.classList.remove('visible');
+  progressText.classList.remove('visible');
+  progressFill.style.width = '0%';
+}
+
+function showError(msg) {
+  errorBox.textContent = '⚠️ ' + msg;
+  errorBox.classList.add('visible');
+}
+
+function clearError() {
+  errorBox.classList.remove('visible');
+  errorBox.textContent = '';
+}
+</script>
+
+</body>
+</html>
