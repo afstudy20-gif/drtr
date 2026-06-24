@@ -361,6 +361,17 @@
         .cat-productivity .tool-card:hover { background: #F5F3FF; border-color: #7C3AED; border-left-color: #7C3AED; }
         .cat-downloads .tool-card:hover { background: #FFF1F2; border-color: #BE123C; border-left-color: #BE123C; }
 
+        .tool-card:focus,
+        .tool-sub-link:focus {
+            outline: none;
+        }
+
+        .tool-card:focus-visible,
+        .tool-sub-link:focus-visible {
+            border-color: var(--teal);
+            box-shadow: var(--shadow-hover), 0 0 0 3px rgba(15, 118, 110, 0.18);
+        }
+
         .tool-card-group {
             grid-column: 1 / -1;
             align-items: flex-start;
@@ -849,10 +860,10 @@
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
                 <a href="https://flow.drtr.uk/" class="tool-card" target="_blank" rel="noopener">
-                    <div class="tool-icon">Fl</div>
+                    <div class="tool-icon">Af</div>
                     <div class="tool-info">
-                        <h4 data-i18n="t14_title">DrTR Flow</h4>
-                        <p data-i18n="t14_desc">Klinik iş akışı ve not alma aracı. Veriler yalnızca tarayıcınızda saklanır</p>
+                        <h4 data-i18n="t14_title">AcademicFlow</h4>
+                        <p data-i18n="t14_desc">Academic Design Tool</p>
                     </div>
                     <span class="tool-arrow">&rsaquo;</span>
                 </a>
@@ -1091,7 +1102,7 @@
             t11_title:"Kelime Sayacı", t11_desc:"Kelime, karakter, cümle ve paragraf sayımı",
             t12_title:"NotebookLM", t12_desc:"Google'ın yapay zeka destekli akademik not ve kaynak analiz aracı",
             t13_title:"ORCID", t13_desc:"Araştırmacılara kalıcı kimlik numarası sağlayan uluslararası sistem",
-            t14_title:"DrTR Flow", t14_desc:"Klinik iş akışı ve not alma aracı. Veriler yalnızca tarayıcınızda saklanır",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"Nöbetçi Eczane Bul", t15_desc:"Konumunuza en yakın nöbetçi eczaneleri harita üzerinde görüntüleyin",
             t16_title:"Kılavuz Karşılaştırıcı", t16_desc:"ESC, AHA/ACC ve NICE önerilerini aynı ekranda karşılaştırın",
             t17_title:"Antikoagülan Etkileşim Kontrolü", t17_desc:"Warfarin/DOAC ve eşlik eden ilaçlarla etkileşim risk taraması",
@@ -1151,7 +1162,7 @@
             t11_title:"S\u00f6z Say\u0131c\u0131", t11_desc:"S\u00f6z, simvol, c\u00fcml\u0259 v\u0259 paraqraf say\u0131m\u0131",
             t12_title:"NotebookLM", t12_desc:"Google-un AI d\u0259st\u0259kli akademik qeyd v\u0259 m\u0259nb\u0259 analiz al\u0259ti",
             t13_title:"ORCID", t13_desc:"Araşdırmacılara daimi kimlik nömrəsi verən beynəlxalq sistem",
-            t14_title:"DrTR Flow", t14_desc:"Klinik iş axını və qeyd aləti. Məlumatlar yalnız brauzerinizdə saxlanılır",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"Növbətçi Eczanə Tap", t15_desc:"Yerinizə ən yaxın növbətçi eczanələri xəritədə görüntüləyin",
             t16_title:"Kılavuz Karşılaştırıcı", t16_desc:"ESC, AHA/ACC və NICE tövsiyələrini eyni ekranda müqayisə edin",
             t17_title:"Antikoagülan Etkileşim Kontrolü", t17_desc:"Warfarin/DOAC və yanaşı dərmanlarla etkileşim risk taraması",
@@ -1215,7 +1226,7 @@
             t11_title:"Word Counter", t11_desc:"Count words, characters, sentences and paragraphs",
             t12_title:"NotebookLM", t12_desc:"Google's AI-powered academic note-taking and source analysis tool",
             t13_title:"ORCID", t13_desc:"International system providing researchers with a permanent identifier",
-            t14_title:"DrTR Flow", t14_desc:"Clinical workflow and note-taking tool. Data stored only in your browser",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"Find On-Duty Pharmacy", t15_desc:"Locate the nearest on-duty pharmacies on a map based on your location",
             t16_title:"Guideline Comparator", t16_desc:"Compare ESC, AHA/ACC, and NICE recommendations on one screen",
             t17_title:"Anticoagulant Interaction Checker", t17_desc:"Interaction risk screening for warfarin/DOAC with concomitant drugs",
@@ -1274,7 +1285,7 @@
             t11_title:"\u0639\u062f\u0627\u062f \u0627\u0644\u0643\u0644\u0645\u0627\u062a", t11_desc:"\u0639\u062f \u0627\u0644\u0643\u0644\u0645\u0627\u062a \u0648\u0627\u0644\u062d\u0631\u0648\u0641 \u0648\u0627\u0644\u062c\u0645\u0644 \u0648\u0627\u0644\u0641\u0642\u0631\u0627\u062a",
             t12_title:"NotebookLM", t12_desc:"\u0623\u062f\u0627\u0629 \u0627\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0627\u0644\u0623\u0643\u0627\u062f\u064a\u0645\u064a\u0629 \u0645\u0646 Google \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a",
             t13_title:"ORCID", t13_desc:"\u0646\u0638\u0627\u0645 \u062f\u0648\u0644\u064a \u064a\u0645\u0646\u062d \u0627\u0644\u0628\u0627\u062d\u062b\u064a\u0646 \u0645\u0639\u0631\u0641\u0627\u064b \u062f\u0627\u0626\u0645\u0627\u064b",
-            t14_title:"DrTR Flow", t14_desc:"\u0623\u062f\u0627\u0629 \u0633\u064a\u0631 \u0627\u0644\u0639\u0645\u0644 \u0627\u0644\u0633\u0631\u064a\u0631\u064a. \u062a\u064f\u062e\u0632\u0646 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0641\u064a \u0645\u062a\u0635\u0641\u062d\u0643 \u0641\u0642\u0637",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"\u0627\u0639\u062b\u0631 \u0639\u0644\u0649 \u0635\u064a\u062f\u0644\u064a\u0629 \u0645\u0646\u0627\u0648\u0628\u0629", t15_desc:"\u062a\u062d\u062f\u064a\u062f \u0623\u0642\u0631\u0628 \u0627\u0644\u0635\u064a\u062f\u0644\u064a\u0627\u062a \u0627\u0644\u0645\u0646\u0627\u0648\u0628\u0629 \u0639\u0644\u0649 \u062e\u0631\u064a\u0637\u0629 \u0628\u0646\u0627\u0621\u064b \u0639\u0644\u0649 \u0645\u0648\u0642\u0639\u0643",
             t16_title:"Guideline Comparator", t16_desc:"Compare ESC, AHA/ACC, and NICE recommendations on one screen",
             t17_title:"Anticoagulant Interaction Checker", t17_desc:"Interaction risk screening for warfarin/DOAC with concomitant drugs",
@@ -1337,7 +1348,7 @@
             t11_title:"\u5b57\u6570\u7edf\u8ba1", t11_desc:"\u7edf\u8ba1\u5b57\u6570\u3001\u5b57\u7b26\u6570\u3001\u53e5\u5b50\u548c\u6bb5\u843d",
             t12_title:"NotebookLM", t12_desc:"Google\u7684AI\u5b66\u672f\u7b14\u8bb0\u548c\u8d44\u6e90\u5206\u6790\u5de5\u5177",
             t13_title:"ORCID", t13_desc:"\u4e3a\u7814\u7a76\u4eba\u5458\u63d0\u4f9b\u6c38\u4e45\u6807\u8bc6\u7684\u56fd\u9645\u7cfb\u7edf",
-            t14_title:"DrTR Flow", t14_desc:"\u4e34\u5e8a\u5de5\u4f5c\u6d41\u548c\u7b14\u8bb0\u5de5\u5177\u3002\u6570\u636e\u4ec5\u5b58\u50a8\u5728\u60a8\u7684\u6d4f\u89c8\u5668\u4e2d",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"\u67e5\u627e\u5f53\u5024\u836f\u623f", t15_desc:"\u6839\u636e\u60a8\u7684\u4f4d\u7f6e\u5728\u5730\u56fe\u4e0a\u627e\u5230\u6700\u8fd1\u7684\u5f53\u5024\u836f\u623f",
             t16_title:"Guideline Comparator", t16_desc:"Compare ESC, AHA/ACC, and NICE recommendations on one screen",
             t17_title:"Anticoagulant Interaction Checker", t17_desc:"Interaction risk screening for warfarin/DOAC with concomitant drugs",
@@ -1400,7 +1411,7 @@
             t11_title:"\u0936\u092c\u094d\u0926 \u0917\u093f\u0928\u0924\u0940", t11_desc:"\u0936\u092c\u094d\u0926, \u0905\u0915\u094d\u0937\u0930, \u0935\u093e\u0915\u094d\u092f \u0914\u0930 \u0905\u0928\u0941\u091a\u094d\u091b\u0947\u0926 \u0917\u093f\u0928\u0924\u0940",
             t12_title:"NotebookLM", t12_desc:"Google \u0915\u093e AI \u0936\u0948\u0915\u094d\u0937\u093f\u0915 \u0928\u094b\u091f \u0914\u0930 \u0938\u094d\u0930\u094b\u0924 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0909\u092a\u0915\u0930\u0923",
             t13_title:"ORCID", t13_desc:"\u0936\u094b\u0927\u0915\u0930\u094d\u0924\u093e\u0913\u0902 \u0915\u094b \u0938\u094d\u0925\u093e\u092f\u0940 \u092a\u0939\u091a\u093e\u0928 \u0915\u094b\u0921 \u0926\u0947\u0928\u0947 \u0935\u093e\u0932\u0940 \u0905\u0902\u0924\u0930\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u0940\u092f \u092a\u094d\u0930\u0923\u093e\u0932\u0940",
-            t14_title:"DrTR Flow", t14_desc:"\u0915\u094d\u0932\u093f\u0928\u093f\u0915\u0932 \u0935\u0930\u094d\u0915\u092b\u094d\u0932\u094b \u0914\u0930 \u0928\u094b\u091f \u0909\u092a\u0915\u0930\u0923\u0964 \u0921\u0947\u091f\u093e \u0915\u0947\u0935\u0932 \u0906\u092a\u0915\u0947 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924",
+            t14_title:"AcademicFlow", t14_desc:"Academic Design Tool",
             t15_title:"\u0921\u094d\u092f\u0942\u091f\u0940 \u092b\u093e\u0930\u094d\u092e\u0947\u0938\u0940 \u0916\u094b\u091c\u0947\u0902", t15_desc:"\u0905\u092a\u0928\u0940 \u0938\u094d\u0925\u093f\u0924\u093f \u0915\u0947 \u0906\u0927\u093e\u0930 \u092a\u0930 \u0928\u0915\u094d\u0936\u0947 \u092a\u0930 \u0928\u091c\u0926\u0940\u0915\u0940 \u0921\u094d\u092f\u0942\u091f\u0940 \u092b\u093e\u0930\u094d\u092e\u0947\u0938\u0940 \u0922\u0942\u0902\u0922\u0947\u0902",
             t16_title:"Guideline Comparator", t16_desc:"Compare ESC, AHA/ACC, and NICE recommendations on one screen",
             t17_title:"Anticoagulant Interaction Checker", t17_desc:"Interaction risk screening for warfarin/DOAC with concomitant drugs",
