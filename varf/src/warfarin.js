@@ -476,9 +476,6 @@ function buildImmediateAction(status, adjustmentPercent, target, currentInr, hig
   }
 
   if (status === "veryHigh") {
-    if (currentInr >= 5) {
-      return "Bu eşikte otomatik ayaktan doz önerisi durdurulur; yüksek INR yönetimi ve kanama değerlendirmesi gerekir.";
-    }
     return "Doz geçici tutulur; INR terapötik aralığa yaklaşınca azaltılmış bakım planına geçilir.";
   }
 
@@ -660,15 +657,15 @@ export function analyzeWarfarinCase({
     };
   }
 
-  if (currentInr >= 5) {
+  if (currentInr >= 4.5) {
     return {
       ok: true,
       highRisk: true,
       title: "Yuksek INR: otomatik oneri sinir disinda",
       message:
-        "INR >= 5 oldugu icin program temkinli olarak otomatik bakim plani olusturmayi durdurdu.",
+        "INR >= 4.5 oldugu icin program temkinli olarak otomatik bakim plani olusturmayi durdurdu.",
       guidance: [
-        "Doz tutma, kanama degerlendirmesi ve yerel yuksek INR protokolu uygulanmali.",
+        "Kanama yoksa: warfarin dozunu tutun (hold), kanama degerlendirmesi yapin ve INR'yi takip edin; terapotik araliga yakinlasinca daha dusuk dozda yeniden baslatin (BC Guidelines / CHEST 2016).",
         "CHEST ozeti, kanama yoksa INR 4.5-10 araliginda rutin vitamin K onermemekle birlikte INR > 10 icin oral vitamin K dusunulmesini belirtir."
       ]
     };
