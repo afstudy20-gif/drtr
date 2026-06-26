@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reçete İlaç Listesi Ayıklayıcı — DrTR Tools</title>
+  <meta name="description" content="Hastane/MEDULA reçete tablosundan kopyalanan listeyi yapıştırın; her ilacın adını ve günlük kullanım dozunu (örn. 1x1) otomatik ayıklar. Tüm işlem tarayıcıda yapılır.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/recete-ayikla.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg:#F8FAFC; --surface:#FFFFFF;
+      --text-primary:#0F172A; --text-secondary:#334155; --text-muted:#64748B; --text-faint:#94A3B8;
+      --border:#E2E8F0; --teal:#0F766E; --teal-bg:#F0FDFA;
+      --red:#DC2626; --red-bg:#FEF2F2;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:32px 24px 60px}
+
+    .hero{margin-bottom:20px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.6;max-width:720px}
+
+    .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .ctrl-group{display:flex;flex-direction:column;gap:5px}
+    .ctrl-group label{font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .ctrl-group select,.ctrl-group input{font:inherit;font-size:.86rem;padding:6px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text-primary);outline:none}
+    .ctrl-group select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .chk{display:flex;align-items:center;gap:7px;font-size:.84rem;color:var(--text-secondary);cursor:pointer;user-select:none}
+    .chk input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer}
+    .btn{font:inherit;font-size:.86rem;font-weight:600;padding:7px 16px;border-radius:7px;border:none;cursor:pointer;transition:all .15s}
+    .btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:#0d6b63}
+    .btn-secondary{background:#fff;color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:#F1F5F9}
+    .btn-danger{background:#fff;color:var(--red);border:1px solid #FECACA}.btn-danger:hover{background:var(--red-bg)}
+
+    .panes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .pane{background:var(--surface);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;box-shadow:var(--shadow);min-height:420px}
+    .pane-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .pane-head h3{font-size:.88rem;font-weight:700;color:var(--text-primary)}
+    .pane-head .meta{font-size:.74rem;color:var(--text-faint)}
+    textarea.io{flex:1;width:100%;border:none;outline:none;resize:vertical;font:inherit;font-family:'SF Mono',Monaco,Consolas,'Courier New',monospace;font-size:.84rem;padding:12px 14px;color:var(--text-primary);background:transparent;line-height:1.6;min-height:380px}
+    .out-list{flex:1;overflow:auto;padding:8px 0;font-family:'SF Mono',Monaco,Consolas,'Courier New',monospace;font-size:.84rem;line-height:1.7;min-height:380px}
+    .out-row{padding:2px 14px;white-space:pre-wrap;color:var(--text-primary);display:flex;gap:10px;align-items:baseline}
+    .out-row .nm{flex:1}
+    .out-row .dz{font-weight:700;color:var(--teal);white-space:nowrap}
+    .out-row.bad{color:var(--red);background:var(--red-bg)}
+    .out-row.empty{min-height:1.7em}
+
+    .stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:.8rem;color:var(--text-muted)}
+    .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 10px}
+    .stat-chip b{color:var(--text-primary);font-weight:700;margin-right:4px}
+    .stat-chip.bad b{color:var(--red)}
+
+    .info{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;font-size:.86rem;color:var(--text-secondary);line-height:1.7}
+    .info h4{color:var(--text-primary);font-size:.95rem;margin-bottom:8px}
+    .info ul{padding-left:20px;margin-top:6px}
+    .info code{background:#F1F5F9;padding:1px 6px;border-radius:4px;font-size:.82rem}
+
+    @media(max-width:780px){
+      .panes{grid-template-columns:1fr}
+      .pane{min-height:280px}
+      textarea.io,.out-list{min-height:240px}
+      .hero h1{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">Dt</div>
+      DrTR Tools
+    </a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-badge">Klinik</span>
+    <h1>Reçete İlaç Listesi Ayıklayıcı</h1>
+    <p>Hastane / MEDULA reçete tablosundan kopyaladığınız satırları yapıştırın. Araç her satırdan <b>ilaç adını</b> ve <b>günlük kullanım dozunu</b> (Kullanım Sayısı × Doz, örn. <code>1x1</code>) ayıklayıp alt alta listeler. Diğer sütunlar (tarih, barkod, hastane…) atılır. Tüm işlem tarayıcınızda yapılır, hiçbir veri sunucuya gönderilmez.</p>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <label for="fmt">Çıktı formatı</label>
+      <select id="fmt">
+        <option value="dash">İlaç adı — doz</option>
+        <option value="tab">Tab ayrımlı (Excel'e yapıştır)</option>
+        <option value="name">Sadece ilaç adı</option>
+        <option value="dose">Sadece doz</option>
+      </select>
+    </div>
+    <label class="chk" style="align-self:flex-end;margin-bottom:6px">
+      <input type="checkbox" id="strip" checked> Ambalaj bilgisini at <span style="color:var(--text-faint)">(parantez)</span>
+    </label>
+    <label class="chk" style="align-self:flex-end;margin-bottom:6px">
+      <input type="checkbox" id="period"> Periyodu da göster
+    </label>
+    <div class="ctrl-group" style="margin-left:auto;flex-direction:row;align-self:flex-end;gap:8px">
+      <button class="btn btn-secondary" id="ex-btn">Örnek yükle</button>
+      <button class="btn btn-danger" id="clear-btn">Temizle</button>
+      <button class="btn btn-primary" id="copy-btn">Çıktıyı kopyala</button>
+    </div>
+  </div>
+
+  <div class="panes">
+    <div class="pane">
+      <div class="pane-head">
+        <h3>Girdi (reçete tablosu)</h3>
+        <span class="meta">Tabloyu seçip kopyalayın, buraya yapıştırın</span>
+      </div>
+      <textarea id="in" class="io" placeholder="Reçete tablosundan satırları kopyalayıp buraya yapıştırın. Örnek bir satır:&#10;26.06.2026 14:52⇥8699540030015⇥3XJ3Z5HH⇥ETOL SR 600 MG ... TABLET⇥1⇥1 GÜN⇥AĞIZDAN (ORAL)⇥1⇥... HASTANESİ⇥NÖROLOJI"></textarea>
+    </div>
+    <div class="pane">
+      <div class="pane-head">
+        <h3>İlaç listesi</h3>
+        <span class="meta" id="out-meta">—</span>
+      </div>
+      <div id="out" class="out-list"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-chip"><b id="s-total">0</b>satır</div>
+    <div class="stat-chip"><b id="s-ok">0</b>ilaç bulundu</div>
+    <div class="stat-chip bad"><b id="s-bad">0</b>ayrıştırılamadı</div>
+  </div>
+
+  <div class="info">
+    <h4>Nasıl çalışır?</h4>
+    <ul>
+      <li>Tablo sütunları sekme (Tab) ile ayrılır. Araç şu sütunları okur: <b>4.</b> İlaç Adı, <b>5.</b> Doz, <b>6.</b> Periyot, <b>8.</b> Kullanım Sayısı.</li>
+      <li>Günlük doz Türk hekim yazımıyla gösterilir: <code>Kullanım Sayısı × Doz</code> → ör. günde 2 kez 1 tablet = <code>2x1</code>.</li>
+      <li><b>Ambalaj bilgisini at</b> seçiliyse ilaç adının sonundaki <code>(10 ... TABLET)</code> gibi kutu içeriği çıkarılır.</li>
+      <li>Başlık satırı (Reçete Tarihi, Barkod…) otomatik atlanır.</li>
+      <li>Periyot <code>1 GÜN</code> dışındaysa (ör. <code>8 SAAT</code>) doz yanında parantezle gösterilir.</li>
+    </ul>
+    <p style="margin-top:10px;font-size:.82rem;color:var(--text-muted)">Not: Bu araç yalnızca metin ayıklar; doz uygunluğu / klinik karar desteği vermez. Reçeteyi her zaman kaynağından doğrulayın.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const inEl=$('in'),outEl=$('out'),fmtEl=$('fmt'),stripEl=$('strip'),periodEl=$('period');
+
+  // strip trailing package parenthetical: "ADI (10 TABLET)" -> "ADI"
+  function cleanName(name){
+    if(!stripEl.checked)return name.trim();
+    return name.replace(/\s*\([^()]*\)\s*$/,'').trim();
+  }
+
+  // is this a numeric dose token? ("1", "2", "0.5", "1,5")
+  function numTok(s){return s!=null && /^\d+([.,]\d+)?$/.test(String(s).trim());}
+
+  // returns {name, dose, ok:true} | {raw, ok:false} | null(empty)
+  function parseRow(line){
+    if(!line.trim())return null;
+    const cols=line.split('\t').map(c=>c.trim());
+    // header detection
+    const joined=line.toLowerCase();
+    if(/re[çc]ete\s*tarihi/.test(joined) && /barkod/.test(joined))return null;
+    // need at least up to drug-name column
+    if(cols.length<4 || !cols[3]) return {raw:line.trim(),ok:false};
+
+    const name=cleanName(cols[3]);
+    const doz=cols[4]||'';
+    const periyot=cols[5]||'';
+    const kullanim=cols[7]||'';
+
+    let dose='';
+    if(numTok(kullanim) && numTok(doz)) dose=kullanim.replace(',','.')+'x'+doz.replace(',','.');
+    else if(numTok(doz)) dose=doz.replace(',','.');           // only Doz parseable
+    else dose='?';
+
+    if(periodEl.checked && periyot && !/^1\s*g[üu]n$/i.test(periyot))
+      dose+=' ('+periyot+')';
+    else if(!periodEl.checked && periyot && !/^1\s*g[üu]n$/i.test(periyot) && dose!=='?')
+      dose+=' /'+periyot.replace(/\s+/g,'');
+
+    if(!name)return {raw:line.trim(),ok:false};
+    return {name,dose,ok:true};
+  }
+
+  function fmtOut(r){
+    const f=fmtEl.value;
+    if(f==='name')return r.name;
+    if(f==='dose')return r.dose;
+    if(f==='tab')return r.name+'\t'+r.dose;
+    return r.name+(r.dose?'  —  '+r.dose:'');
+  }
+
+  function render(){
+    const lines=inEl.value.split(/\r?\n/);
+    outEl.innerHTML='';
+    let ok=0,bad=0,total=0;
+    const plain=[];
+    lines.forEach(line=>{
+      const r=parseRow(line);
+      if(r===null)return;              // blank / header -> skip silently
+      total++;
+      const row=document.createElement('div');
+      row.className='out-row';
+      if(!r.ok){row.classList.add('bad');row.textContent='⚠ ayrıştırılamadı: '+r.raw;bad++;return outEl.appendChild(row);}
+      ok++;
+      const f=fmtEl.value;
+      if(f==='name'||f==='dose'){row.textContent=fmtOut(r);}
+      else if(f==='tab'){row.textContent=r.name+'\t'+r.dose;}
+      else{
+        const nm=document.createElement('span');nm.className='nm';nm.textContent=r.name;
+        const dz=document.createElement('span');dz.className='dz';dz.textContent=r.dose;
+        row.appendChild(nm);if(r.dose)row.appendChild(dz);
+      }
+      plain.push(fmtOut(r));
+      outEl.appendChild(row);
+    });
+    $('s-total').textContent=total;
+    $('s-ok').textContent=ok;
+    $('s-bad').textContent=bad;
+    $('out-meta').textContent=ok?ok+' ilaç':'—';
+    outEl.dataset.plain=plain.join('\n');
+  }
+
+  inEl.addEventListener('input',render);
+  fmtEl.addEventListener('change',render);
+  stripEl.addEventListener('change',render);
+  periodEl.addEventListener('change',render);
+
+  $('clear-btn').addEventListener('click',()=>{inEl.value='';render();inEl.focus()});
+  $('ex-btn').addEventListener('click',()=>{
+    inEl.value=[
+      'Reçete Tarihi\tBarkod\tReçete Numarası\tİlaç Adı\tDoz\tPeriyot\tKullanım Şekli\tKullanım Sayısı\tHastane Adı\tBranş Adı',
+      '26.06.2026 14:52\t8699540030015\t3XJ3Z5HH\tETOL SR 600 MG UZATILMIŞ SALIMLI TABLET (10 UZATILMIŞ SALIMLI TABLET)\t1\t1 GÜN\tAĞIZDAN (ORAL)\t1\tÖZEL KORU KAVAKLIDERE HASTANESİ\tNÖROLOJI',
+      '26.06.2026 14:52\t8699522010151\t3XJ3Z5HH\tPAROL 500 MG 30 TABLET (30 TABLET)\t1\t1 GÜN\tAĞIZDAN (ORAL)\t3\tÖZEL KORU KAVAKLIDERE HASTANESİ\tNÖROLOJI',
+      '26.06.2026 14:52\t8699546610017\t3XJ3Z5HH\tNEXIUM 40 MG 28 TABLET (28 TABLET)\t1\t1 GÜN\tAĞIZDAN (ORAL)\t1\tÖZEL KORU KAVAKLIDERE HASTANESİ\tNÖROLOJI'
+    ].join('\n');
+    render();
+  });
+  $('copy-btn').addEventListener('click',async()=>{
+    const txt=outEl.dataset.plain||'';
+    try{await navigator.clipboard.writeText(txt);const b=$('copy-btn');const old=b.textContent;b.textContent='✓ Kopyalandı';setTimeout(()=>b.textContent=old,1400)}
+    catch(e){alert('Kopyalama başarısız')}
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
