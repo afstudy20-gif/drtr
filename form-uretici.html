@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Form Üretici (Excel'den) — DrTR Tools</title>
+  <meta name="description" content="Anket sorularınızı bir Excel/CSV dosyasına yazın; bu araç saniyeler içinde Google Forms'u kuran hazır bir Apps Script kodu üretir. Grid yok, manuel tıklama yok. Tüm işlem tarayıcınızda yapılır.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drtr.uk/form-uretici.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root{
+      --bg:#F8FAFC;--surface:#FFFFFF;
+      --text-primary:#0F172A;--text-secondary:#334155;--text-muted:#64748B;--text-faint:#94A3B8;
+      --border:#E2E8F0;--teal:#0F766E;--teal-bg:#F0FDFA;
+      --red:#DC2626;--red-bg:#FEF2F2;--amber:#B45309;--amber-bg:#FFFBEB;
+      --shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text-secondary);min-height:100vh}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar-inner{max-width:1100px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-weight:700;font-size:.95rem}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0F172A,#1E293B);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.65rem;color:#0F766E;flex-shrink:0}
+    .nav-back{font-size:.82rem;color:var(--teal);text-decoration:none;padding:5px 12px;border-radius:6px;background:var(--teal-bg);font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:32px 24px 60px}
+    .hero{margin-bottom:22px}
+    .hero-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+    .hero h1{font-size:1.7rem;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px}
+    .hero p{font-size:.92rem;color:var(--text-muted);line-height:1.6;max-width:760px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .card h3{font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;display:flex;align-items:center;gap:9px}
+    .step-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:.8rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+    .card p.desc{font-size:.86rem;color:var(--text-muted);line-height:1.6;margin-bottom:14px}
+    .btn{font:inherit;font-size:.86rem;font-weight:600;padding:8px 16px;border-radius:7px;border:none;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+    .btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:#0d6b63}
+    .btn-secondary{background:#fff;color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{background:#F1F5F9}
+    .row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+    .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:220px}
+    .fld label{font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .fld input,.fld textarea{font:inherit;font-size:.86rem;padding:8px 11px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text-primary);outline:none;width:100%}
+    .fld textarea{min-height:70px;resize:vertical;line-height:1.5}
+    .fld input:focus,.fld textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+    .drop{border:2px dashed var(--border);border-radius:10px;padding:26px;text-align:center;cursor:pointer;transition:all .15s;background:#FCFDFE}
+    .drop:hover,.drop.over{border-color:var(--teal);background:var(--teal-bg)}
+    .drop .big{font-size:.95rem;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+    .drop .sm{font-size:.8rem;color:var(--text-muted)}
+    .schema{font-size:.8rem;color:var(--text-secondary);line-height:1.7;background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+    .schema code{background:#E2E8F0;padding:1px 5px;border-radius:4px;font-size:.78rem;color:#0F172A}
+    .tag{display:inline-block;font-size:.72rem;font-weight:600;padding:1px 7px;border-radius:5px;background:var(--teal-bg);color:var(--teal);margin:0 2px}
+    pre.code{background:#0F172A;color:#E2E8F0;border-radius:9px;padding:16px 18px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;line-height:1.55;max-height:340px;white-space:pre;margin-bottom:12px}
+    ol.steps{margin:0 0 4px 0;padding-left:0;list-style:none;counter-reset:s}
+    ol.steps li{position:relative;padding:0 0 12px 34px;font-size:.87rem;color:var(--text-secondary);line-height:1.55;counter-increment:s}
+    ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--teal-bg);color:var(--teal);font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+    ol.steps li b{color:var(--text-primary)}
+    ol.steps a{color:var(--teal);font-weight:600;text-decoration:none}ol.steps a:hover{text-decoration:underline}
+    .note{font-size:.8rem;line-height:1.6;padding:10px 13px;border-radius:8px;background:var(--amber-bg);color:var(--amber);border:1px solid #FDE68A;margin-top:8px}
+    .hidden{display:none}
+    .stat{font-size:.82rem;color:var(--text-muted)}
+    .stat b{color:var(--teal)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    @media(max-width:640px){.hero h1{font-size:1.4rem}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="nav-brand"><div class="nav-logo">Dt</div>DrTR Tools</a>
+    <a href="/" class="nav-back">← Ana Sayfa</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-badge">Üretkenlik</span>
+    <h1>Google Form Üretici <span style="font-weight:600;color:var(--text-muted);font-size:1rem">(Excel'den)</span></h1>
+    <p>Anket sorularınızı bir Excel/CSV dosyasına yazın; bu araç, formu Google Forms'ta otomatik kuran <b>hazır bir Apps Script kodu</b> üretir. Manuel tıklama, mobilde kayan grid, kopya soru derdi yok. Tüm işlem tarayıcınızda yapılır — dosyanız hiçbir yere gönderilmez.</p>
+  </div>
+
+  <!-- 1: şablon -->
+  <div class="card">
+    <h3><span class="step-num">1</span> Soruları hazırla</h3>
+    <p class="desc">Boş şablonu indir, sorularını satır satır doldur. Sütun düzeni:</p>
+    <div class="schema">
+      <code>Bolum</code> · <code>Soru</code> · <code>Tip</code> · <code>Secenekler</code> · <code>Zorunlu</code><br>
+      <b>Bolum:</b> yeni bölüm başlığı. <code>Başlık|Açıklama</code> ile açıklama eklenir. <code>__INTRO__</code> satırında Soru = formun üst açıklaması. Boş bırakılırsa soru bir önceki bölüme eklenir.<br>
+      <b>Tip:</b> <span class="tag">short_text</span><span class="tag">paragraph</span><span class="tag">multiple_choice</span><span class="tag">checkbox</span><span class="tag">dropdown</span><span class="tag">scale</span><br>
+      <b>Secenekler:</b> çoktan seçmeli/onay/açılır için <code>A|B|C</code> (pipe ile ayır). <b>scale</b> için <code>1|5</code>.<br>
+      <b>Zorunlu:</b> <code>EVET</code> / <code>HAYIR</code>
+    </div>
+    <button id="tpl-btn" class="btn btn-secondary">⬇ Boş şablon indir (.xlsx)</button>
+  </div>
+
+  <!-- 2: yükle -->
+  <div class="card">
+    <h3><span class="step-num">2</span> Excel'i yükle & ayarla</h3>
+    <div class="row" style="margin-bottom:14px">
+      <div class="fld">
+        <label for="title">Form başlığı</label>
+        <input id="title" type="text" value="Anket Formu" placeholder="Form başlığı">
+      </div>
+    </div>
+    <div class="fld" style="margin-bottom:14px">
+      <label for="thanks">Tamamlama / teşekkür mesajı</label>
+      <textarea id="thanks" placeholder="Gönderim sonrası gösterilecek mesaj">Anketi tamamladığınız için teşekkür ederiz! Yanıtlarınız başarıyla kaydedildi.</textarea>
+    </div>
+    <div id="drop" class="drop">
+      <div class="big">📄 Excel / CSV dosyasını buraya bırak</div>
+      <div class="sm">veya tıklayıp seç · .xlsx, .xls, .csv</div>
+    </div>
+    <input id="file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+    <div id="parse-stat" class="stat" style="margin-top:12px"></div>
+  </div>
+
+  <!-- 3: kod (parse sonrası) -->
+  <div id="out-card" class="card hidden">
+    <h3><span class="step-num">3</span> Apps Script kodu — kopyala & çalıştır</h3>
+    <p class="desc">Aşağıdaki kod <b>sorularını içine gömülü</b> tek parçadır. Google tarafında Sheet'e ihtiyaç yok — sadece yapıştır & çalıştır.</p>
+    <div class="actions">
+      <button id="copy-btn" class="btn btn-primary">📋 Kodu kopyala</button>
+      <button id="dl-btn" class="btn btn-secondary">⬇ FormOlustur.gs indir</button>
+    </div>
+    <pre id="code" class="code"></pre>
+    <ol class="steps">
+      <li><a href="https://script.google.com/home/projects/create" target="_blank" rel="noopener">script.google.com</a> aç → <b>Yeni proje</b>.</li>
+      <li>Editördeki tüm kodu sil, üstteki kodu <b>yapıştır</b> → <b>Kaydet</b> (💾).</li>
+      <li>Fonksiyon açılırından <b>formOlustur</b> seç → <b>Çalıştır</b> (▶).</li>
+      <li>İlk seferde izin ister: <b>İzinleri incele</b> → hesabını seç → <b>Gelişmiş</b> → <b>(güvenli değil) devam et</b> → <b>İzin ver</b>. (Kendi kodun, güvenli.)</li>
+      <li><b>Yürütme günlüğü</b>'nde çıkan <b>doldurma linki</b> anketin — paylaş. QR kod istersen ana sayfadaki araçları kullan.</li>
+    </ol>
+    <div class="note">⚠️ Script <b>yeni</b> bir form oluşturur. Aynı kodu tekrar çalıştırırsan yeni bir form daha yaratır (üzerine yazmaz).</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const LIK="Kesinlikle katılmıyorum|Katılmıyorum|Kararsızım|Katılıyorum|Kesinlikle katılıyorum";
+  const HEADERS=["Bolum","Soru","Tip","Secenekler","Zorunlu"];
+
+  // --- şablon indir ---
+  $('tpl-btn').addEventListener('click',()=>{
+    if(typeof XLSX==='undefined'){alert('Excel kütüphanesi yüklenmedi, sayfayı yenileyin.');return;}
+    const rows=[
+      HEADERS,
+      ["__INTRO__","Bu anket ... amacıyla hazırlanmıştır. Yanıtlar anonim olarak saklanacaktır.","","",""],
+      ["A. Kişisel Bilgiler","Yaşınız","short_text","","EVET"],
+      ["","Cinsiyetiniz","multiple_choice","Kadın|Erkek","EVET"],
+      ["B. Değerlendirme|Aşağıdaki ifadeleri değerlendiriniz.","1. Örnek Likert ifadesi.","multiple_choice",LIK,"EVET"],
+      ["","2. Bir diğer ifade.","multiple_choice",LIK,"EVET"],
+    ];
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols']=[{wch:30},{wch:60},{wch:16},{wch:50},{wch:10}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,"Sorular");
+    XLSX.writeFile(wb,"anket_sorular_sablon.xlsx");
+  });
+
+  // --- dosya yükleme ---
+  const drop=$('drop'),file=$('file');
+  drop.addEventListener('click',()=>file.click());
+  ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('over');}));
+  ['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('over');}));
+  drop.addEventListener('drop',ev=>{if(ev.dataTransfer.files.length)handle(ev.dataTransfer.files[0]);});
+  file.addEventListener('change',()=>{if(file.files.length)handle(file.files[0]);});
+
+  function handle(f){
+    if(typeof XLSX==='undefined'){alert('Excel kütüphanesi yüklenmedi, sayfayı yenileyin.');return;}
+    const rd=new FileReader();
+    rd.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:'array'});
+        const shName=wb.SheetNames.includes('Sorular')?'Sorular':wb.SheetNames[0];
+        const aoa=XLSX.utils.sheet_to_json(wb.Sheets[shName],{header:1,defval:''});
+        build(aoa,f.name);
+      }catch(err){$('parse-stat').innerHTML='<span style="color:var(--red)">Dosya okunamadı: '+err.message+'</span>';}
+    };
+    rd.readAsArrayBuffer(f);
+  }
+
+  function build(aoa,fname){
+    // başlık satırını atla (ilk hücre "Bolum" ise)
+    let rows=aoa.filter(r=>r.some(c=>String(c).trim()!==''));
+    if(rows.length && String(rows[0][0]).trim().toLowerCase()==='bolum') rows=rows.slice(1);
+    // 5 sütuna normalize
+    const data=rows.map(r=>[0,1,2,3,4].map(i=>String(r[i]!=null?r[i]:'').trim()));
+    const nQ=data.filter(r=>r[1] && r[0]!=='__INTRO__').length;
+    const nSec=data.filter(r=>r[0] && r[0]!=='__INTRO__').length;
+    $('parse-stat').innerHTML='✓ <b>'+fname+'</b> · <b>'+nQ+'</b> soru, <b>'+nSec+'</b> bölüm okundu';
+    const gs=genGS(data,$('title').value.trim()||'Anket Formu',$('thanks').value.trim());
+    $('code').textContent=gs;
+    $('out-card').classList.remove('hidden');
+    $('out-card').scrollIntoView({behavior:'smooth',block:'start'});
+    window._gs=gs;
+  }
+
+  function genGS(data,title,thanks){
+    return '/** DrTR Form Üretici — otomatik oluşturuldu. script.google.com > Yeni proje > yapıştır > formOlustur() çalıştır. */\n'+
+'var FORM_BASLIK = '+JSON.stringify(title)+';\n'+
+'var TESEKKUR = '+JSON.stringify(thanks)+';\n'+
+'var DATA = '+JSON.stringify(data)+';\n\n'+
+'function formOlustur(){\n'+
+'  var form = FormApp.create(FORM_BASLIK);\n'+
+'  form.setConfirmationMessage(TESEKKUR).setProgressBar(true).setAllowResponseEdits(false).setCollectEmail(false);\n'+
+'  for (var i=0;i<DATA.length;i++){\n'+
+'    var bolum=String(DATA[i][0]||"").trim();\n'+
+'    var soru =String(DATA[i][1]||"").trim();\n'+
+'    var tip  =String(DATA[i][2]||"").trim().toLowerCase();\n'+
+'    var secStr=String(DATA[i][3]||"").trim();\n'+
+'    var zor  =String(DATA[i][4]||"").trim().toUpperCase()==="EVET";\n'+
+'    if(bolum==="__INTRO__"){ form.setDescription(soru); continue; }\n'+
+'    if(bolum!==""){ var pb=form.addPageBreakItem(); var p=bolum.split("|"); pb.setTitle(p[0].trim()); if(p.length>1) pb.setHelpText(p.slice(1).join("|").trim()); }\n'+
+'    if(soru==="") continue;\n'+
+'    var sec=secStr?secStr.split("|").map(function(s){return s.trim();}):[];\n'+
+'    var item;\n'+
+'    switch(tip){\n'+
+'      case "short_text": item=form.addTextItem().setTitle(soru); break;\n'+
+'      case "paragraph":  item=form.addParagraphTextItem().setTitle(soru); break;\n'+
+'      case "checkbox":   item=form.addCheckboxItem().setTitle(soru).setChoiceValues(sec); break;\n'+
+'      case "dropdown":   item=form.addListItem().setTitle(soru).setChoiceValues(sec); break;\n'+
+'      case "scale":      item=form.addScaleItem().setTitle(soru).setBounds(Number(sec[0]||1),Number(sec[1]||5)); break;\n'+
+'      default:           item=form.addMultipleChoiceItem().setTitle(soru).setChoiceValues(sec);\n'+
+'    }\n'+
+'    if(item.setRequired) item.setRequired(zor);\n'+
+'  }\n'+
+'  Logger.log("FORM (doldurma linki): "+form.getPublishedUrl());\n'+
+'  Logger.log("Düzenleme linki: "+form.getEditUrl());\n'+
+'}\n';
+  }
+
+  // --- kopyala / indir ---
+  $('copy-btn').addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(window._gs||'');const b=$('copy-btn');const o=b.textContent;b.textContent='✓ Kopyalandı';setTimeout(()=>b.textContent=o,1400);}
+    catch(e){alert('Kopyalama başarısız');}
+  });
+  $('dl-btn').addEventListener('click',()=>{
+    const blob=new Blob([window._gs||''],{type:'text/plain'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FormOlustur.gs';a.click();URL.revokeObjectURL(a.href);
+  });
+})();
+</script>
+</body>
+</html>
