@@ -512,7 +512,32 @@
         <div class="result-box" id="qtc-result"></div>
     </div>
 
-    <!-- 6. CHA2DS2-VA (ESC 2024) -->
+    <!-- 6. RR / Heart Rate -->
+    <div class="calc-card" id="calc-rrhr">
+        <h2 data-tr="RR / Kalp Hizi Hesaplama" data-en="RR / Heart Rate Calculator">RR / Kalp Hizi Hesaplama</h2>
+        <p class="subtitle" data-tr="RR suresi ile kalp hizini anlik donusturur" data-en="Instant conversion between RR interval and heart rate">RR suresi ile kalp hizini anlik donusturur</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-tr="RR Suresi" data-en="RR Interval">RR Suresi</label>
+                <input type="number" id="rrhr-rr" placeholder="800" min="1" step="any" inputmode="decimal">
+            </div>
+            <div class="form-group">
+                <label data-tr="RR Birimi" data-en="RR Unit">RR Birimi</label>
+                <select id="rrhr-unit">
+                    <option value="ms" data-tr="Milisaniye (ms)" data-en="Milliseconds (ms)">Milisaniye (ms)</option>
+                    <option value="s" data-tr="Saniye (sn)" data-en="Seconds (s)">Saniye (sn)</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label data-tr="Kalp Hizi (bpm)" data-en="Heart Rate (bpm)">Kalp Hizi (bpm)</label>
+            <input type="number" id="rrhr-hr" placeholder="75" min="1" step="any" inputmode="decimal">
+        </div>
+        <div class="result-box" id="rrhr-result"></div>
+        <p class="info-note" data-tr="Formul: Kalp hizi = 60 / RR(s). Kalp hizindan RR(ms) = 60000 / bpm." data-en="Formula: Heart rate = 60 / RR(s). From heart rate, RR(ms) = 60000 / bpm.">Formul: Kalp hizi = 60 / RR(s). Kalp hizindan RR(ms) = 60000 / bpm.</p>
+    </div>
+
+    <!-- 7. CHA2DS2-VA (ESC 2024) -->
     <div class="calc-card" id="calc-chadsvasc">
         <h2>CHA₂DS₂-VA</h2>
         <p class="subtitle" data-tr="AF'de inme riski - ESC 2024 (cinsiyet cikarildi)" data-en="Stroke risk in AF - ESC 2024 (sex removed)">AF'de inme riski - ESC 2024 (cinsiyet cikarildi)</p>
@@ -530,7 +555,7 @@
         <div class="result-box" id="chadsvasc-result"></div>
     </div>
 
-    <!-- 7. HAS-BLED -->
+    <!-- 8. HAS-BLED -->
     <div class="calc-card" id="calc-hasbled">
         <h2>HAS-BLED</h2>
         <p class="subtitle" data-tr="Antikoagulan tedavide kanama riski" data-en="Bleeding risk on anticoagulation">Antikoagulan tedavide kanama riski</p>
@@ -695,6 +720,7 @@ const calcNames = {
     'gfr':        { tr: 'eGFR', en: 'eGFR' },
     'ldl':        { tr: 'LDL', en: 'LDL' },
     'qtc':        { tr: 'QTc', en: 'QTc' },
+    'rrhr':       { tr: 'RR / Kalp Hizi', en: 'RR / Heart Rate' },
     'chadsvasc':  { tr: 'CHA₂DS₂-VA', en: 'CHA₂DS₂-VA' },
     'hasbled':    { tr: 'HAS-BLED', en: 'HAS-BLED' },
     'balthazard': { tr: 'Balthazard', en: 'Balthazard' },
@@ -728,6 +754,9 @@ function toggleLang() {
         const key = pill.dataset.calc;
         if (calcNames[key]) pill.textContent = calcNames[key][currentLang];
     });
+    if (typeof updateRRHR === 'function' && document.getElementById('rrhr-result')?.classList.contains('show')) {
+        updateRRHR(rrhrLastSource);
+    }
     if (typeof updateFooterLang === 'function') updateFooterLang();
 }
 
@@ -1240,7 +1269,74 @@ function calcQTc() {
     showResult('qtc-result', 'QTc', `Bazett: ${bazett.toFixed(0)} ms | Fridericia: ${fridericia.toFixed(0)} ms`, details, '');
 }
 
-// ============ 6. CHA2DS2-VASc ============
+// ============ 6. RR / Heart Rate ============
+let rrhrLastSource = 'rr';
+let rrhrUpdating = false;
+
+function formatRRHRNumber(value, digits) {
+    return Number(value.toFixed(digits)).toString();
+}
+
+function updateRRHR(source) {
+    if (rrhrUpdating) return;
+    rrhrLastSource = source;
+
+    const rrInput = document.getElementById('rrhr-rr');
+    const hrInput = document.getElementById('rrhr-hr');
+    const unit = document.getElementById('rrhr-unit').value;
+    const box = document.getElementById('rrhr-result');
+    const rrValue = parseFloat(rrInput.value);
+    const hrValue = parseFloat(hrInput.value);
+
+    rrhrUpdating = true;
+
+    let rrMs;
+    let hr;
+
+    if (source === 'hr') {
+        if (!Number.isFinite(hrValue) || hrValue <= 0) {
+            rrInput.value = '';
+            box.classList.remove('show');
+            rrhrUpdating = false;
+            return;
+        }
+
+        hr = hrValue;
+        rrMs = 60000 / hr;
+        rrInput.value = unit === 'ms' ? formatRRHRNumber(rrMs, 0) : formatRRHRNumber(rrMs / 1000, 3);
+    } else {
+        if (!Number.isFinite(rrValue) || rrValue <= 0) {
+            hrInput.value = '';
+            box.classList.remove('show');
+            rrhrUpdating = false;
+            return;
+        }
+
+        rrMs = unit === 'ms' ? rrValue : rrValue * 1000;
+        hr = 60000 / rrMs;
+        hrInput.value = formatRRHRNumber(hr, 1);
+    }
+
+    const rrSeconds = rrMs / 1000;
+    const detail = `<strong>RR:</strong> ${formatRRHRNumber(rrMs, 0)} ms (${formatRRHRNumber(rrSeconds, 3)} sn)` +
+        `<br><strong>${t('Kalp Hizi', 'Heart Rate')}:</strong> ${formatRRHRNumber(hr, 1)} bpm`;
+
+    showResult('rrhr-result', t('Anlik Donusum', 'Instant Conversion'), `${formatRRHRNumber(hr, 1)} bpm`, detail, '');
+    rrhrUpdating = false;
+}
+
+function initRRHeartRate() {
+    const rrInput = document.getElementById('rrhr-rr');
+    const hrInput = document.getElementById('rrhr-hr');
+    const unitSelect = document.getElementById('rrhr-unit');
+    if (!rrInput || !hrInput || !unitSelect) return;
+
+    rrInput.addEventListener('input', () => updateRRHR('rr'));
+    hrInput.addEventListener('input', () => updateRRHR('hr'));
+    unitSelect.addEventListener('change', () => updateRRHR(rrhrLastSource));
+}
+
+// ============ 7. CHA2DS2-VASc ============
 function calcCHADS() {
     let score = 0;
     if (document.getElementById('chad-chf').checked) score += 1;
@@ -1428,6 +1524,7 @@ function calcBalthazard() {
 
 // ============ INIT ============
 initNav();
+initRRHeartRate();
 </script>    <style>
         footer {
             text-align: center;
