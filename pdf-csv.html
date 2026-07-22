@@ -108,15 +108,16 @@
   <div class="drop-zone" id="dropZone">
     <div class="icon">📄</div>
     <h3>Dosya seçmek için tıklayın veya sürükleyin</h3>
-    <p>PDF, JPG, PNG, BMP, TIFF, WebP</p>
+    <p>PDF, PRNX, JPG, PNG, BMP, TIFF, WebP</p>
     <div class="types">
       <span class="type-chip">PDF</span>
+      <span class="type-chip">PRNX</span>
       <span class="type-chip">JPG</span>
       <span class="type-chip">PNG</span>
       <span class="type-chip">WebP</span>
       <span class="type-chip">TIFF</span>
     </div>
-    <input type="file" id="fileInput" accept=".pdf,image/*" style="display:none">
+    <input type="file" id="fileInput" accept=".pdf,.prnx,image/*" style="display:none">
   </div>
 
   <div class="controls">
@@ -193,6 +194,7 @@
     <ul>
       <li><b>Metin tabanlı PDF</b>: pdf.js ile sayfa metin akışı okunur; sütunlar X-koordinatına göre kümelenir.</li>
       <li><b>Taranmış PDF / Görsel</b>: Tesseract.js ile OCR; tespit edilen satır kutuları analiz edilip tablo grid'i çıkarılır.</li>
+      <li><b>PRNX</b> (HBYS / DevExpress rapor önizleme dosyası, ör. epikriz çıktısı): gzip açılır, XML içindeki metin kutuları koordinatlarına göre tabloya dizilir — OCR gerekmez.</li>
       <li><b>Otomatik mod</b>: önce metin katmanı denenir; sayfada metin yoksa veya çok az kelime varsa otomatik OCR'a geçer.</li>
       <li><b>Sayı formatı</b>: tablo değerleri TR / US biçimine normalize edilebilir.</li>
     </ul>
@@ -213,6 +215,7 @@
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs" type="module"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
 
 <script type="module">
 import * as pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs';
@@ -321,8 +324,9 @@ window.__pdfjs = pdfjs;
     clearError();
     if(!file) return;
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
-    const isImg = file.type.startsWith('image/') || /\.(jpe?g|png|bmp|tiff?|webp|gif)$/i.test(file.name);
-    if(!isPdf && !isImg){ showError('Desteklenmeyen dosya türü: ' + (file.type||file.name)); return }
+    const isPrnx = /\.prnx$/i.test(file.name);
+    const isImg = !isPrnx && (file.type.startsWith('image/') || /\.(jpe?g|png|bmp|tiff?|webp|gif)$/i.test(file.name));
+    if(!isPdf && !isImg && !isPrnx){ showError('Desteklenmeyen dosya türü: ' + (file.type||file.name)); return }
 
     pages = []; pagesList.innerHTML = ''; tableContainer.innerHTML = '';
     results.classList.remove('visible');
@@ -332,6 +336,8 @@ window.__pdfjs = pdfjs;
     try {
       if(isPdf){
         await processPdf(file);
+      } else if(isPrnx){
+        await processPrnx(file);
       } else {
         await processImage(file);
       }
@@ -392,6 +398,100 @@ window.__pdfjs = pdfjs;
       if(rows && rows.length) pages.push({idx: pn, rows, source});
     }
     setProgress(100, 'Tamamlandı');
+  }
+
+  // ── PRNX (DevExpress PreviewSerializer) processing ──
+  // .prnx = gzip'li XML; Label brick'leri Text + Rect (parent'a relatif) taşır.
+  async function processPrnx(file){
+    if(typeof pako === 'undefined') throw new Error('Sıkıştırma kütüphanesi (pako) yüklenemedi');
+    setProgress(10, 'PRNX açılıyor…');
+    const buf = new Uint8Array(await file.arrayBuffer());
+    let xmlText;
+    if(buf.length > 2 && buf[0] === 0x1f && buf[1] === 0x8b){
+      xmlText = new TextDecoder('utf-8').decode(pako.ungzip(buf));
+    } else {
+      xmlText = new TextDecoder('utf-8').decode(buf);
+    }
+    if(xmlText.charCodeAt(0) === 0xFEFF) xmlText = xmlText.slice(1);
+    setProgress(30, 'XML ayrıştırılıyor…');
+    const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+    if(doc.querySelector('parsererror')) throw new Error('PRNX içeriği okunamadı (geçersiz XML)');
+    const root = doc.documentElement;
+
+    const pageEls = [...root.children].filter(el => /^Page\d+$/.test(el.tagName));
+    const sources = pageEls.length ? pageEls : [root];
+
+    sources.forEach((pageEl, pi) => {
+      setProgress(30 + (pi / sources.length) * 65, `Sayfa ${pi + 1}/${sources.length} işleniyor…`);
+      const labels = [];
+      collectPrnxLabels(pageEl, 0, 0, labels);
+      const rows = prnxLabelsToRows(labels);
+      if(rows && rows.length) pages.push({idx: pi + 1, rows, source: 'prnx'});
+    });
+    setProgress(100, 'Tamamlandı');
+  }
+
+  function parseRect(str){
+    const p = (str || '').split(',').map(Number);
+    if(p.length < 4 || p.some(isNaN)) return null;
+    return {x: p[0], y: p[1], w: p[2], h: p[3]};
+  }
+
+  function collectPrnxLabels(el, offX, offY, out){
+    const rect = parseRect(el.getAttribute && el.getAttribute('Rect'));
+    const brickType = el.getAttribute && el.getAttribute('BrickType');
+    const text = el.getAttribute && el.getAttribute('Text');
+    if(rect && brickType && /Label|Text/i.test(brickType) && text && text.trim()){
+      out.push({
+        text: text.trim(),
+        x: offX + rect.x,
+        y: offY + rect.y,
+        h: rect.h
+      });
+      return; // Label = yaprak; alt öğe taranmaz
+    }
+    const childOffX = rect ? offX + rect.x : offX;
+    const childOffY = rect ? offY + rect.y : offY;
+    for(const c of el.children) collectPrnxLabels(c, childOffX, childOffY, out);
+  }
+
+  function prnxLabelsToRows(labels){
+    if(!labels.length) return null;
+    labels.sort((a,b) => a.y - b.y || a.x - b.x);
+    const heights = labels.map(l => l.h).filter(h => h > 0).sort((a,b)=>a-b);
+    const medH = heights[Math.floor(heights.length/2)] || 40;
+    const yTol = Math.max(10, medH * 0.5);
+
+    const lines = [];
+    let cur = [], curY = null;
+    for(const l of labels){
+      if(curY === null || Math.abs(l.y - curY) <= yTol){
+        cur.push(l);
+        curY = curY === null ? l.y : (curY*0.7 + l.y*0.3);
+      } else {
+        lines.push(cur);
+        cur = [l]; curY = l.y;
+      }
+    }
+    if(cur.length) lines.push(cur);
+
+    const allX = labels.map(l => l.x).sort((a,b)=>a-b);
+    const cols = clusterColumns(allX, Math.max(20, medH * 0.6));
+    if(!cols.length) return null;
+
+    return lines.map(line => {
+      const row = new Array(cols.length).fill('');
+      line.sort((a,b) => a.x - b.x);
+      for(const l of line){
+        let ci = 0, best = Infinity;
+        cols.forEach((cx, i) => {
+          const d = Math.abs(l.x - cx);
+          if(d < best){ best = d; ci = i }
+        });
+        row[ci] = (row[ci] ? row[ci] + ' ' : '') + l.text;
+      }
+      return row;
+    }).filter(r => r.some(c => c && c.trim()));
   }
 
   // Build rows from PDF text items using X-clustering
